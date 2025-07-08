@@ -5,8 +5,15 @@
  * @format
  */
 
-import {NewAppScreen} from '@react-native/new-app-screen';
-import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
+import React from 'react';
+import { NewAppScreen } from '@react-native/new-app-screen';
+import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -18,11 +25,5 @@ function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
