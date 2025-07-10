@@ -1,6 +1,4 @@
 const { getDefaultConfig } = require('expo/metro-config');
-// eslint-disable-next-line import/no-unresolved
-const { mergeConfig } = require('@react-native/metro-config');
 
 /**
  * Metro configuration
@@ -8,6 +6,21 @@ const { mergeConfig } = require('@react-native/metro-config');
  *
  * @type {import('@react-native/metro-config').MetroConfig}
  */
-const config = {};
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = (() => {
+  const config = getDefaultConfig(__dirname);
+
+  const { transformer, resolver } = config;
+
+  config.transformer = {
+    ...transformer,
+    babelTransformerPath: require.resolve('react-native-svg-transformer/expo'),
+  };
+  config.resolver = {
+    ...resolver,
+    assetExts: resolver.assetExts.filter((ext) => ext !== 'svg'),
+    sourceExts: [...resolver.sourceExts, 'svg'],
+  };
+
+  return config;
+})();
