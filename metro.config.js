@@ -1,4 +1,6 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
+// eslint-disable-next-line import/no-unresolved
+const { mergeConfig } = require('@react-native/metro-config');
 
 /**
  * Metro configuration
