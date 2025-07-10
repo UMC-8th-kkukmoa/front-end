@@ -2,6 +2,11 @@
   "name": "kkukmoa",
   "displayName": "kkukmoa",
   "scheme": "kkukmoa",
+  "newArchEnabled": true,
+  "android": {
+    "edgeToEdgeEnabled": true,
+    "package": "com.anonymous.kkukmoa"
+  },
   "plugins": [
     "expo-build-properties",
     "expo-router"
