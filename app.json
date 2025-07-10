@@ -1,4 +1,9 @@
 {
   "name": "kkukmoa",
-  "displayName": "kkukmoa"
+  "displayName": "kkukmoa",
+  "scheme": "kkukmoa",
+  "plugins": [
+    "expo-build-properties",
+    "expo-router"
+  ]
 }
