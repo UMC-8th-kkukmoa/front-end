@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard',
     lineHeight: 16,
     letterSpacing: 0.4,
+    marginTop: 6,
+    marginLeft: 18,
   },
 });
 
@@ -215,6 +217,21 @@ export default function LoginTextbox({
           >
             <Icon name="calendar-outline" size={20} color={colors.light.gray2} />
           </TouchableOpacity>
+        )}
+
+        {variant === 'error' && (
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: colors.light.main,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>!</Text>
+          </View>
         )}
       </View>
 
