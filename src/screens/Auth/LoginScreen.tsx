@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    paddingHorizontal: 13,
+    paddingHorizontal: 14,
   },
   signupContainer: {
     flexDirection: 'row',
