@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    paddingHorizontal: 7,
+    paddingHorizontal: 13,
   },
   signupContainer: {
     flexDirection: 'row',
@@ -84,14 +84,12 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.button}>
-        <View style={styles.button}>
-          <KkButton
-            label="로그인"
-            type={isValid ? 'primary' : 'disabled'}
-            size="large"
-            onPress={isValid ? handleLogin : () => {}}
-          />
-        </View>
+        <KkButton
+          label="로그인"
+          type={isValid ? 'primary' : 'disabled'}
+          size="large"
+          onPress={isValid ? handleLogin : () => {}}
+        />
       </View>
 
       <View style={styles.signupContainer}>
