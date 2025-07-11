@@ -2,7 +2,7 @@ import React, { JSX } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import colors from '../colors';
 
-export type KkButtonType = 'primary' | 'secondary';
+export type KkButtonType = 'primary' | 'secondary' | 'disabled';
 export type KkButtonSize = 'large' | 'small';
 
 export interface KkButtonProps {
@@ -37,6 +37,12 @@ const styles = StyleSheet.create({
   variantSecondaryText: {
     color: colors.light.black,
   },
+  variantDisabled: {
+    backgroundColor: colors.light.gray1,
+  },
+  variantDisabledText: {
+    color: colors.light.gray2,
+  },
   sizeLarge: {
     paddingVertical: 17,
   },
@@ -45,30 +51,49 @@ const styles = StyleSheet.create({
   },
 });
 
+const getVariantStyle = (type: KkButtonType) => {
+  switch (type) {
+    case 'primary':
+      return styles.variantPrimary;
+    case 'secondary':
+      return styles.variantSecondary;
+    case 'disabled':
+      return styles.variantDisabled;
+    default:
+      return styles.variantPrimary;
+  }
+};
+
+const getVariantTextStyle = (type: KkButtonType) => {
+  switch (type) {
+    case 'primary':
+      return styles.variantPrimaryText;
+    case 'secondary':
+      return styles.variantSecondaryText;
+    case 'disabled':
+      return styles.variantDisabledText;
+    default:
+      return styles.variantPrimaryText;
+  }
+};
+
 export function KkButton({ style, label, type, size, onPress, left }: KkButtonProps) {
   return (
     <TouchableOpacity
       style={[
         styles.buttonStyles,
-        type === 'primary' ? styles.variantPrimary : styles.variantSecondary,
+        getVariantStyle(type),
         size === 'large' ? styles.sizeLarge : styles.sizeSmall,
         style,
       ]}
       accessibilityRole="button"
       accessible
-      onPress={onPress}
+      onPress={type === 'disabled' ? () => {} : onPress}
+      disabled={type === 'disabled'}
     >
       <View>
         {left || null}
-
-        <Text
-          style={[
-            styles.buttonTextStyles,
-            type === 'primary' ? styles.variantPrimaryText : styles.variantSecondaryText,
-          ]}
-        >
-          {label}
-        </Text>
+        <Text style={[styles.buttonTextStyles, getVariantTextStyle(type)]}>{label}</Text>
       </View>
     </TouchableOpacity>
   );
