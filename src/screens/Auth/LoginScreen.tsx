@@ -1,10 +1,106 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import LoginTextbox from '../../design/component/LoginTextbox';
+import { KkButton } from '../../design/component/KkButton';
+import colors from '../../design/colors';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+  },
+  logo: {
+    width: 100,
+    height: 42,
+    marginBottom: 70,
+  },
+  form: {
+    alignItems: 'center',
+    width: '100%',
+    gap: 24,
+    marginBottom: 50,
+  },
+  button: {
+    width: '100%',
+    paddingHorizontal: 7,
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+    gap: 10,
+  },
+  signupText: {
+    color: colors.light.black,
+    fontSize: 14,
+  },
+  signupLink: {
+    color: colors.light.main,
+    fontSize: 14,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+  },
+});
+
+const logoImage = require('../../assets/images/logo/LogoText2.png');
 
 export default function LoginScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const isValid = email && password;
+
+  const handleLogin = () => {
+    // 로그인 처리 로직
+    console.log('로그인 버튼 클릭!');
+  };
+
   return (
-    <View>
-      <Text>LoginScreen</Text>
+    <View style={styles.container}>
+      <Image source={logoImage} style={styles.logo} resizeMode="contain" />
+
+      <View style={styles.form}>
+        <LoginTextbox
+          label=""
+          size="large"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="이메일 주소"
+          type="email"
+          variant={email ? 'loginEnabled' : 'disabled'}
+        />
+
+        <LoginTextbox
+          label=""
+          size="large"
+          value={password}
+          onChangeText={setPassword}
+          placeholder="비밀번호"
+          type="password"
+          variant={password ? 'loginEnabled' : 'disabled'}
+        />
+      </View>
+
+      <View style={styles.button}>
+        <View style={styles.button}>
+          <KkButton
+            label="로그인"
+            type={isValid ? 'primary' : 'disabled'}
+            size="large"
+            onPress={isValid ? handleLogin : () => {}}
+          />
+        </View>
+      </View>
+
+      <View style={styles.signupContainer}>
+        <Text style={styles.signupText}>아직 꾹모아의 회원이 아니신가요? </Text>
+        <TouchableOpacity onPress={() => {}}>
+          {/* expo 네비게이션 사용 */}
+          <Text style={styles.signupLink}>회원가입</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
