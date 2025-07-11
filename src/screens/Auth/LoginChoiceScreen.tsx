@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { KkButton } from '../../design/component/KkButton';
+import colors from '../../design/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: 150,
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingHorizontal: 24,
@@ -13,18 +14,68 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 42,
-    marginBottom: 70,
+    marginBottom: 50,
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 40,
+  },
+  loginText: {
+    color: colors.light.black,
+    fontSize: 14,
+  },
+  loginLink: {
+    color: colors.light.main,
+    fontSize: 14,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+  },
+  button: {
+    width: '100%',
+    paddingHorizontal: 7,
+    gap: 20,
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    marginTop: 60,
+    gap: 120,
+    alignItems: 'center',
+  },
+  logoSmall: {
+    width: 42,
+    height: 42,
+    marginLeft: 4,
+    alignSelf: 'center',
   },
 });
 
 const logoImage = require('../../assets/images/logo/LogoText2.png');
+const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
   return (
     <View style={styles.container}>
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />
 
-      <KkButton label="로그인" type="primary" size="large" onPress={() => {}} />
+      <View style={styles.loginContainer}>
+        <Text style={styles.loginText}>이미 회원이신가요?</Text>
+        <TouchableOpacity onPress={() => {}}>
+          {/* expo 네비게이션 사용 */}
+          <Text style={styles.loginLink}>로그인하기</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.button}>
+        <KkButton label="카카오 로그인" type="primary" size="large" onPress={() => {}} />
+
+        <KkButton label="이메일 가입" type="secondary" size="large" onPress={() => {}} />
+      </View>
+
+      <View style={styles.signupContainer}>
+        <Text style={styles.loginText}>다른 방식으로 가입하기</Text>
+        <Image source={naverImage} style={styles.logoSmall} resizeMode="contain" />
+      </View>
     </View>
   );
 }
