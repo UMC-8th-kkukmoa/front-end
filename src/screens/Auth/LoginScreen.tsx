@@ -7,7 +7,7 @@ import colors from '../../design/colors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: 210,
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingHorizontal: 24,
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 24,
-    marginBottom: 50,
+    marginBottom: 74,
   },
   button: {
     width: '100%',
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 40,
     gap: 10,
   },
   signupText: {
