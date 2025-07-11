@@ -17,7 +17,11 @@ export interface KkButtonProps {
 const styles = StyleSheet.create({
   buttonStyles: {
     borderRadius: 30,
-    shadowColor: '#6C313126',
+    shadowColor: '#6C3131',
+    shadowOffset: { width: 1, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 6,
     display: 'flex',
     alignItems: 'center',
   },
@@ -35,7 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light.white,
   },
   variantSecondaryText: {
-    color: colors.light.black,
+    color: colors.light.main,
   },
   variantDisabled: {
     backgroundColor: colors.light.gray1,
