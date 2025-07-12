@@ -32,7 +32,7 @@ interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
 const styles = StyleSheet.create({
   label: {
     marginBottom: 6,
-    fontWeight: '600',
+    fontWeight: '500',
     color: colors.light.black,
   },
   inputWrapper: {
