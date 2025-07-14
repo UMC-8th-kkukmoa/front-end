@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../colors';
 
-export type TextboxVariant = 'enabled' | 'disabled' | 'error' | 'loginEnabled';
+export type TextboxVariant = 'primary' | 'secondary';
 type Size = 'large' | 'small';
 type InputType = 'text' | 'email' | 'password' | 'date';
 
@@ -23,6 +23,8 @@ interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
   type: InputType;
   size: Size;
   variant: TextboxVariant;
+  enabled: boolean;
+  error: boolean;
   message?: string;
   required?: boolean;
 }
@@ -79,60 +81,61 @@ const sizeStyles = StyleSheet.create({
   },
 });
 
-const borderStyles = StyleSheet.create({
-  enabled: {
-    borderWidth: 1,
-    borderColor: colors.light.gray2,
-  },
-  disabled: {
-    borderWidth: 1,
-    borderColor: colors.light.gray1,
-  },
-  error: {
-    borderWidth: 1,
-    borderColor: colors.light.sub,
-  },
-  loginEnabled: {
-    borderWidth: 1,
-    borderColor: colors.light.main,
-  },
-});
+const getBorderStyle = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
+  if (error) {
+    return {
+      borderWidth: 1,
+      borderColor: colors.light.sub,
+    };
+  }
 
-const textColorStyles = StyleSheet.create({
-  enabled: {
-    color: colors.light.gray2,
-  },
-  disabled: {
-    color: colors.light.gray1,
-  },
-  error: {
-    color: colors.light.sub,
-  },
-  loginEnabled: {
-    color: colors.light.black,
-  },
-});
+  if (!enabled) {
+    return {
+      borderWidth: 1,
+      borderColor: colors.light.gray1,
+    };
+  }
 
-const placeholderColorStyles = StyleSheet.create({
-  enabled: {
-    color: colors.light.gray2,
-  },
-  disabled: {
-    color: colors.light.gray1,
-  },
-  error: {
-    color: colors.light.sub,
-  },
-  loginEnabled: {
-    color: colors.light.gray2,
-  },
-});
+  // enabled 상태에서 variant에 따른 스타일
+  return {
+    borderWidth: 1,
+    borderColor: variant === 'primary' ? colors.light.main : colors.light.gray2,
+  };
+};
+
+const getTextColor = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
+  if (error) {
+    return colors.light.sub;
+  }
+
+  if (!enabled) {
+    return colors.light.gray1;
+  }
+
+  // enabled 상태에서 variant에 따른 스타일
+  return variant === 'primary' ? colors.light.black : colors.light.gray2;
+};
+
+const getPlaceholderColor = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
+  if (error) {
+    return colors.light.sub;
+  }
+
+  if (!enabled) {
+    return colors.light.gray1;
+  }
+
+  // enabled 상태에서는 variant에 관계없이 gray2
+  return colors.light.gray2;
+};
 
 export default function KkLoginTextbox({
   label,
-  variant = 'enabled',
+  variant = 'secondary',
   size = 'large',
   type = 'text',
+  enabled = true,
+  error = false,
   message = '',
   style = {},
   editable = true,
@@ -147,7 +150,7 @@ export default function KkLoginTextbox({
 
   const isPassword = type === 'password';
   const isDate = type === 'date';
-  const isError = variant === 'error';
+  const isInputEditable = editable && !isDate;
 
   // 날짜 포맷팅 함수
   const formatDate = (formattedDate: Date) => {
@@ -171,6 +174,16 @@ export default function KkLoginTextbox({
     return value;
   };
 
+  const getIconColor = () => {
+    if (error) {
+      return colors.light.sub;
+    }
+    if (!enabled) {
+      return colors.light.gray1;
+    }
+    return variant === 'primary' ? colors.light.main : colors.light.gray2;
+  };
+
   return (
     <View style={style}>
       {label && (
@@ -180,17 +193,19 @@ export default function KkLoginTextbox({
         </Text>
       )}
 
-      <View style={[styles.inputWrapper, sizeStyles[size], borderStyles[variant]]}>
+      <View
+        style={[styles.inputWrapper, sizeStyles[size], getBorderStyle(variant, enabled, error)]}
+      >
         <TextInput
-          style={[styles.input, textColorStyles[variant]]}
-          editable={editable && !isDate} // 날짜 타입일 때는 편집 불가
+          style={[styles.input, { color: getTextColor(variant, enabled, error) }]}
+          editable={isInputEditable}
           secureTextEntry={isPassword && !showPassword}
           keyboardType={type === 'email' ? 'email-address' : 'default'}
           value={getDisplayValue()}
           onChangeText={onChangeText}
-          pointerEvents={isDate ? 'none' : 'auto'} // 날짜 타입일 때 터치 이벤트 차단
+          pointerEvents={isDate ? 'none' : 'auto'}
           placeholder={placeholder}
-          placeholderTextColor={placeholderColorStyles[variant].color}
+          placeholderTextColor={getPlaceholderColor(variant, enabled, error)}
         />
 
         {isPassword && (
@@ -198,11 +213,12 @@ export default function KkLoginTextbox({
             onPress={() => setShowPassword(!showPassword)}
             accessibilityLabel={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
             accessibilityRole="button"
+            disabled={!enabled}
           >
             <Icon
               name={showPassword ? 'eye-off-outline' : 'eye-outline'}
               size={20}
-              color={variant === 'loginEnabled' ? colors.light.main : colors.light.gray2}
+              color={getIconColor()}
             />
           </TouchableOpacity>
         )}
@@ -212,12 +228,13 @@ export default function KkLoginTextbox({
             onPress={() => setShowPicker(true)}
             accessibilityLabel="날짜 선택"
             accessibilityRole="button"
+            disabled={!enabled}
           >
-            <Icon name="calendar-outline" size={20} color={colors.light.gray2} />
+            <Icon name="calendar-outline" size={20} color={getIconColor()} />
           </TouchableOpacity>
         )}
 
-        {variant === 'error' && (
+        {error && (
           <View
             style={{
               width: 20,
@@ -234,12 +251,12 @@ export default function KkLoginTextbox({
       </View>
 
       {message && (
-        <Text style={[styles.message, { color: isError ? colors.light.main : colors.light.gray2 }]}>
+        <Text style={[styles.message, { color: error ? colors.light.main : colors.light.gray2 }]}>
           {message}
         </Text>
       )}
 
-      {showPicker && (
+      {showPicker && enabled && (
         <DateTimePicker value={date} mode="date" display="default" onChange={handleDateChange} />
       )}
     </View>
