@@ -1,6 +1,6 @@
 import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
-import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePathname } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
@@ -33,7 +33,13 @@ const styles = StyleSheet.create({
     borderRadius: '100%',
     padding: 6,
   },
+  logoIcon: {
+    width: 48,
+    height: 48,
+  },
 });
+
+const logoIcon = require('../../src/assets/images/logo.png');
 
 function IconWrapper({ isSelected, children }: { isSelected: boolean; children: React.ReactNode }) {
   return <View style={[styles.tabIcon, isSelected && styles.tabIconSelected]}>{children}</View>;
@@ -44,15 +50,7 @@ function MainButton() {
     <TouchableOpacity>
       <View style={styles.mainButton}>
         <View style={styles.mainButtonInner}>
-          {/* TODO: logo */}
-          <View
-            style={{
-              backgroundColor: colors.light.gray2,
-              width: 48,
-              height: 48,
-              borderRadius: '100%',
-            }}
-          />
+          <Image source={logoIcon} style={styles.logoIcon} />
         </View>
       </View>
     </TouchableOpacity>
