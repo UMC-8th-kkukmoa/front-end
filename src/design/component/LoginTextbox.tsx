@@ -1,5 +1,3 @@
-/* eslint-disable react/require-default-props */
-/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useState } from 'react';
 import {
   TextInput,
@@ -15,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../colors';
 
-type Variant = 'enabled' | 'disabled' | 'error' | 'loginEnabled';
+export type TextboxVariant = 'enabled' | 'disabled' | 'error' | 'loginEnabled';
 type Size = 'large' | 'small';
 type InputType = 'text' | 'email' | 'password' | 'date';
 
@@ -24,7 +22,7 @@ interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
   label: string;
   type: InputType;
   size: Size;
-  variant: Variant;
+  variant: TextboxVariant;
   message?: string;
   required?: boolean;
 }
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
 const sizeStyles = StyleSheet.create({
   large: {
     width: 333,
-    height: 56,
+    height: 48,
     borderRadius: 30,
     paddingHorizontal: 21,
     paddingVertical: 4,
@@ -130,7 +128,7 @@ const placeholderColorStyles = StyleSheet.create({
   },
 });
 
-export default function LoginTextbox({
+export default function KkLoginTextbox({
   label,
   variant = 'enabled',
   size = 'large',
@@ -152,8 +150,8 @@ export default function LoginTextbox({
   const isError = variant === 'error';
 
   // 날짜 포맷팅 함수
-  const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0]; // yyyy-mm-dd
+  const formatDate = (formattedDate: Date) => {
+    return formattedDate.toISOString().split('T')[0]; // yyyy-mm-dd
   };
 
   // 날짜 선택 처리
@@ -247,3 +245,9 @@ export default function LoginTextbox({
     </View>
   );
 }
+
+KkLoginTextbox.defaultProps = {
+  style: undefined,
+  message: undefined,
+  required: undefined,
+};
