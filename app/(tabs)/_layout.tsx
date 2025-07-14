@@ -3,10 +3,10 @@ import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePathname } from 'expo-router';
-import CouponsIcon from '../../asset/credit-card.svg';
-import HomeIcon from '../../asset/home.svg';
-import StoresIcon from '../../asset/map-pin.svg';
-import ProfileIcon from '../../asset/user.svg';
+import CouponsIcon from '../../src/assets/images/credit-card.svg';
+import HomeIcon from '../../src/assets/images/home.svg';
+import StoresIcon from '../../src/assets/images/map-pin.svg';
+import ProfileIcon from '../../src/assets/images/user.svg';
 import colors from '../../src/design/colors';
 
 const styles = StyleSheet.create({
