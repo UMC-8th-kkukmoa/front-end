@@ -5,7 +5,7 @@
   "newArchEnabled": true,
   "android": {
     "edgeToEdgeEnabled": true,
-    "package": "com.anonymous.kkukmoa"
+    "package": "com.kkukmoa"
   },
   "plugins": [
     "expo-build-properties",

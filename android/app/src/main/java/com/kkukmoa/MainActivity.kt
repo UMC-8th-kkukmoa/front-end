@@ -1,4 +1,4 @@
-package com.anonymous.kkukmoa
+package com.kkukmoa
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
