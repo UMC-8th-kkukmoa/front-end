@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import colors from '../colors';
+import colors from '../../design/colors';
 
 type StampCompleteModalProps = {
   visible: boolean;

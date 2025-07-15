@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
-import Header from '../design/component/Header';
-import StampBoard from '../design/component/StampBoard';
-import StampCompleteModal from '../design/component/StampCompleteModal';
-import CustomDropdown from '../design/component/CustomDropdown';
-import colors from '../design/colors';
+import Header from '../../design/component/Header';
+import StampBoard from './StampBoard';
+import StampCompleteModal from './StampCompleteModal';
+import CustomDropdown from '../../design/component/KkDropdown';
+import colors from '../../design/colors';
 
 type Stamp = {
   id: number;
@@ -16,7 +16,7 @@ type ShopStampData = {
   stamps: Stamp[];
 };
 
-const presentIcon = require('../assets/images/present_icon.png');
+const presentIcon = require('../../assets/images/present_icon.png');
 
 const styles = StyleSheet.create({
   container: {
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light.white,
   },
   dropdownArea: {
-    height: 64,
+    height: 45,
     paddingTop: 28,
     paddingLeft: 22,
     marginBottom: 10,
