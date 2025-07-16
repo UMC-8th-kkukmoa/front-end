@@ -18,6 +18,7 @@ export interface KkButtonProps {
 const styles = StyleSheet.create({
   buttonStyles: {
     borderRadius: 30,
+    shadowColor: '#6C313126',
     display: 'flex',
     alignItems: 'center',
   },
