@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import LoginTextbox from '../../design/component/LoginTextbox';
+import LoginTextbox from '../../design/component/KkLoginTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 
@@ -69,9 +69,10 @@ export default function LoginScreen() {
           onChangeText={setEmail}
           placeholder="이메일 주소"
           type="email"
-          variant={email ? 'loginEnabled' : 'disabled'}
+          variant={email ? 'primary' : 'secondary'}
+          enabled={!!email}
+          error={false}
         />
-
         <LoginTextbox
           label=""
           size="large"
@@ -79,7 +80,9 @@ export default function LoginScreen() {
           onChangeText={setPassword}
           placeholder="비밀번호"
           type="password"
-          variant={password ? 'loginEnabled' : 'disabled'}
+          variant={password ? 'primary' : 'secondary'}
+          enabled={!!password}
+          error={false}
         />
       </View>
 

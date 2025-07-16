@@ -12,18 +12,21 @@ export interface KkButtonProps {
   size: KkButtonSize;
   onPress: () => void;
   left?: JSX.Element;
+  shadow?: boolean;
 }
 
 const styles = StyleSheet.create({
   buttonStyles: {
     borderRadius: 30,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  shadowStyles: {
     shadowColor: '#6C3131',
     shadowOffset: { width: 1, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 6,
-    display: 'flex',
-    alignItems: 'center',
   },
   buttonTextStyles: {
     fontSize: 15,
@@ -48,9 +51,13 @@ const styles = StyleSheet.create({
     color: colors.light.gray2,
   },
   sizeLarge: {
+    width: 333,
+    height: 55,
     paddingVertical: 17,
   },
   sizeSmall: {
+    width: 100,
+    height: 48,
     paddingVertical: 13.5,
   },
 });
@@ -81,11 +88,12 @@ const getVariantTextStyle = (type: KkButtonType) => {
   }
 };
 
-export function KkButton({ style, label, type, size, onPress, left }: KkButtonProps) {
+export function KkButton({ style, label, type, size, onPress, left, shadow }: KkButtonProps) {
   return (
     <TouchableOpacity
       style={[
         styles.buttonStyles,
+        shadow && styles.shadowStyles,
         getVariantStyle(type),
         size === 'large' ? styles.sizeLarge : styles.sizeSmall,
         style,
@@ -106,4 +114,5 @@ export function KkButton({ style, label, type, size, onPress, left }: KkButtonPr
 KkButton.defaultProps = {
   style: undefined,
   left: undefined,
+  shadow: true,
 };
