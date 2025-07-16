@@ -27,6 +27,11 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: -16,
     alignSelf: 'center',
+    shadowColor: '#6C313126',
+    shadowOffset: {
+      width: 1,
+      height: 3,
+    },
   },
   mainButtonInner: {
     backgroundColor: colors.light.sub,
