@@ -41,6 +41,22 @@ const styles = StyleSheet.create({
 
 const logoIcon = require('../../src/assets/images/logo.png');
 
+const mainButtonSymbol = Symbol('mainButton');
+
+type TabItem = {
+  name: 'home' | 'stores' | 'coupons' | 'profile';
+  uri: string;
+  icon: React.ComponentType<{ color: string; width: number; height: number }>;
+};
+
+const tabs: Array<typeof mainButtonSymbol | TabItem> = [
+  { name: 'home', uri: '/', icon: HomeIcon },
+  { name: 'stores', uri: '/stores', icon: StoresIcon },
+  mainButtonSymbol,
+  { name: 'coupons', uri: '/coupons', icon: CouponsIcon },
+  { name: 'profile', uri: '/profile', icon: ProfileIcon },
+];
+
 function IconWrapper({ isSelected, children }: { isSelected: boolean; children: React.ReactNode }) {
   return <View style={[styles.tabIcon, isSelected && styles.tabIconSelected]}>{children}</View>;
 }
@@ -60,56 +76,32 @@ function MainButton() {
 export default function Layout() {
   const pathname = usePathname();
 
-  const homeSelected = pathname === '/';
-  const storesSelected = pathname === '/stores';
-  const couponsSelected = pathname === '/coupons';
-  const profileSelected = pathname === '/profile';
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
       <Tabs>
         <TabSlot />
         <TabList style={styles.tabLayout}>
-          <TabTrigger name="home" href="/">
-            <IconWrapper isSelected={homeSelected}>
-              <HomeIcon
-                color={homeSelected ? colors.light.white : colors.light.main}
-                width={24}
-                height={24}
-              />
-            </IconWrapper>
-          </TabTrigger>
-          <TabTrigger name="stores" href="/stores">
-            <IconWrapper isSelected={storesSelected}>
-              <StoresIcon
-                color={storesSelected ? colors.light.white : colors.light.main}
-                width={24}
-                height={24}
-              />
-            </IconWrapper>
-          </TabTrigger>
+          {tabs.map((tab) => {
+            if (tab === mainButtonSymbol) {
+              return <MainButton key="mainButton" />;
+            }
 
-          <MainButton />
+            const selected = pathname === tab.uri;
+            const IconComponent = tab.icon;
 
-          <TabTrigger name="coupons" href="/coupons">
-            <IconWrapper isSelected={couponsSelected}>
-              <CouponsIcon
-                color={couponsSelected ? colors.light.white : colors.light.main}
-                width={24}
-                height={24}
-              />
-            </IconWrapper>
-          </TabTrigger>
-          <TabTrigger name="profile" href="/profile">
-            <IconWrapper isSelected={profileSelected}>
-              <ProfileIcon
-                color={profileSelected ? colors.light.white : colors.light.main}
-                width={24}
-                height={24}
-              />
-            </IconWrapper>
-          </TabTrigger>
+            return (
+              <TabTrigger name={tab.name} href={tab.uri} key={tab.name}>
+                <IconWrapper isSelected={selected}>
+                  <IconComponent
+                    color={selected ? colors.light.white : colors.light.main}
+                    width={24}
+                    height={24}
+                  />
+                </IconWrapper>
+              </TabTrigger>
+            );
+          })}
         </TabList>
       </Tabs>
     </SafeAreaView>
