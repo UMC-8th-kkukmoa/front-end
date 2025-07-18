@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
   },
   message: {
     fontWeight: '400',
-    fontFamily: 'Pretendard',
     lineHeight: 16,
     letterSpacing: 0.4,
     marginTop: 6,

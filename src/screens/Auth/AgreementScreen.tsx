@@ -1,7 +1,188 @@
-import React from 'react';
-import { View } from 'react-native';
-// import LoginTextbox from '../../design/component/KkLoginTextbox';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import colors from '../../design/colors';
+import Header from '../../design/component/Header';
+import { KkButton } from '../../design/component/KkButton';
+
+const styles = StyleSheet.create({
+  contain: {
+    flex: 1,
+    backgroundColor: colors.light.white,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.light.white,
+    padding: 35,
+    paddingTop: 40,
+  },
+  progressBarContainer: {
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  progressBarBackground: {
+    width: '100%',
+    height: 15.8,
+    borderRadius: 15,
+    backgroundColor: colors.light.gray1,
+    overflow: 'hidden',
+    marginBottom: 4,
+  },
+  progressBar: {
+    width: '50%',
+    height: '100%',
+    backgroundColor: colors.light.main,
+    borderRadius: 15,
+  },
+  progressText: {
+    fontSize: 12.64,
+    fontWeight: '600',
+    color: colors.light.main,
+  },
+  agreementList: {
+    marginTop: 32,
+    flex: 1,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  checkboxText: {
+    fontWeight: '600',
+    marginLeft: 10,
+    fontSize: 15,
+    flex: 1,
+  },
+  checkboxText2: {
+    fontWeight: '500',
+    marginLeft: 10,
+    fontSize: 15,
+    flex: 1,
+    color: colors.light.gray2,
+  },
+  required: {
+    color: colors.light.main,
+    fontWeight: '600',
+  },
+  optional: {
+    color: colors.light.black,
+    fontWeight: '600',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.light.gray1,
+    marginBottom: 10,
+  },
+  nextButton: {
+    width: '100%',
+    marginTop: 50,
+  },
+});
 
 export default function AgreementScreen() {
-  return <View />;
+  const [allChecked, setAllChecked] = useState(true);
+  const [agreements, setAgreements] = useState({
+    terms: true,
+    privacy: true,
+    thirdParty: true,
+    marketing: true,
+  });
+
+  const handleBack = () => {
+    /* eslint-disable no-console */
+    console.log('뒤로가기 눌림');
+    /* eslint-enable no-console */
+  };
+
+  // const isAllRequiredChecked = agreements.terms && agreements.privacy;
+
+  const toggleAgreement = (key: keyof typeof agreements) => {
+    const updated = { ...agreements, [key]: !agreements[key] };
+    setAgreements(updated);
+    const all = Object.values(updated).every(Boolean);
+    setAllChecked(all);
+  };
+
+  const toggleAll = () => {
+    const newValue = !allChecked;
+    setAllChecked(newValue);
+    setAgreements({
+      terms: newValue,
+      privacy: newValue,
+      thirdParty: newValue,
+      marketing: newValue,
+    });
+  };
+
+  return (
+    <View style={styles.contain}>
+      <Header title="회원가입" onBackPress={handleBack} shadow={false} />
+      <View style={styles.container}>
+        <View style={styles.progressBarContainer}>
+          <View style={styles.progressBarBackground}>
+            <View style={styles.progressBar} />
+          </View>
+          <Text style={styles.progressText}>약관동의</Text>
+        </View>
+
+        <View style={styles.agreementList}>
+          <TouchableOpacity style={styles.checkboxContainer} onPress={toggleAll}>
+            <Icon
+              name={allChecked ? 'checkmark-circle' : 'checkmark-circle-outline'}
+              size={35}
+              color={allChecked ? colors.light.main : colors.light.gray2}
+              style={{ marginTop: 5 }}
+            />
+            <Text style={styles.checkboxText}>전체 약관에 동의합니다.</Text>
+          </TouchableOpacity>
+
+          <View style={styles.separator} />
+
+          {[
+            { key: 'terms', label: '(필수) 이용 약관 동의' },
+            { key: 'privacy', label: '(필수) 개인정보 수집 및 이용 약관 동의' },
+            { key: 'thirdParty', label: '(선택) 제 3자 정보 제공 동의' },
+            { key: 'marketing', label: '(선택) 마케팅 활용 동의' },
+          ].map((item) => (
+            <TouchableOpacity
+              key={item.key}
+              style={styles.checkboxContainer}
+              onPress={() => toggleAgreement(item.key as keyof typeof agreements)}
+            >
+              <Icon
+                name={
+                  agreements[item.key as keyof typeof agreements]
+                    ? 'checkmark-circle'
+                    : 'checkmark-circle-outline'
+                }
+                size={35}
+                color={
+                  agreements[item.key as keyof typeof agreements]
+                    ? colors.light.main
+                    : colors.light.gray2
+                }
+                style={{ marginTop: 5 }}
+              />
+              <Text style={styles.checkboxText2}>
+                <Text style={item.label.includes('(필수)') ? styles.required : styles.optional}>
+                  {item.label.split(')')[0]})
+                </Text>
+                {item.label.split(')')[1]}
+              </Text>
+              <Icon name="add" size={21} color={colors.light.gray1} />
+            </TouchableOpacity>
+          ))}
+          <KkButton
+            style={styles.nextButton}
+            label="다음"
+            type="disabled"
+            size="large"
+            onPress={() => {}}
+            shadow
+          />
+        </View>
+      </View>
+    </View>
+  );
 }
