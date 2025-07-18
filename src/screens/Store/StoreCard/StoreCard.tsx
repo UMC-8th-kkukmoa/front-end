@@ -4,11 +4,11 @@ import styles from './StoreCard.style';
 import Arrow from '../../../assets/images/store/arrow.svg';
 import Like from '../../../assets/images/store/like.svg';
 import Unlike from '../../../assets/images/store/unlike.svg';
-import FoodIcon from '../../../assets/images/store/food.svg';
-import CafeIcon from '../../../assets/images/store/cafe.svg';
-import SalonIcon from '../../../assets/images/store/salon.svg';
-import EducationIcon from '../../../assets/images/store/education.svg';
-import ExerciseIcon from '../../../assets/images/store/exercise.svg';
+import FoodIcon from '../../../assets/images/store/food-small.svg';
+import CafeIcon from '../../../assets/images/store/cafe-small.svg';
+import SalonIcon from '../../../assets/images/store/salon-small.svg';
+import EducationIcon from '../../../assets/images/store/education-small.svg';
+import ExerciseIcon from '../../../assets/images/store/exercise-small.svg';
 
 // 문자열 → SVG 컴포넌트 매핑
 const categoryIconMap: Record<string, React.FC<any>> = {
@@ -43,7 +43,7 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
 
       {CategoryIcon && (
         <View style={styles.categoryBadge}>
-          <CategoryIcon width={55} />
+          <CategoryIcon />
         </View>
       )}
 

@@ -17,9 +17,13 @@ export default StyleSheet.create({
   },
   categoryBadge: {
     position: 'absolute',
-    top: 2,
-    left: 10,
-    elevation: 3,
+    top: 12,
+    left: 15,
+    shadowColor: 'rgb(108, 49, 49)',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 3,
+    elevation: 4,
   },
   content: {
     paddingHorizontal: 20,
