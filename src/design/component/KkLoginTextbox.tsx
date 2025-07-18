@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '../colors';
 
 export type TextboxVariant = 'primary' | 'secondary';
-type Size = 'large' | 'small';
+type Size = 'large' | 'small' | 'searchbar';
 type InputType = 'text' | 'email' | 'password' | 'date';
 
 interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
@@ -71,6 +71,16 @@ const sizeStyles = StyleSheet.create({
   },
   small: {
     width: 222,
+    height: 48,
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  searchbar: {
+    width: 360,
     height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
