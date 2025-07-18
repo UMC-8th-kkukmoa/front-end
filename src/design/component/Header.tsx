@@ -10,8 +10,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-
-    elevation: 4,
   },
   backButton: {
     width: 40,
@@ -31,11 +29,23 @@ const styles = StyleSheet.create({
 type HeaderProps = {
   title: string;
   onBackPress: () => void;
+  shadow?: boolean;
 };
 
-export default function Header({ title, onBackPress }: HeaderProps) {
+export default function Header({ title, onBackPress, shadow }: HeaderProps) {
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        shadow !== false && {
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOpacity: 0.1,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 3,
+        },
+      ]}
+    >
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
         <Text style={styles.backArrow}>←</Text>
       </TouchableOpacity>
@@ -44,3 +54,7 @@ export default function Header({ title, onBackPress }: HeaderProps) {
     </View>
   );
 }
+
+Header.defaultProps = {
+  shadow: true,
+};
