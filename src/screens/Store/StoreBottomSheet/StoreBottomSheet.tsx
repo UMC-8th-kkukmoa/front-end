@@ -6,7 +6,7 @@ import MapPin from '../../../assets/images/store/mappin.svg';
 import MapButton from '../../../assets/images/store/mapbutton.svg';
 import StoreCard from '../StoreCard/StoreCard';
 
-// 더미데이터 (5)
+// 더미데이터 (10)
 const mockStores = [
   {
     id: '1',
@@ -42,7 +42,7 @@ const mockStores = [
     id: '4',
     name: '브레드마루 신촌본점',
     imageUrl: 'https://picsum.photos/200/140?4',
-    category: '운동과건강',
+    category: '운동/건강',
     distance: '3.42 km',
     time: '07:30 ~ 19:00',
     reviewCount: 34,
@@ -58,6 +58,56 @@ const mockStores = [
     reviewCount: 18,
     bookmarkCount: 12,
   },
+  {
+    id: '6',
+    name: '헬시핏짐 강남점',
+    imageUrl: 'https://picsum.photos/200/140?6',
+    category: '운동/건강',
+    distance: '2.45 km',
+    time: '06:00 ~ 23:00',
+    reviewCount: 50,
+    bookmarkCount: 40,
+  },
+  {
+    id: '7',
+    name: '헤어클래식 명동점',
+    imageUrl: 'https://picsum.photos/200/140?7',
+    category: '미용',
+    distance: '1.95 km',
+    time: '10:00 ~ 20:00',
+    reviewCount: 12,
+    bookmarkCount: 9,
+  },
+  {
+    id: '8',
+    name: '스터디팩토리 건대점',
+    imageUrl: 'https://picsum.photos/200/140?8',
+    category: '교육',
+    distance: '0.74 km',
+    time: '08:00 ~ 22:00',
+    reviewCount: 27,
+    bookmarkCount: 18,
+  },
+  {
+    id: '9',
+    name: '에그버거 서초점',
+    imageUrl: 'https://picsum.photos/200/140?9',
+    category: '음식점',
+    distance: '3.22 km',
+    time: '11:00 ~ 21:30',
+    reviewCount: 30,
+    bookmarkCount: 21,
+  },
+  {
+    id: '10',
+    name: '루프탑카페 이화여대점',
+    imageUrl: 'https://picsum.photos/200/140?10',
+    category: '카페',
+    distance: '1.11 km',
+    time: '09:30 ~ 22:00',
+    reviewCount: 16,
+    bookmarkCount: 25,
+  },
 ];
 
 function BottomSheetHandle() {
@@ -68,7 +118,11 @@ function BottomSheetHandle() {
   );
 }
 
-function StoreBottomSheet() {
+type Props = {
+  selectedCategory: string | null;
+};
+
+function StoreBottomSheet({ selectedCategory }: Props) {
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['10%', '80%'], []);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
@@ -106,6 +160,21 @@ function StoreBottomSheet() {
       [id]: !prev[id],
     }));
   };
+  // 카테고리 필터링 & 거리 순 정렬
+  const filteredAndSortedStores = useMemo(() => {
+    const filtered = !selectedCategory
+      ? mockStores
+      : mockStores.filter((store) => store.category === selectedCategory);
+
+    const sorted = filtered
+      .map((store) => ({
+        ...store,
+        distanceValue: parseFloat(store.distance.replace(' km', '')),
+      }))
+      .sort((a, b) => a.distanceValue - b.distanceValue);
+
+    return sorted;
+  }, [selectedCategory]);
 
   // 가게 리스트 카드
   const renderItem = ({ item }: { item: (typeof mockStores)[0] }) => (
@@ -124,6 +193,7 @@ function StoreBottomSheet() {
         handleStyle={styles.bottomSheetHandle}
         enableContentPanningGesture={false}
         handleComponent={BottomSheetHandle}
+        style={{ flex: 1 }}
       >
         <View style={styles.header}>
           <MapPin />
@@ -131,10 +201,10 @@ function StoreBottomSheet() {
         </View>
 
         <BottomSheetFlatList
-          data={mockStores}
+          data={filteredAndSortedStores}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContentContainer}
+          contentContainerStyle={{ ...styles.listContentContainer, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled
         />

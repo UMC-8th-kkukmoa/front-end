@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import styles from './CategoryTabs.style';
 // icon
@@ -14,38 +14,21 @@ import ExerciseIcon from '../../../assets/images/store/exercise.svg';
 import ExerciseIconActive from '../../../assets/images/store/exercise2.svg';
 
 const categoryData = [
-  {
-    name: '음식점',
-    icon: FoodIcon,
-    selectedIcon: FoodIconActive,
-  },
-  {
-    name: '카페',
-    icon: CafeIcon,
-    selectedIcon: CafeIconActive,
-  },
-  {
-    name: '미용',
-    icon: SalonIcon,
-    selectedIcon: SalonIconActive,
-  },
-  {
-    name: '교육',
-    icon: EducationIcon,
-    selectedIcon: EducationIconActive,
-  },
-  {
-    name: '운동/건강',
-    icon: ExerciseIcon,
-    selectedIcon: ExerciseIconActive,
-  },
+  { name: '음식점', icon: FoodIcon, selectedIcon: FoodIconActive },
+  { name: '카페', icon: CafeIcon, selectedIcon: CafeIconActive },
+  { name: '미용', icon: SalonIcon, selectedIcon: SalonIconActive },
+  { name: '교육', icon: EducationIcon, selectedIcon: EducationIconActive },
+  { name: '운동/건강', icon: ExerciseIcon, selectedIcon: ExerciseIconActive },
 ];
 
-function CategoryTabs() {
-  const [selected, setSelected] = useState<string | null>('음식점');
+type Props = {
+  selected: string | null;
+  onSelect: (name: string | null) => void;
+};
 
+function CategoryTabs({ selected, onSelect }: Props) {
   const handleSelect = (name: string) => {
-    setSelected((prev) => (prev === name ? null : name));
+    onSelect(selected === name ? null : name);
   };
 
   return (

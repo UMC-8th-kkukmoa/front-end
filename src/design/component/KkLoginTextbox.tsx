@@ -80,7 +80,7 @@ const sizeStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   searchbar: {
-    width: 360,
+    width: 321,
     height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
