@@ -14,7 +14,7 @@ import ExerciseIcon from '../../../assets/images/store/exercise-small.svg';
 const categoryIconMap: Record<string, React.FC<any>> = {
   카페: CafeIcon,
   음식점: FoodIcon,
-  운동과건강: ExerciseIcon,
+  '운동/건강': ExerciseIcon,
   교육: EducationIcon,
   미용: SalonIcon,
 };
