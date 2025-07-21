@@ -26,7 +26,8 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
     "expo-web-browser": "~14.2.0",
-    "react": "^19.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-native": "^0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-modal-datetime-picker": "^18.0.0",
@@ -66,7 +67,7 @@
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.0",
     "react-native-svg-transformer": "^1.5.1",
-    "react-test-renderer": "^19.1.0",
+    "react-test-renderer": "19.0.0",
     "typescript": "~5.8.3"
   },
   "lint-staged": {
