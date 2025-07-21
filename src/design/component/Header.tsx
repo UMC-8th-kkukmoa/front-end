@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../colors';
+import ArrowBackIcon from '../../assets/images/arrow_back.svg';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,10 +19,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backArrow: {
-    fontSize: 24,
-    fontFamily: 'Pretendard-SemiBold',
-  },
   title: {
     fontSize: 20,
     fontFamily: 'Pretendard-Medium',
@@ -37,7 +34,7 @@ export default function Header({ title, onBackPress }: HeaderProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-        <Text style={styles.backArrow}>←</Text>
+        <ArrowBackIcon color={colors.light.black} width={24} height={24} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <View style={{ width: 40 }} />

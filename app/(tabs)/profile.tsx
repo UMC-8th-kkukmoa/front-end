@@ -1,10 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import MyPageScreen from '../../src/screens/mypage/MyPageScreen';
 
 export default function ProfileScreen() {
-  return (
-    <View>
-      <Text>Profile</Text>
-    </View>
-  );
+  return <MyPageScreen />;
 }
