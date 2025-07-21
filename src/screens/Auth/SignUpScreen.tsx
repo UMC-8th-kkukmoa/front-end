@@ -7,8 +7,9 @@ import colors from '../../design/colors';
 
 const styles = StyleSheet.create({
   progressBarContainer: {
-    marginTop: 24,
     alignItems: 'center',
+    padding: 23,
+    marginBottom: 20,
   },
   progressBarBackground: {
     width: '100%',
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.light.main,
     overflow: 'hidden',
-    marginBottom: 4,
+    marginBottom: 10,
   },
   progressText: {
     fontSize: 12.64,
@@ -25,11 +26,12 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 1,
+    paddingTop: 25,
   },
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: 'colors.light.white',
+    backgroundColor: colors.light.white,
     paddingHorizontal: 16,
   },
   form: {
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 30,
+    paddingBottom: 36,
   },
   message: {
     position: 'absolute',
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     marginTop: 6,
     marginLeft: 18,
-    color: '#FF8246',
+    color: colors.light.main,
     fontSize: 12,
   },
   messageSuccess: {
@@ -60,12 +62,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     marginTop: 6,
     marginLeft: 18,
-    color: '#888888',
+    color: colors.light.gray2,
     fontSize: 12,
   },
   button: {
     marginHorizontal: 16,
     marginTop: 24,
+    marginBottom: 70,
   },
 });
 
@@ -74,14 +77,14 @@ export default function SignUpScreen() {
   const [isNicknameError, setIsNicknameError] = useState(true);
   const [date, setDate] = useState('');
   const [email, setEmail] = useState('');
-  const [isEmailError, setIsEmailError] = useState(true);
+  const [isEmailError, setIsEmailError] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [isVerificationError, setIsVerificationError] = useState(true);
+  const [isVerificationError, setIsVerificationError] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [isPasswordError, setIsPasswordError] = useState(false);
+  const [isPasswordError, setIsPasswordError] = useState(true);
 
-  // 임시 (린트 오류)
+  // // 임시 (린트 오류)
   setIsEmailError(email === '' || !/\S+@\S+\.\S+/.test(email));
   setIsNicknameError(nickname === '' || nickname.length < 2);
   setIsVerificationError(verificationCode === '' || verificationCode.length < 6);
@@ -94,7 +97,7 @@ export default function SignUpScreen() {
       <ScrollView style={styles.container}>
         <View style={styles.progressBarContainer}>
           <View style={styles.progressBarBackground} />
-          <Text style={styles.progressText}>약관동의</Text>
+          <Text style={styles.progressText}>개인정보 입력</Text>
         </View>
 
         {/* 닉네임 입력 */}
@@ -114,13 +117,14 @@ export default function SignUpScreen() {
             />
             {isNicknameError && <Text style={styles.message}>이미 사용중인 닉네임입니다.</Text>}
           </View>
-          <KkButton
-            style={{ marginTop: 26.3 }}
-            label="중복 확인"
-            type={isNicknameError ? 'primary' : 'disabled'}
-            size="small"
-            onPress={() => {}}
-          />
+          <View style={{ marginTop: 26.3 }}>
+            <KkButton
+              label="중복 확인"
+              type={isNicknameError ? 'primary' : 'disabled'}
+              size="small"
+              onPress={() => {}}
+            />
+          </View>
         </View>
 
         {/* 생년월일 입력 */}
@@ -131,7 +135,7 @@ export default function SignUpScreen() {
             value={date}
             onChangeText={setDate}
             type="date"
-            variant={date ? 'secondary' : 'primary'}
+            variant={date ? 'secondary' : 'secondary'}
             enabled
             error={false}
             required
@@ -155,13 +159,14 @@ export default function SignUpScreen() {
             />
             {isEmailError && <Text style={styles.message}>이메일 형식이 올바르지 않습니다.</Text>}
           </View>
-          <KkButton
-            style={{ marginTop: 26.3 }}
-            label="인증받기"
-            type={email ? 'primary' : 'disabled'}
-            size="small"
-            onPress={() => {}}
-          />
+          <View style={{ marginTop: 26.3 }}>
+            <KkButton
+              label="인증받기"
+              type={email ? 'primary' : 'disabled'}
+              size="small"
+              onPress={() => {}}
+            />
+          </View>
         </View>
 
         {/* 인증번호 입력 */}
@@ -183,13 +188,14 @@ export default function SignUpScreen() {
               <Text style={styles.message}>올바르지 않은 인증번호입니다.</Text>
             )}
           </View>
-          <KkButton
-            style={{ marginTop: 24 }}
-            label="인증받기"
-            type={verificationCode ? 'primary' : 'disabled'}
-            size="small"
-            onPress={() => {}}
-          />
+          <View style={{ marginTop: 26.3 }}>
+            <KkButton
+              label="인증받기"
+              type={verificationCode ? 'primary' : 'disabled'}
+              size="small"
+              onPress={() => {}}
+            />
+          </View>
         </View>
 
         {/* 비밀번호 입력 */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextInput,
   View,
@@ -10,11 +10,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import colors from '../colors';
 
 export type TextboxVariant = 'primary' | 'secondary';
-type Size = 'large' | 'small';
+type Size = 'large' | 'small' | 'searchbar';
 type InputType = 'text' | 'email' | 'password' | 'date';
 
 interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
@@ -70,6 +70,16 @@ const sizeStyles = StyleSheet.create({
   },
   small: {
     width: 222,
+    height: 48,
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  searchbar: {
+    width: 321,
     height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
@@ -165,6 +175,23 @@ export default function KkLoginTextbox({
     }
   };
 
+  const showDatePicker = () => {
+    if (enabled) {
+      DateTimePickerAndroid.open({
+        value: date,
+        mode: 'date',
+        display: 'default',
+        onChange: handleDateChange,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (showPicker && enabled) {
+      showDatePicker();
+    }
+  }, [showPicker, enabled]);
+
   // 날짜 타입일 때 표시할 텍스트
   const getDisplayValue = () => {
     if (isDate) {
@@ -253,10 +280,6 @@ export default function KkLoginTextbox({
         <Text style={[styles.message, { color: error ? colors.light.main : colors.light.gray2 }]}>
           {message}
         </Text>
-      )}
-
-      {showPicker && enabled && (
-        <DateTimePicker value={date} mode="date" display="default" onChange={handleDateChange} />
       )}
     </View>
   );

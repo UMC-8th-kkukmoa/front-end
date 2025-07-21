@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 210,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.light.white,
     paddingHorizontal: 24,
   },
   logo: {

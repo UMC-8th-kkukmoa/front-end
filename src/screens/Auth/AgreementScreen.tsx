@@ -8,6 +8,7 @@ import { KkButton } from '../../design/component/KkButton';
 const styles = StyleSheet.create({
   contain: {
     flex: 1,
+    paddingTop: 25,
     backgroundColor: colors.light.white,
   },
   container: {
@@ -17,8 +18,8 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   progressBarContainer: {
-    marginTop: 24,
-    alignItems: 'center',
+    marginTop: 15,
+    alignItems: 'flex-start',
   },
   progressBarBackground: {
     width: '100%',
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.light.gray1,
     overflow: 'hidden',
-    marginBottom: 4,
+    marginBottom: 10,
   },
   progressBar: {
     width: '50%',
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     fontSize: 12.64,
     fontWeight: '600',
     color: colors.light.main,
+    paddingLeft: 55,
   },
   agreementList: {
     marginTop: 32,
@@ -81,12 +83,12 @@ const styles = StyleSheet.create({
 });
 
 export default function AgreementScreen() {
-  const [allChecked, setAllChecked] = useState(true);
+  const [allChecked, setAllChecked] = useState(false);
   const [agreements, setAgreements] = useState({
-    terms: true,
-    privacy: true,
-    thirdParty: true,
-    marketing: true,
+    terms: false,
+    privacy: false,
+    thirdParty: false,
+    marketing: false,
   });
 
   const handleBack = () => {
@@ -95,7 +97,7 @@ export default function AgreementScreen() {
     /* eslint-enable no-console */
   };
 
-  // const isAllRequiredChecked = agreements.terms && agreements.privacy;
+  const isAllRequiredChecked = agreements.terms && agreements.privacy;
 
   const toggleAgreement = (key: keyof typeof agreements) => {
     const updated = { ...agreements, [key]: !agreements[key] };
@@ -176,7 +178,7 @@ export default function AgreementScreen() {
           <KkButton
             style={styles.nextButton}
             label="다음"
-            type="disabled"
+            type={isAllRequiredChecked ? 'primary' : 'disabled'}
             size="large"
             onPress={() => {}}
             shadow
