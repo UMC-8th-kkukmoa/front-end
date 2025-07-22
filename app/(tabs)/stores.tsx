@@ -1,10 +1,3 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import StoreScreen from '../../src/screens/Store/StoreScreen/StoreScreen';
 
-export default function StoresScreen() {
-  return (
-    <View>
-      <Text>Stores</Text>
-    </View>
-  );
-}
+export default StoreScreen;

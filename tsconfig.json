@@ -1,7 +1,4 @@
 {
   "extends": "@react-native/typescript-config",
-  "exclude": [
-    "node_modules",
-    ".eslintrc.js"
-  ]
+  "exclude": ["node_modules", ".eslintrc.js"]
 }
