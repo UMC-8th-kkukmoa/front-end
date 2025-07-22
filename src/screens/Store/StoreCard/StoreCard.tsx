@@ -69,7 +69,10 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
 
         <TouchableOpacity
           style={styles.heart}
-          onPress={() => onToggleLike(item.id)}
+          onPress={(e) => {
+            e.stopPropagation?.();
+            onToggleLike(item.id);
+          }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           {isLiked ? <Like /> : <Unlike />}
