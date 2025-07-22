@@ -24,6 +24,7 @@ export default StyleSheet.create({
     position: 'relative',
   },
   textBox: {
+    width: '95%',
     borderRadius: 50,
     backgroundColor: colors.light.white,
     shadowColor: 'rgb(108, 49, 49)',

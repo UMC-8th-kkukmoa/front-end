@@ -29,7 +29,7 @@ export default function SearchScreen() {
             label=""
             placeholder="매장을 검색해보세요."
             type="text"
-            size="searchbar"
+            size="small"
             variant="primary"
             enabled
             error={false}
