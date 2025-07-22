@@ -2,8 +2,8 @@ import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import styles from './StoreBottomSheet.style';
-import MapPin from '../../../assets/images/store/mappin.svg';
-import MapButton from '../../../assets/images/store/mapbutton.svg';
+import MapPin from '../../../assets/images/mappin.svg';
+import MapButton from '../../../assets/images/mapbutton.svg';
 import StoreCard from '../StoreCard/StoreCard';
 
 // 더미데이터 (10)

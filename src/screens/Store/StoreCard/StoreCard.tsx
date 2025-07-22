@@ -1,14 +1,15 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './StoreCard.style';
-import Arrow from '../../../assets/images/store/arrow.svg';
-import Like from '../../../assets/images/store/like.svg';
-import Unlike from '../../../assets/images/store/unlike.svg';
-import FoodIcon from '../../../assets/images/store/food-small.svg';
-import CafeIcon from '../../../assets/images/store/cafe-small.svg';
-import SalonIcon from '../../../assets/images/store/salon-small.svg';
-import EducationIcon from '../../../assets/images/store/education-small.svg';
-import ExerciseIcon from '../../../assets/images/store/exercise-small.svg';
+import Arrow from '../../../assets/images/arrow.svg';
+import Like from '../../../assets/images/like.svg';
+import Unlike from '../../../assets/images/unlike.svg';
+import FoodIcon from '../../../assets/images/food.svg';
+import CafeIcon from '../../../assets/images/cafe.svg';
+import SalonIcon from '../../../assets/images/salon.svg';
+import EducationIcon from '../../../assets/images/education.svg';
+import ExerciseIcon from '../../../assets/images/exercise.svg';
+import colors from '../../../design/colors';
 
 // 문자열 → SVG 컴포넌트 매핑
 const categoryIconMap: Record<string, React.FC<any>> = {
@@ -43,7 +44,8 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
 
       {CategoryIcon && (
         <View style={styles.categoryBadge}>
-          <CategoryIcon />
+          <CategoryIcon width={12} height={12} color={colors.light.sub} />
+          <Text style={styles.categoryLabel}>{item.category}</Text>
         </View>
       )}
 

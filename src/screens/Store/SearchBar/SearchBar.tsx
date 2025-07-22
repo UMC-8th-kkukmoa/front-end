@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './SearchBar.style';
-import SearchBarSvg from '../../../assets/images/store/search-bar.svg';
+import SearchBarSvg from '../../../assets/images/search-bar.svg';
 
 function SearchBar() {
   const router = useRouter();

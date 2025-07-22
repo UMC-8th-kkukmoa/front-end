@@ -1,24 +1,20 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import styles from './CategoryTabs.style';
 // icon
-import FoodIcon from '../../../assets/images/store/food.svg';
-import FoodIconActive from '../../../assets/images/store/food2.svg';
-import CafeIcon from '../../../assets/images/store/cafe.svg';
-import CafeIconActive from '../../../assets/images/store/cafe2.svg';
-import SalonIcon from '../../../assets/images/store/salon.svg';
-import SalonIconActive from '../../../assets/images/store/salon2.svg';
-import EducationIcon from '../../../assets/images/store/education.svg';
-import EducationIconActive from '../../../assets/images/store/education2.svg';
-import ExerciseIcon from '../../../assets/images/store/exercise.svg';
-import ExerciseIconActive from '../../../assets/images/store/exercise2.svg';
+import FoodIcon from '../../../assets/images/food.svg';
+import CafeIcon from '../../../assets/images/cafe.svg';
+import SalonIcon from '../../../assets/images/salon.svg';
+import EducationIcon from '../../../assets/images/education.svg';
+import ExerciseIcon from '../../../assets/images/exercise.svg';
+import colors from '../../../design/colors';
 
 const categoryData = [
-  { name: '음식점', icon: FoodIcon, selectedIcon: FoodIconActive },
-  { name: '카페', icon: CafeIcon, selectedIcon: CafeIconActive },
-  { name: '미용', icon: SalonIcon, selectedIcon: SalonIconActive },
-  { name: '교육', icon: EducationIcon, selectedIcon: EducationIconActive },
-  { name: '운동/건강', icon: ExerciseIcon, selectedIcon: ExerciseIconActive },
+  { name: '음식점', icon: FoodIcon },
+  { name: '카페', icon: CafeIcon },
+  { name: '미용', icon: SalonIcon },
+  { name: '교육', icon: EducationIcon },
+  { name: '운동/건강', icon: ExerciseIcon },
 ];
 
 type Props = {
@@ -39,16 +35,26 @@ function CategoryTabs({ selected, onSelect }: Props) {
     >
       {categoryData.map((category) => {
         const isSelected = selected === category.name;
-        const IconComponent = isSelected ? category.selectedIcon : category.icon;
+        const IconComponent = category.icon;
+        const iconColor = isSelected ? colors.light.white : colors.light.sub;
+        const textColor = isSelected ? colors.light.white : colors.light.gray2;
 
         return (
           <TouchableOpacity
             key={category.name}
-            style={styles.tab}
+            style={[
+              styles.tab,
+              {
+                backgroundColor: isSelected ? colors.light.sub : colors.light.white,
+              },
+            ]}
             onPress={() => handleSelect(category.name)}
             activeOpacity={0.8}
           >
-            <IconComponent />
+            <View style={styles.iconWrapper}>
+              <IconComponent color={iconColor} />
+              <Text style={[styles.label, { color: textColor }]}>{category.name}</Text>
+            </View>
           </TouchableOpacity>
         );
       })}
