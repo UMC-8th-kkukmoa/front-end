@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import styles from './MapFloatingButtons.style';
-import HeartIcon from '../../../assets/images/store/heart.svg';
-import PinIcon from '../../../assets/images/store/location.svg';
-import TargetIcon from '../../../assets/images/store/target.svg';
+import HeartIcon from '../../../assets/images/heart.svg';
+import PinIcon from '../../../assets/images/location.svg';
+import TargetIcon from '../../../assets/images/target.svg';
 
 function MapFloatingButtons() {
   return (

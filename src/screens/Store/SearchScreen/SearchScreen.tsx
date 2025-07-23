@@ -3,8 +3,8 @@ import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KkLoginTextbox from '../../../design/component/KkLoginTextbox';
-import SearchIcon from '../../../assets/images/store/search-icon.svg';
-import BackIcon from '../../../assets/images/store/left-arrow.svg';
+import SearchIcon from '../../../assets/images/search-icon.svg';
+import BackIcon from '../../../assets/images/left-arrow.svg';
 import styles from './SearchScreen.style';
 
 export default function SearchScreen() {
