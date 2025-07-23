@@ -1,28 +1,41 @@
 import { StyleSheet } from 'react-native';
+import colors from '../../../design/colors';
 
 export default StyleSheet.create({
   card: {
-    width: 160,
-    height: 180,
-    borderRadius: 12,
-    backgroundColor: '#f9f9f9',
-    marginRight: 12,
+    width: 144,
+    height: 167,
+    borderRadius: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3, // Android 그림자
+    position: 'relative',
+    backgroundColor: colors.light.gray1_35,
   },
   image: {
     width: '100%',
-    height: 120,
+    height: '100%',
     resizeMode: 'cover',
+    position: 'absolute',
+  },
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    height: 57,
+    width: '100%',
+  },
+  textContainer: {
+    position: 'absolute',
+    top: 120,
+    left: 11,
+    right: 11,
+  },
+  name: {
+    color: colors.light.white,
+    fontWeight: '700',
+    fontSize: 13,
+    marginBottom: 2,
   },
   text: {
-    paddingHorizontal: 8,
-    paddingTop: 8,
-    fontSize: 14,
-    color: '#333',
+    color: colors.light.white,
+    fontSize: 10,
   },
 });

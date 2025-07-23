@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import styles from './StoreCard.style';
 import Arrow from '../../../assets/images/arrow.svg';
 import Like from '../../../assets/images/like.svg';
@@ -36,10 +37,11 @@ type Props = {
 };
 
 function StoreCard({ item, isLiked, onToggleLike }: Props) {
+  const router = useRouter();
   const CategoryIcon = categoryIconMap[item.category];
 
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.id}`)}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
       {CategoryIcon && (

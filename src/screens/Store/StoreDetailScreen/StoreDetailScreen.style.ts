@@ -1,66 +1,98 @@
 import { StyleSheet } from 'react-native';
+import colors from '../../../design/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingTop: 48,
   },
+
+  // 스토어 사진
+  storeImageArea: {
+    height: 221,
+    backgroundColor: colors.light.gray1_35,
+  },
+
   backButton: {
     position: 'absolute',
-    top: 20,
+    top: 50,
     left: 16,
     zIndex: 10,
   },
-  backArrow: {
-    fontSize: 24,
+
+  infoArea: {
+    flex: 1,
   },
+
+  // 스토어 정보
   storeInfo: {
-    marginTop: 40,
-    marginBottom: 24,
+    padding: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1,
+  },
+  titleSection: {
+    marginBottom: 45,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  storeName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  heartIcon: {
-    fontSize: 20,
-  },
-  reviewCount: {
-    marginTop: 4,
-    marginBottom: 12,
-    color: '#f90',
-  },
-  detailText: {
-    fontSize: 14,
-    color: '#333',
     marginBottom: 4,
   },
+  storeName: {
+    fontSize: 22,
+    fontWeight: '700',
+    minWidth: 260,
+  },
+  reviewCount: {
+    marginTop: 6,
+    fontSize: 11,
+    color: colors.light.main,
+  },
+
+  detailSection: {
+    gap: 15,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  detailLabel: {
+    color: colors.light.gray2,
+    fontWeight: '400',
+    fontSize: 13,
+    marginRight: 10,
+  },
+  detailText: {
+    color: colors.light.black,
+    fontWeight: '400',
+    fontSize: 13,
+  },
+
+  // 리뷰
   reviewSection: {
-    marginTop: 16,
+    paddingTop: 24,
   },
   reviewHeader: {
+    paddingHorizontal: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 32,
   },
   reviewTitle: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
   },
+  buttonWapper: {
+    alignItems: 'center',
+    paddingHorizontal: 11,
+    paddingVertical: 3,
+    backgroundColor: colors.light.sub,
+    borderRadius: 20,
+  },
   seeAllButton: {
-    backgroundColor: '#ffe0cc',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    color: '#f90',
-    fontWeight: '600',
+    fontSize: 9,
+    color: colors.light.white,
+    fontWeight: '500',
   },
 });
