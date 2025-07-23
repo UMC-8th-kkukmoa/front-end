@@ -141,7 +141,17 @@ export default function CustomDropdown({ items, value, onSelect }: CustomDropdow
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.dropdown} onPress={() => setOpen(!open)} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={styles.dropdown}
+        onPress={() => {
+          setTempValue(value);
+          setOpen(true);
+        }}
+        activeOpacity={0.8}
+        accessibilityRole="button"
+        accessibilityLabel={`업종 선택. 현재 선택: ${selectedLabel}`}
+        accessibilityState={{ expanded: open }}
+      >
         <Text style={styles.text}>{selectedLabel}</Text>
         <Text style={styles.arrow}>▼</Text>
       </TouchableOpacity>
