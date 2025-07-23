@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Image, LayoutChangeEvent, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, LayoutChangeEvent, TouchableOpacity, StyleSheet } from 'react-native';
 import colors from '../../design/colors';
 import BarcodeModal from './BarcodeModal';
-
-const couponContainer = require('../../assets/images/coupon-container.png');
+import CouponContainer from '../../assets/images/coupon-container.svg';
+import CouponLogo from '../../assets/images/coupon-logo.svg';
 
 interface CouponCardProps {
   title: string;
@@ -19,14 +19,10 @@ const styles = StyleSheet.create({
   imageWrapper: {
     position: 'relative',
   },
-  image: {
-    width: 343,
-    height: 187,
-  },
   textBox: {
     position: 'absolute',
     top: '50%',
-    left: 90,
+    left: 10,
     width: 123,
     padding: 8,
   },
@@ -76,14 +72,23 @@ export default function CouponCard({ title, shopName, onUse }: CouponCardProps) 
     <>
       <View style={styles.container}>
         <View style={styles.imageWrapper}>
-          <Image source={couponContainer} style={styles.image} resizeMode="contain" />
-
+          <CouponContainer width={343} height={187} />
           <View
             onLayout={onTextBoxLayout}
-            style={[styles.textBox, { transform: [{ translateY: -textBoxHeight / 2 }] }]}
+            style={[
+              styles.textBox,
+              {
+                transform: [{ translateY: -textBoxHeight / 2 }],
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            ]}
           >
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.shopName}>{shopName}</Text>
+            <CouponLogo width={60} height={60} style={{ marginRight: 8 }} />
+            <View>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.shopName}>{shopName}</Text>
+            </View>
           </View>
 
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)} />
