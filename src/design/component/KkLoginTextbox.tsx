@@ -69,6 +69,8 @@ const sizeStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   small: {
+    width: 222,
+    height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 4,
