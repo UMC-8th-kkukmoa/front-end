@@ -14,11 +14,13 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import colors from '../colors';
 
 export type TextboxVariant = 'primary' | 'secondary';
-type Size = 'large' | 'small' | 'searchbar';
+type Size = 'large' | 'small';
 type InputType = 'text' | 'email' | 'password' | 'date';
 
 interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
   style?: StyleProp<ViewStyle>;
+  width: number;
+  height: number;
   label: string;
   type: InputType;
   size: Size;
@@ -59,8 +61,6 @@ const styles = StyleSheet.create({
 
 const sizeStyles = StyleSheet.create({
   large: {
-    width: 333,
-    height: 48,
     borderRadius: 30,
     paddingHorizontal: 21,
     paddingVertical: 4,
@@ -69,18 +69,6 @@ const sizeStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   small: {
-    width: 222,
-    height: 48,
-    borderRadius: 30,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  searchbar: {
-    width: 321,
-    height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 4,
@@ -142,6 +130,8 @@ export default function KkLoginTextbox({
   label,
   variant = 'secondary',
   size = 'large',
+  width = 333,
+  height = 47,
   type = 'text',
   enabled = true,
   error = false,
@@ -220,7 +210,13 @@ export default function KkLoginTextbox({
       )}
 
       <View
-        style={[styles.inputWrapper, sizeStyles[size], getBorderStyle(variant, enabled, error)]}
+        style={[
+          styles.inputWrapper,
+          sizeStyles[size],
+          getBorderStyle(variant, enabled, error),
+          width !== undefined && { width },
+          height !== undefined && { height },
+        ]}
       >
         <TextInput
           style={[styles.input, { color: getTextColor(variant, enabled, error) }]}

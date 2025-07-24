@@ -84,7 +84,7 @@ export default function SignUpScreen() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isPasswordError, setIsPasswordError] = useState(true);
 
-  // // 임시 (린트 오류)
+  // 임시 (린트 오류)
   setIsEmailError(email === '' || !/\S+@\S+\.\S+/.test(email));
   setIsNicknameError(nickname === '' || nickname.length < 2);
   setIsVerificationError(verificationCode === '' || verificationCode.length < 6);
@@ -106,6 +106,8 @@ export default function SignUpScreen() {
             <KkLoginTextbox
               label="닉네임"
               size="small"
+              width={222}
+              height={48}
               value={nickname}
               onChangeText={setNickname}
               placeholder="한글, 영문, 숫자만 입력"
@@ -132,6 +134,8 @@ export default function SignUpScreen() {
           <KkLoginTextbox
             label="생년월일"
             size="large"
+            width={338}
+            height={48}
             value={date}
             onChangeText={setDate}
             type="date"
@@ -148,6 +152,8 @@ export default function SignUpScreen() {
             <KkLoginTextbox
               label="이메일"
               size="small"
+              width={222}
+              height={48}
               value={email}
               onChangeText={setEmail}
               placeholder="이메일을 입력해주세요."
@@ -175,6 +181,8 @@ export default function SignUpScreen() {
             <KkLoginTextbox
               label="인증번호"
               size="small"
+              width={222}
+              height={48}
               value={verificationCode}
               onChangeText={setVerificationCode}
               placeholder="인증번호를 입력해주세요."
@@ -203,6 +211,8 @@ export default function SignUpScreen() {
           <KkLoginTextbox
             label="비밀번호"
             size="large"
+            width={338}
+            height={48}
             value={password}
             onChangeText={setPassword}
             placeholder="비밀번호를 입력해주세요."
@@ -220,6 +230,8 @@ export default function SignUpScreen() {
             <KkLoginTextbox
               label="비밀번호 확인"
               size="large"
+              width={338}
+              height={48}
               value={passwordConfirm}
               onChangeText={setPasswordConfirm}
               placeholder="비밀번호를 입력해주세요."

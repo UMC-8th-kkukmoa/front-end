@@ -65,6 +65,7 @@ export default function LoginScreen() {
         <KkLoginTextbox
           label=""
           size="large"
+          height={56}
           value={email}
           onChangeText={setEmail}
           placeholder="이메일 주소"
@@ -76,6 +77,7 @@ export default function LoginScreen() {
         <KkLoginTextbox
           label=""
           size="large"
+          height={56}
           value={password}
           onChangeText={setPassword}
           placeholder="비밀번호"
