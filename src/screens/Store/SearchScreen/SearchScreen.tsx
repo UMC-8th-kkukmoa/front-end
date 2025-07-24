@@ -28,6 +28,8 @@ export default function SearchScreen() {
           <KkLoginTextbox
             label=""
             placeholder="매장을 검색해보세요."
+            width={324}
+            height={47}
             type="text"
             size="small"
             variant="primary"
