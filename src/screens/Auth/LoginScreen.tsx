@@ -96,6 +96,7 @@ export default function LoginScreen() {
           type={isValid ? 'primary' : 'disabled'}
           size="large"
           onPress={isValid ? handleLogin : () => {}}
+          shadow
         />
       </View>
 
