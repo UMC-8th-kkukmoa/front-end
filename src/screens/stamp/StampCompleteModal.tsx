@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useRouter } from 'expo-router';
 import colors from '../../design/colors';
 
 type StampCompleteModalProps = {
@@ -93,6 +94,13 @@ export default function StampCompleteModal({
   visible,
   onClose,
 }: StampCompleteModalProps): JSX.Element {
+  const router = useRouter();
+
+  const handleGoToCoupon = () => {
+    onClose();
+    router.push('/myCoupon/MyCouponList');
+  };
+
   return (
     <Modal transparent animationType="fade" visible={visible} statusBarTranslucent>
       <View style={styles.overlay}>
@@ -108,7 +116,7 @@ export default function StampCompleteModal({
             <TouchableOpacity style={styles.buttonFirst} onPress={onClose}>
               <Text style={styles.buttonFirstText}>닫기</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonSecond} onPress={onClose}>
+            <TouchableOpacity style={styles.buttonSecond} onPress={handleGoToCoupon}>
               <Text style={styles.buttonSecondText}>받은 쿠폰 보기</Text>
             </TouchableOpacity>
           </View>
