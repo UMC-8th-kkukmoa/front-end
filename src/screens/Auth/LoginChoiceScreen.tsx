@@ -67,9 +67,9 @@ export default function LoginChoiceScreen() {
       </View>
 
       <View style={styles.button}>
-        <KkButton label="카카오 로그인" type="primary" size="large" onPress={() => {}} />
+        <KkButton label="카카오 로그인" type="primary" size="large" shadow onPress={() => {}} />
 
-        <KkButton label="이메일 가입" type="secondary" size="large" onPress={() => {}} />
+        <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
       </View>
 
       <View style={styles.signupContainer}>
