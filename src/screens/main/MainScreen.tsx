@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
 import BellIcon from '../../assets/images/bell.svg';
@@ -7,8 +8,7 @@ import BannerImage from '../../assets/images/banner.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
-import SearchIcon from '../../assets/images/search-icon.svg';
-import KkLoginTextbox from '../../design/component/KkLoginTextbox';
+import SearchBar from '../Store/SearchBar/SearchBar';
 // import { useRouter } from 'expo-router';
 
 // 더미데이터 (10)
@@ -115,63 +115,8 @@ const mockStores = [
   },
 ];
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  topBar: {
-    marginTop: 50,
-    marginHorizontal: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  topButton: {
-    width: 24,
-    height: 24,
-  },
-  location: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  iconRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchRow: {
-    flexDirection: 'row',
-    marginTop: 16,
-    marginHorizontal: 20,
-    alignItems: 'center',
-  },
-  iconBox: {
-    borderWidth: 1,
-    borderColor: '#E65F37',
-    borderRadius: 10,
-    padding: 8,
-    marginRight: 8,
-  },
-  iconWrapper: {},
-  input: {
-    flex: 1,
-  },
-  banner: {
-    width: 357,
-    height: 114,
-    borderRadius: 12,
-    margin: 20,
-    padding: 16,
-    position: 'relative',
-  },
-  cardList: {
-    paddingHorizontal: 16,
-  },
-});
-
 function MainScreen() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [query, setQuery] = useState('');
   // const router = useRouter();
 
   const toggleLike = (id: string) => {
@@ -183,68 +128,58 @@ function MainScreen() {
 
   return (
     <View style={styles.container}>
-      {/* 헤더 */}
-      <View style={styles.topBar}>
-        <MapPinIcon width={24} height={24} />
-        <Text style={styles.location}>용인시 기흥구 신갈동</Text>
-        <View style={styles.iconRow}>
-          <TouchableOpacity>
-            <HeartIcon width={24} height={24} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <BellIcon width={24} height={24} />
-          </TouchableOpacity>
+      {/* 상단 주황색 헤더 */}
+      <View style={styles.headerContainer}>
+        <View style={styles.topBar}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <MapPinIcon width={20} height={20} />
+            <Text style={styles.location}>용인시 기흥구 신갈동</Text>
+          </View>
+          <View style={styles.rightIcons}>
+            <TouchableOpacity>
+              <HeartIcon width={24} height={24} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <BellIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
-      {/* 버튼 & 검색 */}
-      <View>
-        <View>
-          <TouchableOpacity>
+      {/* 흰색 모달 영역 */}
+      <View style={styles.whiteModal}>
+        {/* 검색 영역 */}
+        <View style={styles.searchRow}>
+          <TouchableOpacity style={styles.iconButton}>
             <QRIcon width={24} height={24} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
             <StampIcon width={24} height={24} />
           </TouchableOpacity>
+          <View style={styles.searchBarContainer}>
+            <SearchBar />
+          </View>
         </View>
 
-        <View style={styles.searchRow}>
-          <KkLoginTextbox
-            label=""
-            placeholder="매장을 검색해보세요."
-            width={324}
-            height={47}
-            type="text"
-            size="small"
-            variant="primary"
-            enabled
-            error={false}
-            value={query}
-            onChangeText={setQuery}
-          />
-          <TouchableOpacity style={styles.iconWrapper}>
-            <SearchIcon />
-          </TouchableOpacity>
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
+          {/* 🟨 배너 */}
+          <View style={styles.banner}>
+            <BannerImage width={357} height={114} />
+          </View>
+
+          {/* 🏪 가게 카드 리스트 */}
+          <View style={styles.cardContainer}>
+            {mockStores.map((item) => (
+              <StoreCard
+                key={item.id}
+                item={item}
+                isLiked={likedMap[item.id] === true}
+                onToggleLike={toggleLike}
+              />
+            ))}
+          </View>
+        </ScrollView>
       </View>
-
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
-        {/* 🟨 배너 */}
-        <View style={styles.banner}>
-          <BannerImage width="100%" height={200} />
-        </View>
-
-        {/* 🏪 가게 카드 리스트 */}
-        <FlatList
-          data={mockStores}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <StoreCard item={item} isLiked={likedMap[item.id] === true} onToggleLike={toggleLike} />
-          )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 16 }}
-        />
-      </ScrollView>
     </View>
   );
 }
