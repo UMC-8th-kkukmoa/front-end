@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   TextInput,
   View,
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
+    borderWidth: 1,
   },
   input: {
     flex: 1,
@@ -57,16 +58,28 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginLeft: 18,
   },
+  errorIcon: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: colors.light.main,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
 });
 
 const sizeStyles = StyleSheet.create({
   large: {
+    width: 333,
+    height: 47,
     borderRadius: 30,
     paddingHorizontal: 21,
     paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   small: {
     width: 222,
@@ -74,132 +87,114 @@ const sizeStyles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
 });
-
-const getBorderStyle = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
-  if (error) {
-    return {
-      borderWidth: 1,
-      borderColor: colors.light.sub,
-    };
-  }
-
-  if (!enabled) {
-    return {
-      borderWidth: 1,
-      borderColor: colors.light.gray1,
-    };
-  }
-
-  // enabled 상태에서 variant에 따른 스타일
-  return {
-    borderWidth: 1,
-    borderColor: variant === 'primary' ? colors.light.main : colors.light.gray2,
-  };
-};
-
-const getTextColor = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
-  if (error) {
-    return colors.light.sub;
-  }
-
-  if (!enabled) {
-    return colors.light.gray1;
-  }
-
-  // enabled 상태에서 variant에 따른 스타일
-  return variant === 'primary' ? colors.light.black : colors.light.gray2;
-};
-
-const getPlaceholderColor = (variant: TextboxVariant, enabled: boolean, error: boolean) => {
-  if (error) {
-    return colors.light.sub;
-  }
-
-  if (!enabled) {
-    return colors.light.gray1;
-  }
-
-  // enabled 상태에서는 variant에 관계없이 gray2
-  return colors.light.gray2;
-};
 
 export default function KkLoginTextbox({
   label,
   variant = 'secondary',
   size = 'large',
-  width = 333,
-  height = 47,
+  width,
+  height,
   type = 'text',
   enabled = true,
   error = false,
-  message = '',
-  style = {},
+  message,
+  style,
   editable = true,
   required = false,
   value = '',
-  onChangeText = () => {},
+  onChangeText,
   placeholder = '',
 }: TextboxProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date());
 
   const isPassword = type === 'password';
   const isDate = type === 'date';
   const isInputEditable = editable && !isDate;
 
-  // 날짜 포맷팅 함수
-  const formatDate = (formattedDate: Date) => {
-    return formattedDate.toISOString().split('T')[0]; // yyyy-mm-dd
+  const getColor = (colorType: 'border' | 'text' | 'placeholder' | 'icon') => {
+    if (error) return colors.light.sub;
+    if (!enabled) return colors.light.gray1;
+
+    switch (colorType) {
+      case 'border':
+      case 'icon':
+        return variant === 'primary' ? colors.light.main : colors.light.gray2;
+      case 'text':
+        return variant === 'primary' ? colors.light.black : colors.light.gray2;
+      case 'placeholder':
+        return colors.light.gray2;
+      default:
+        return colors.light.gray2;
+    }
   };
+
+  // 날짜 포맷팅
+  const formatDate = (dateValue: Date) => dateValue.toISOString().split('T')[0];
 
   // 날짜 선택 처리
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowPicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
-      onChangeText?.(formatDate(selectedDate));
-    }
+  const handleDatePress = () => {
+    if (!enabled) return;
+
+    DateTimePickerAndroid.open({
+      value: date,
+      mode: 'date',
+      display: 'default',
+      onChange: (event, selectedDate) => {
+        if (selectedDate) {
+          setDate(selectedDate);
+          onChangeText?.(formatDate(selectedDate));
+        }
+      },
+    });
   };
 
-  const showDatePicker = () => {
-    if (enabled) {
-      DateTimePickerAndroid.open({
-        value: date,
-        mode: 'date',
-        display: 'default',
-        onChange: handleDateChange,
-      });
-    }
-  };
+  // 표시할 값 계산
+  const displayValue = isDate ? value || formatDate(date) : value;
 
-  useEffect(() => {
-    if (showPicker && enabled) {
-      showDatePicker();
-    }
-  }, [showPicker, enabled]);
+  // 아이콘 렌더링
+  const renderIcon = () => {
+    const iconColor = getColor('icon');
 
-  // 날짜 타입일 때 표시할 텍스트
-  const getDisplayValue = () => {
+    if (isPassword) {
+      return (
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          accessibilityLabel={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+          disabled={!enabled}
+        >
+          <Icon
+            name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+            size={20}
+            color={iconColor}
+          />
+        </TouchableOpacity>
+      );
+    }
+
     if (isDate) {
-      return value || formatDate(date);
+      return (
+        <TouchableOpacity
+          onPress={handleDatePress}
+          accessibilityLabel="날짜 선택"
+          disabled={!enabled}
+        >
+          <Icon name="calendar-outline" size={20} color={iconColor} />
+        </TouchableOpacity>
+      );
     }
-    return value;
-  };
 
-  const getIconColor = () => {
     if (error) {
-      return colors.light.sub;
+      return (
+        <View style={styles.errorIcon}>
+          <Text style={styles.errorText}>!</Text>
+        </View>
+      );
     }
-    if (!enabled) {
-      return colors.light.gray1;
-    }
-    return variant === 'primary' ? colors.light.main : colors.light.gray2;
+
+    return null;
   };
 
   return (
@@ -215,63 +210,26 @@ export default function KkLoginTextbox({
         style={[
           styles.inputWrapper,
           sizeStyles[size],
-          getBorderStyle(variant, enabled, error),
-          width !== undefined && { width },
-          height !== undefined && { height },
+          {
+            borderColor: getColor('border'),
+            ...(width && { width }),
+            ...(height && { height }),
+          },
         ]}
       >
         <TextInput
-          style={[styles.input, { color: getTextColor(variant, enabled, error) }]}
+          style={[styles.input, { color: getColor('text') }]}
           editable={isInputEditable}
           secureTextEntry={isPassword && !showPassword}
           keyboardType={type === 'email' ? 'email-address' : 'default'}
-          value={getDisplayValue()}
+          value={displayValue}
           onChangeText={onChangeText}
           pointerEvents={isDate ? 'none' : 'auto'}
           placeholder={placeholder}
-          placeholderTextColor={getPlaceholderColor(variant, enabled, error)}
+          placeholderTextColor={getColor('placeholder')}
         />
 
-        {isPassword && (
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            accessibilityLabel={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
-            accessibilityRole="button"
-            disabled={!enabled}
-          >
-            <Icon
-              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-              size={20}
-              color={getIconColor()}
-            />
-          </TouchableOpacity>
-        )}
-
-        {isDate && (
-          <TouchableOpacity
-            onPress={() => setShowPicker(true)}
-            accessibilityLabel="날짜 선택"
-            accessibilityRole="button"
-            disabled={!enabled}
-          >
-            <Icon name="calendar-outline" size={20} color={getIconColor()} />
-          </TouchableOpacity>
-        )}
-
-        {error && (
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 10,
-              backgroundColor: colors.light.main,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>!</Text>
-          </View>
-        )}
+        {renderIcon()}
       </View>
 
       {message && (
