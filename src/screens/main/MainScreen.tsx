@@ -132,7 +132,7 @@ function MainScreen() {
       <View style={styles.headerContainer}>
         <View style={styles.topBar}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <MapPinIcon width={20} height={20} />
+            <MapPinIcon width={24} height={24} />
             <Text style={styles.location}>용인시 기흥구 신갈동</Text>
           </View>
           <View style={styles.rightIcons}>
@@ -146,9 +146,9 @@ function MainScreen() {
         </View>
       </View>
 
-      {/* 흰색 모달 영역 */}
+      {/* 흰색 모달 */}
       <View style={styles.whiteModal}>
-        {/* 검색 영역 */}
+        {/* 버튼, 검색 */}
         <View style={styles.searchRow}>
           <TouchableOpacity style={styles.iconButton}>
             <QRIcon width={24} height={24} />
@@ -162,12 +162,12 @@ function MainScreen() {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
-          {/* 🟨 배너 */}
+          {/* 배너 (추후 컴포넌트 만들기) */}
           <View style={styles.banner}>
             <BannerImage width={357} height={114} />
           </View>
 
-          {/* 🏪 가게 카드 리스트 */}
+          {/* 가게 카드 리스트 */}
           <View style={styles.cardContainer}>
             {mockStores.map((item) => (
               <StoreCard
