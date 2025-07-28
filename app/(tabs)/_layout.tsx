@@ -2,7 +2,7 @@ import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePathname } from 'expo-router';
+import { Link, usePathname } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
 import StoresIcon from '../../src/assets/images/map-pin.svg';
@@ -68,13 +68,15 @@ function IconWrapper({ isSelected, children }: { isSelected: boolean; children: 
 
 function MainButton() {
   return (
-    <TouchableOpacity>
-      <View style={styles.mainButton}>
-        <View style={styles.mainButtonInner}>
-          <Image source={logoIcon} style={styles.logoIcon} />
+    <Link href="/qrcode" asChild>
+      <TouchableOpacity>
+        <View style={styles.mainButton}>
+          <View style={styles.mainButtonInner}>
+            <Image source={logoIcon} style={styles.logoIcon} />
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 }
 
