@@ -241,7 +241,9 @@ export default function SignUpScreen() {
               required
             />
             {isPasswordError && <Text style={styles.message}>비밀번호가 일치하지 않습니다.</Text>}
-            {!!passwordConfirm && <Text style={styles.messageSuccess}>비밀번호가 일치합니다.</Text>}
+            {!!passwordConfirm && !isPasswordError && password === passwordConfirm && (
+              <Text style={styles.messageSuccess}>비밀번호가 일치합니다.</Text>
+            )}
           </View>
         </View>
 
