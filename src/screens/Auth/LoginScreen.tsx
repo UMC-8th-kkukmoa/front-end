@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import KkLoginTextbox from '../../design/component/KkLoginTextbox';
+import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 
@@ -62,7 +62,7 @@ export default function LoginScreen() {
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />
 
       <View style={styles.form}>
-        <KkLoginTextbox
+        <KkTextbox
           label=""
           size="large"
           width={333}
@@ -75,7 +75,7 @@ export default function LoginScreen() {
           enabled={!!email}
           error={false}
         />
-        <KkLoginTextbox
+        <KkTextbox
           label=""
           size="large"
           width={333}
