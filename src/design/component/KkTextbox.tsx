@@ -75,15 +75,11 @@ const styles = StyleSheet.create({
 
 const sizeStyles = StyleSheet.create({
   large: {
-    width: 333,
-    height: 47,
     borderRadius: 30,
     paddingHorizontal: 21,
     paddingVertical: 4,
   },
   small: {
-    width: 222,
-    height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 4,
