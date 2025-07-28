@@ -9,6 +9,7 @@ if (!baseUrl) {
 
 const apiClient = axios.create({
   baseURL: baseUrl,
+  timeout: 10000,
 });
 
 apiClient.interceptors.request.use(async (config) => {
