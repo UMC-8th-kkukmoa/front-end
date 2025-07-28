@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
-import KkLoginTextbox from '../../design/component/KkLoginTextbox';
+import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
@@ -102,7 +102,7 @@ export default function SignUpScreen() {
         {/* 닉네임 입력 */}
         <View style={styles.form}>
           <View style={{ flex: 1, position: 'relative' }}>
-            <KkLoginTextbox
+            <KkTextbox
               label="닉네임"
               size="small"
               width={222}
@@ -130,7 +130,7 @@ export default function SignUpScreen() {
 
         {/* 생년월일 입력 */}
         <View style={styles.form}>
-          <KkLoginTextbox
+          <KkTextbox
             label="생년월일"
             size="large"
             width={338}
@@ -148,7 +148,7 @@ export default function SignUpScreen() {
         {/* 이메일 인증 */}
         <View style={styles.form}>
           <View style={{ flex: 1, position: 'relative' }}>
-            <KkLoginTextbox
+            <KkTextbox
               label="이메일"
               size="small"
               width={222}
@@ -177,7 +177,7 @@ export default function SignUpScreen() {
         {/* 인증번호 입력 */}
         <View style={styles.form}>
           <View style={{ flex: 1, position: 'relative' }}>
-            <KkLoginTextbox
+            <KkTextbox
               label="인증번호"
               size="small"
               width={222}
@@ -207,7 +207,7 @@ export default function SignUpScreen() {
 
         {/* 비밀번호 입력 */}
         <View style={styles.form}>
-          <KkLoginTextbox
+          <KkTextbox
             label="비밀번호"
             size="large"
             width={338}
@@ -226,7 +226,7 @@ export default function SignUpScreen() {
         {/* 비밀번호 확인 */}
         <View style={styles.form}>
           <View style={{ flex: 1, position: 'relative' }}>
-            <KkLoginTextbox
+            <KkTextbox
               label="비밀번호 확인"
               size="large"
               width={338}

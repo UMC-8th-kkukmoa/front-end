@@ -90,7 +90,7 @@ const sizeStyles = StyleSheet.create({
   },
 });
 
-export default function KkLoginTextbox({
+export default function KkTextbox({
   label,
   variant = 'secondary',
   size = 'large',
@@ -241,7 +241,7 @@ export default function KkLoginTextbox({
   );
 }
 
-KkLoginTextbox.defaultProps = {
+KkTextbox.defaultProps = {
   style: undefined,
   message: undefined,
   required: undefined,
