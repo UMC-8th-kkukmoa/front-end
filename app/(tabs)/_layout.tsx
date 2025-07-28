@@ -3,7 +3,7 @@ import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePathname, router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
 import StoresIcon from '../../src/assets/images/mapicon.svg';
