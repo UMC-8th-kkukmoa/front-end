@@ -142,10 +142,10 @@ export default function AgreementScreen() {
           <View style={styles.separator} />
 
           {[
-            { key: 'terms', label: '(필수) 이용 약관 동의' },
-            { key: 'privacy', label: '(필수) 개인정보 수집 및 이용 약관 동의' },
-            { key: 'thirdParty', label: '(선택) 제 3자 정보 제공 동의' },
-            { key: 'marketing', label: '(선택) 마케팅 활용 동의' },
+            { key: 'terms', type: 'required', label: '이용 약관 동의' },
+            { key: 'privacy', type: 'required', label: '개인정보 수집 및 이용 약관 동의' },
+            { key: 'thirdParty', type: 'optional', label: '제 3자 정보 제공 동의' },
+            { key: 'marketing', type: 'optional', label: '마케팅 활용 동의' },
           ].map((item) => (
             <TouchableOpacity
               key={item.key}
@@ -167,10 +167,10 @@ export default function AgreementScreen() {
                 style={{ marginTop: 5 }}
               />
               <Text style={styles.checkboxText2}>
-                <Text style={item.label.includes('(필수)') ? styles.required : styles.optional}>
-                  {item.label.split(')')[0]})
+                <Text style={item.type === 'required' ? styles.required : styles.optional}>
+                  ({item.type === 'required' ? '필수' : '선택'})
                 </Text>
-                {item.label.split(')')[1]}
+                {item.label}
               </Text>
               <Icon name="add" size={21} color={colors.light.gray1} />
             </TouchableOpacity>
