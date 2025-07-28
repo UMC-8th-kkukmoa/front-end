@@ -2,7 +2,7 @@ import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePathname } from 'expo-router';
+import { usePathname, router } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
 import StoresIcon from '../../src/assets/images/map-pin.svg';
@@ -58,7 +58,7 @@ const tabs: Array<typeof mainButtonSymbol | TabItem> = [
   { name: 'home', uri: '/', icon: HomeIcon },
   { name: 'stores', uri: '/stores', icon: StoresIcon },
   mainButtonSymbol,
-  { name: 'coupons', uri: '/coupons', icon: CouponsIcon },
+  { name: 'coupons', uri: '/giftCard/GiftCardList', icon: CouponsIcon },
   { name: 'profile', uri: '/profile', icon: ProfileIcon },
 ];
 
@@ -90,6 +90,23 @@ export default function Layout() {
           {tabs.map((tab) => {
             if (tab === mainButtonSymbol) {
               return <MainButton key="mainButton" />;
+            }
+
+            if (tab.name === 'coupons') {
+              const selected = pathname === tab.uri;
+              const IconComponent = tab.icon;
+
+              return (
+                <TouchableOpacity key={tab.name} onPress={() => router.push(tab.uri)}>
+                  <IconWrapper isSelected={selected}>
+                    <IconComponent
+                      color={selected ? colors.light.white : colors.light.main}
+                      width={24}
+                      height={24}
+                    />
+                  </IconWrapper>
+                </TouchableOpacity>
+              );
             }
 
             const selected = pathname === tab.uri;
