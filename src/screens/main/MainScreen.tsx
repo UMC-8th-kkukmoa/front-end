@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
@@ -8,8 +9,7 @@ import BannerImage from '../../assets/images/banner.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
-import SearchBar from '../Store/SearchBar/SearchBar';
-// import { useRouter } from 'expo-router';
+import SearchBarIcon from '../../assets/images/search-icon.svg';
 
 // 더미데이터 (10)
 const mockStores = [
@@ -117,7 +117,7 @@ const mockStores = [
 
 function MainScreen() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  // const router = useRouter();
+  const router = useRouter();
 
   const toggleLike = (id: string) => {
     setLikedMap((prev) => ({
@@ -148,23 +148,33 @@ function MainScreen() {
 
       {/* 흰색 모달 */}
       <View style={styles.whiteModal}>
-        {/* 버튼, 검색 */}
         <View style={styles.searchRow}>
-          <TouchableOpacity style={styles.iconButton}>
-            <QRIcon width={24} height={24} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <StampIcon width={24} height={24} />
-          </TouchableOpacity>
+          {/* 버튼 */}
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity style={styles.iconButton}>
+              <QRIcon width={26} height={26} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <StampIcon width={26} height={26} />
+            </TouchableOpacity>
+          </View>
+          {/* 검색 */}
           <View style={styles.searchBarContainer}>
-            <SearchBar />
+            <TouchableOpacity
+              style={styles.searchTouchable}
+              onPress={() => router.push('/search')}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.searchPlaceholder}>매장을 검색해보세요.</Text>
+              <SearchBarIcon width={23} height={23} />
+            </TouchableOpacity>
           </View>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
           {/* 배너 (추후 컴포넌트 만들기) */}
           <View style={styles.banner}>
-            <BannerImage width={357} height={114} />
+            <BannerImage width={378} height={130} />
           </View>
 
           {/* 가게 카드 리스트 */}
