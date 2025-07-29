@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 import colors from '../../design/colors';
 import Header from '../../design/component/Header';
 import { KkButton } from '../../design/component/KkButton';
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
 });
 
 export default function AgreementScreen() {
+  const router = useRouter();
   const [allChecked, setAllChecked] = useState(false);
   const [agreements, setAgreements] = useState({
     terms: false,
@@ -92,9 +94,7 @@ export default function AgreementScreen() {
   });
 
   const handleBack = () => {
-    /* eslint-disable no-console */
-    console.log('뒤로가기 눌림');
-    /* eslint-enable no-console */
+    router.back();
   };
 
   const isAllRequiredChecked = agreements.terms && agreements.privacy;
