@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
@@ -48,7 +48,21 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+
+  const validateEmail = (inputEmail: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(inputEmail);
+  };
+
+  useEffect(() => {
+    if (email && !validateEmail(email)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  }, [email]);
 
   const isValid = email && password;
 
@@ -73,7 +87,7 @@ export default function LoginScreen() {
           type="email"
           variant={email ? 'primary' : 'secondary'}
           enabled={!!email}
-          error={false}
+          error={emailError}
         />
         <KkTextbox
           label=""

@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 
 export default function SignUpScreen() {
   const [nickname, setNickname] = useState('');
-  const [isNicknameError, setIsNicknameError] = useState(true);
+  const [isNicknameError, setIsNicknameError] = useState(false);
   const [date, setDate] = useState('');
   const [email, setEmail] = useState('');
   const [isEmailError, setIsEmailError] = useState(false);
@@ -81,7 +81,7 @@ export default function SignUpScreen() {
   const [isVerificationError, setIsVerificationError] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [isPasswordError, setIsPasswordError] = useState(true);
+  const [isPasswordError, setIsPasswordError] = useState(false);
 
   // 유효성 검사
   useEffect(() => {
