@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
@@ -83,11 +83,22 @@ export default function SignUpScreen() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isPasswordError, setIsPasswordError] = useState(true);
 
-  // 임시 (린트 오류)
-  setIsEmailError(email === '' || !/\S+@\S+\.\S+/.test(email));
-  setIsNicknameError(nickname === '' || nickname.length < 2);
-  setIsVerificationError(verificationCode === '' || verificationCode.length < 6);
-  setIsPasswordError(password !== passwordConfirm);
+  // 유효성 검사
+  useEffect(() => {
+    setIsEmailError(email !== '' && !/\S+@\S+\.\S+/.test(email));
+  }, [email]);
+
+  useEffect(() => {
+    setIsNicknameError(nickname !== '' && nickname.length < 2);
+  }, [nickname]);
+
+  useEffect(() => {
+    setIsVerificationError(verificationCode !== '' && verificationCode.length < 6);
+  }, [verificationCode]);
+
+  useEffect(() => {
+    setIsPasswordError(passwordConfirm !== '' && password !== passwordConfirm);
+  }, [password, passwordConfirm]);
 
   return (
     <View style={styles.headerContainer}>
@@ -121,7 +132,7 @@ export default function SignUpScreen() {
           <View style={{ marginTop: 26.3 }}>
             <KkButton
               label="중복 확인"
-              type={isNicknameError ? 'primary' : 'disabled'}
+              type={nickname && !isNicknameError ? 'primary' : 'disabled'}
               size="small"
               onPress={() => {}}
             />
