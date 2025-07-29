@@ -83,7 +83,7 @@ export default function SignUpScreen() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isPasswordError, setIsPasswordError] = useState(false);
 
-  // 유효성 검사
+  // 유효성 검사 (api 연동 전 임시)
   useEffect(() => {
     setIsEmailError(email !== '' && !/\S+@\S+\.\S+/.test(email));
   }, [email]);
