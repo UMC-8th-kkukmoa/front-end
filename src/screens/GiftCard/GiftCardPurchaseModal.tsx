@@ -15,10 +15,14 @@ interface GiftCardPurchaseModalProps {
 function GiftCardPurchaseModal({ isVisible, onClose, title, price }: GiftCardPurchaseModalProps) {
   const [quantity, setQuantity] = useState(1);
 
-  const numericPrice = Number(price.replace(/[^0-9]/g, ''));
+  const numericPrice = Number(price.replace(/[^0-9]/g, '')) || 0;
   const total = numericPrice * quantity;
 
-  const formatPrice = (amount) => `${amount.toLocaleString()}원`;
+  if (numericPrice === 0) {
+    console.warn('가격 파싱에 실패했습니다:', price);
+  }
+
+  const formatPrice = (amount: number) => `${amount.toLocaleString()}원`;
 
   const router = useRouter();
 
