@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 61,
+    minWidth: 61,
+    alignSelf: 'flex-start',
     height: 27,
     borderRadius: 30,
     borderWidth: 1,
@@ -73,37 +74,38 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    paddingVertical: 6,
   },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 55,
     backgroundColor: colors.light.white,
-    borderWidth: 1,
-    borderColor: colors.light.sub,
     margin: 5,
     elevation: 3,
+    overflow: 'visible',
   },
   chipSelected: {
     backgroundColor: colors.light.sub,
   },
   chipText: {
-    fontSize: 14,
-    fontFamily: 'Pretendard-Medium',
-    color: colors.light.sub,
+    fontSize: 13,
+    fontFamily: 'Pretendard-Regular',
+    color: colors.light.gray2,
   },
   chipTextSelected: {
     color: colors.light.white,
   },
   applyButton: {
-    marginTop: 24,
+    marginTop: 16,
     backgroundColor: colors.light.main,
     paddingVertical: 14,
-    borderRadius: 999,
+    marginBottom: 15,
+    borderRadius: 30,
     alignItems: 'center',
     elevation: 4,
   },
@@ -117,15 +119,16 @@ const styles = StyleSheet.create({
 type Option = {
   label: string;
   value: string;
+  icon?: React.FC<React.SVGProps<SVGSVGElement>>;
 };
 
-type CustomDropdownProps = {
+type KkDropdownProps = {
   items: Option[];
   value: string | null;
   onSelect: (value: string) => void;
 };
 
-export default function CustomDropdown({ items, value, onSelect }: CustomDropdownProps) {
+export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) {
   const [open, setOpen] = useState(false);
 
   const [tempValue, setTempValue] = useState<string | null>(value);
@@ -156,20 +159,39 @@ export default function CustomDropdown({ items, value, onSelect }: CustomDropdow
         <Text style={styles.arrow}>▼</Text>
       </TouchableOpacity>
 
-      <Modal animationType="slide" transparent visible={open} onRequestClose={() => setOpen(false)}>
+      <Modal
+        animationType="slide"
+        transparent
+        visible={open}
+        onRequestClose={() => setOpen(false)}
+        statusBarTranslucent
+      >
         <Pressable style={styles.modalOverlay} onPress={() => setOpen(false)}>
           <Pressable style={styles.bottomSheet} onPress={() => {}}>
             <View style={styles.handleBar} />
             <Text style={styles.title}>업종 선택</Text>
-            <ScrollView contentContainerStyle={styles.chipContainer}>
+            <ScrollView
+              horizontal
+              contentContainerStyle={styles.chipContainer}
+              showsHorizontalScrollIndicator={false}
+            >
               {items.map((item) => {
                 const isSelected = tempValue === item.value;
+                const Icon = item.icon;
                 return (
                   <TouchableOpacity
                     key={item.value}
                     style={[styles.chip, isSelected && styles.chipSelected]}
                     onPress={() => setTempValue(item.value)}
                   >
+                    {Icon && (
+                      <Icon
+                        width={15}
+                        height={15}
+                        color={isSelected ? colors.light.white : colors.light.sub}
+                        style={{ marginRight: 6 }}
+                      />
+                    )}
                     <Text style={[styles.chipText, isSelected && styles.chipTextSelected]}>
                       {item.label}
                     </Text>
