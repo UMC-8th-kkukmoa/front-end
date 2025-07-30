@@ -92,8 +92,9 @@ export default function Layout() {
               return <MainButton key="mainButton" />;
             }
 
+            // 이 페이지는 하단 탭 바가 보이지 않아야 하므로 router.push를 사용해 별도로 이동 처리함
             if (tab.name === 'coupons') {
-              const selected = pathname === tab.uri;
+              const selected = pathname === tab.uri || pathname.startsWith(`${tab.uri}/`);
               const IconComponent = tab.icon;
 
               return (
