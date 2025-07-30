@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   qtyControl: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
     borderWidth: 1,
     borderColor: colors.light.gray1,
     borderRadius: 50,

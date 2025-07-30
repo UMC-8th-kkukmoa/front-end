@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   productBox: {
-    backgroundColor: 'rgba(220, 220, 220, 0.35)',
+    backgroundColor: `${colors.light.gray1}59`,
     borderRadius: 10,
     flexDirection: 'row',
     padding: 13,

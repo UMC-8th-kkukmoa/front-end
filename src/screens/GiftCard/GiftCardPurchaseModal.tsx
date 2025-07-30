@@ -40,7 +40,7 @@ function GiftCardPurchaseModal({ isVisible, onClose, title, price }: GiftCardPur
             <TouchableOpacity onPress={() => setQuantity((q) => Math.max(1, q - 1))}>
               <Text style={styles.qtyButton}>-</Text>
             </TouchableOpacity>
-            <Text style={styles.qtyText}>{quantity}</Text>
+            <Text style={[styles.qtyText, { marginHorizontal: 16 }]}>{quantity}</Text>
             <TouchableOpacity onPress={() => setQuantity((q) => q + 1)}>
               <Text style={styles.qtyButton}>+</Text>
             </TouchableOpacity>
