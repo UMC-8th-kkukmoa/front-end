@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
-import CustomDropdown from '../../design/component/KkDropdown';
+import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
 
 import foodIcon from '../../assets/images/food.svg';
@@ -115,7 +115,7 @@ export default function StampListScreen() {
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.dropdownArea}>
-            <CustomDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
+            <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
           </View>
 
           {dummyStampBoards.map((shop) => (
