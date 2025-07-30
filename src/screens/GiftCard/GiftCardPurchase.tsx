@@ -21,12 +21,12 @@ function GiftCardPurchase() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [isPayMethodSelected, setIsPayMethodSelected] = useState(false);
 
-  const numericPrice = Number(price?.toString().replace(/[^0-9]/g, '') || '0');
-  let qtyValue = quantity;
-  if (Array.isArray(quantity)) {
-    [qtyValue] = quantity;
-  }
-  const quantityNumber = Number(qtyValue) || 1;
+  const priceStr = Array.isArray(price) ? price[0] : price;
+  const quantityStr = Array.isArray(quantity) ? quantity[0] : quantity;
+
+  const numericPrice = Number(priceStr?.replace(/[^0-9]/g, '') || '0');
+  const quantityNumber = Number(quantityStr) || 1;
+
   const total = numericPrice * quantityNumber;
 
   const getGiftImage = (giftTitle: string | string[] | undefined) => {
