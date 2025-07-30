@@ -36,6 +36,7 @@ const giftCardData = {
 
 export default function GiftCardDetailScreen() {
   const [isModalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -53,7 +54,6 @@ export default function GiftCardDetailScreen() {
   }
 
   const gift = giftCardData[giftId];
-  const router = useRouter();
 
   if (!gift) {
     return (
