@@ -257,7 +257,19 @@ export default function SignUpScreen() {
         <KkButton
           style={styles.button}
           label="다음"
-          type={nickname && date && email && password && passwordConfirm ? 'primary' : 'disabled'}
+          type={
+            nickname &&
+            date &&
+            email &&
+            password &&
+            passwordConfirm &&
+            !isNicknameError &&
+            !isEmailError &&
+            !isVerificationError &&
+            !isPasswordError
+              ? 'primary'
+              : 'disabled'
+          }
           size="large"
           onPress={() => {}}
           shadow
