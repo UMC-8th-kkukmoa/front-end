@@ -2,12 +2,21 @@ import { StyleSheet } from 'react-native';
 import colors from '../../../design/colors';
 
 export default StyleSheet.create({
+  shadowWrapper: {
+    marginBottom: 10,
+    borderRadius: 20,
+    shadowColor: 'rgb(108, 49, 49)',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 1.02, height: 3.07 },
+    shadowRadius: 3,
+    elevation: 4,
+    backgroundColor: colors.light.white, // 그림자 표시용 배경색
+  },
   card: {
     width: 144,
     height: 167,
     borderRadius: 20,
     overflow: 'hidden',
-    position: 'relative',
     backgroundColor: colors.light.gray1_35,
   },
   image: {
