@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StatusBar } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
-import BackArrow from '../../../assets/images/back-arrow.svg';
+import BackArrow from '../../../assets/images/arrow_back.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
 
@@ -53,15 +53,17 @@ function ItemSeparator() {
 
 function StoreDetailScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
 
   const store = mockStores.find((s) => s.id === id);
+
+  const [isLiked, setIsLiked] = useState(store?.isLiked || false);
+
   // 가게 정보 없을때 임시 화면
   if (!store) {
     return <Text>가게 정보를 불러올 수 없습니다.</Text>;
   }
-
-  const [isLiked, setIsLiked] = useState(store.isLiked);
 
   const details = [
     { label: '카테고리', value: store.category },
@@ -74,7 +76,10 @@ function StoreDetailScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.replace('/(tabs)/stores')}>
+      <TouchableOpacity
+        style={[styles.backButton, { top: insets.top + 12 }]}
+        onPress={() => router.replace('/(tabs)/stores')}
+      >
         <BackArrow />
       </TouchableOpacity>
 

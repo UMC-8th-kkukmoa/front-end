@@ -31,10 +31,12 @@ export default StyleSheet.create({
   name: {
     color: colors.light.white,
     fontWeight: '700',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 13,
     marginBottom: 2,
   },
   text: {
+    fontFamily: 'Pretendard-Medium',
     color: colors.light.white,
     fontSize: 10,
   },

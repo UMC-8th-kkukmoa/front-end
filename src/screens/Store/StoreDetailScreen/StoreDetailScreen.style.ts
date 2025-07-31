@@ -14,7 +14,6 @@ export default StyleSheet.create({
 
   backButton: {
     position: 'absolute',
-    top: 50,
     left: 16,
     zIndex: 10,
   },
@@ -41,12 +40,14 @@ export default StyleSheet.create({
   storeName: {
     fontSize: 22,
     fontWeight: '700',
+    fontFamily: 'Pretendard-Bold',
     minWidth: 260,
   },
   reviewCount: {
     marginTop: 6,
     fontSize: 11,
     color: colors.light.main,
+    fontFamily: 'Pretendard-Regular',
   },
 
   detailSection: {
@@ -59,12 +60,14 @@ export default StyleSheet.create({
   detailLabel: {
     color: colors.light.gray2,
     fontWeight: '400',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 13,
     marginRight: 10,
   },
   detailText: {
     color: colors.light.black,
     fontWeight: '400',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 13,
   },
 
@@ -82,6 +85,7 @@ export default StyleSheet.create({
   reviewTitle: {
     fontSize: 22,
     fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
   },
   buttonWapper: {
     alignItems: 'center',
