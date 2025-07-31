@@ -5,7 +5,7 @@ export default StyleSheet.create({
   shadowWrapper: {
     marginBottom: 10,
     borderRadius: 20,
-    shadowColor: 'rgb(108, 49, 49)',
+    shadowColor: colors.light.shadow,
     shadowOpacity: 0.15,
     shadowOffset: { width: 1.02, height: 3.07 },
     shadowRadius: 3,

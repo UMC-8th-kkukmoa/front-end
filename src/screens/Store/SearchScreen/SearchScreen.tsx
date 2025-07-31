@@ -26,8 +26,6 @@ export default function SearchScreen() {
 
         <View style={styles.searchWrapper}>
           <KkTextbox
-            width={325}
-            height={47}
             label=""
             placeholder="매장을 검색해보세요."
             type="text"
