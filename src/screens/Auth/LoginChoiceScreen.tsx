@@ -55,7 +55,7 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
-  // onst router = useRouter();
+  // const router = useRouter();
   return (
     <View style={styles.container}>
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />

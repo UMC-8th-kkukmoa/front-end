@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     shadowColor: '#6C313126',
     display: 'flex',
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   shadowStyles: {
     shadowColor: '#6C3131',
@@ -52,13 +53,9 @@ const styles = StyleSheet.create({
     color: colors.light.gray2,
   },
   sizeLarge: {
-    width: 333,
-    height: 55,
     paddingVertical: 17,
   },
   sizeSmall: {
-    width: 100,
-    height: 48,
     paddingVertical: 13.5,
   },
 });

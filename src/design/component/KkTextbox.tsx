@@ -19,8 +19,6 @@ type InputType = 'text' | 'email' | 'password' | 'date';
 
 interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
   style?: StyleProp<ViewStyle>;
-  width: number;
-  height: number;
   label: string;
   type: InputType;
   size: Size;
@@ -75,18 +73,14 @@ const styles = StyleSheet.create({
 
 const sizeStyles = StyleSheet.create({
   large: {
-    width: 333,
-    height: 47,
     borderRadius: 30,
     paddingHorizontal: 21,
-    paddingVertical: 4,
+    paddingVertical: 16,
   },
   small: {
-    width: 222,
-    height: 48,
     borderRadius: 30,
     paddingHorizontal: 16,
-    paddingVertical: 4,
+    paddingVertical: 16,
   },
 });
 
@@ -94,8 +88,6 @@ export default function KkTextbox({
   label,
   variant = 'secondary',
   size = 'large',
-  width,
-  height,
   type = 'text',
   enabled = true,
   error = false,
@@ -212,8 +204,6 @@ export default function KkTextbox({
           sizeStyles[size],
           {
             borderColor: getColor('border'),
-            ...(width && { width }),
-            ...(height && { height }),
           },
         ]}
       >
