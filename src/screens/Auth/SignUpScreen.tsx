@@ -206,7 +206,7 @@ export default function SignUpScreen() {
           </View>
           <View style={{ marginTop: 26.3 }}>
             <KkButton
-              label="인증받기"
+              label="인증하기"
               type={verificationCode ? 'primary' : 'disabled'}
               size="large"
               onPress={() => {}}
