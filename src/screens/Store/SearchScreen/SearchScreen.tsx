@@ -28,8 +28,6 @@ export default function SearchScreen() {
           <KkTextbox
             label=""
             placeholder="매장을 검색해보세요."
-            width={324}
-            height={47}
             type="text"
             size="small"
             variant="primary"
@@ -40,7 +38,7 @@ export default function SearchScreen() {
             style={styles.textBox}
           />
           <TouchableOpacity style={styles.iconWrapper}>
-            <SearchIcon />
+            <SearchIcon style={{ margin: 5 }} />
           </TouchableOpacity>
         </View>
       </View>
