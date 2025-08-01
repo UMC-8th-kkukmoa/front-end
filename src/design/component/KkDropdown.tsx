@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,9 @@ import {
   Modal,
   Pressable,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 import colors from '../colors';
+import CategoryTabs from '../../screens/Store/CategoryTabs/CategoryTabs';
 
 const { height } = Dimensions.get('window');
 
@@ -72,34 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: colors.light.black,
   },
-  chipContainer: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    paddingVertical: 6,
-  },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 55,
-    backgroundColor: colors.light.white,
-    margin: 5,
-    elevation: 3,
-    overflow: 'visible',
-  },
-  chipSelected: {
-    backgroundColor: colors.light.sub,
-  },
-  chipText: {
-    fontSize: 13,
-    fontFamily: 'Pretendard-Regular',
-    color: colors.light.gray2,
-  },
-  chipTextSelected: {
-    color: colors.light.white,
-  },
   applyButton: {
     marginTop: 16,
     backgroundColor: colors.light.main,
@@ -130,8 +102,11 @@ type KkDropdownProps = {
 
 export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) {
   const [open, setOpen] = useState(false);
-
   const [tempValue, setTempValue] = useState<string | null>(value);
+
+  useEffect(() => {
+    setTempValue(value);
+  }, [value]);
 
   const selectedLabel = items.find((item) => item.value === value)?.label ?? '업종';
 
@@ -170,35 +145,12 @@ export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) 
           <Pressable style={styles.bottomSheet} onPress={() => {}}>
             <View style={styles.handleBar} />
             <Text style={styles.title}>업종 선택</Text>
-            <ScrollView
-              horizontal
-              contentContainerStyle={styles.chipContainer}
-              showsHorizontalScrollIndicator={false}
-            >
-              {items.map((item) => {
-                const isSelected = tempValue === item.value;
-                const Icon = item.icon;
-                return (
-                  <TouchableOpacity
-                    key={item.value}
-                    style={[styles.chip, isSelected && styles.chipSelected]}
-                    onPress={() => setTempValue(item.value)}
-                  >
-                    {Icon && (
-                      <Icon
-                        width={15}
-                        height={15}
-                        color={isSelected ? colors.light.white : colors.light.sub}
-                        style={{ marginRight: 6 }}
-                      />
-                    )}
-                    <Text style={[styles.chipText, isSelected && styles.chipTextSelected]}>
-                      {item.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+            <CategoryTabs
+              selected={tempValue}
+              onSelect={setTempValue}
+              paddingHorizontal={5}
+              paddingVertical={15}
+            />
             <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
               <Text style={styles.applyText}>적용하기</Text>
             </TouchableOpacity>

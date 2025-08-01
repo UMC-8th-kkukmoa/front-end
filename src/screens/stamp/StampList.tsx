@@ -5,12 +5,7 @@ import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
 import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
-
-import foodIcon from '../../assets/images/food.svg';
-import cafeIcon from '../../assets/images/cafe.svg';
-import exerciseIcon from '../../assets/images/exercise.svg';
-import salonIcon from '../../assets/images/salon.svg';
-import educationIcon from '../../assets/images/education.svg';
+import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
 
 type Stamp = {
   id: number;
@@ -43,14 +38,12 @@ const styles = StyleSheet.create({
 });
 
 export default function StampListScreen() {
+  const items = categoryData.map((cat) => ({
+    label: cat.name,
+    value: cat.name.toLowerCase(),
+    icon: cat.icon,
+  }));
   const [value, setValue] = useState<string | null>(null);
-  const [items] = useState([
-    { label: '음식점', value: 'food', icon: foodIcon },
-    { label: '카페', value: 'cafe', icon: cafeIcon },
-    { label: '미용', value: 'salon', icon: salonIcon },
-    { label: '교육', value: 'education', icon: educationIcon },
-    { label: '운동/건강', value: 'exercise', icon: exerciseIcon },
-  ]);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
