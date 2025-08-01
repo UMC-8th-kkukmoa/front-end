@@ -166,7 +166,7 @@ function MainScreen() {
           <View style={styles.searchBarContainer}>
             <TouchableOpacity
               style={styles.searchTouchable}
-              onPress={() => router.push('/search')}
+              onPress={() => router.push('/store/search')}
               activeOpacity={0.8}
             >
               <Text style={styles.searchPlaceholder}>매장을 검색해보세요.</Text>

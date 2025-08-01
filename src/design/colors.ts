@@ -6,6 +6,7 @@ const lightColors = {
   gray1: '#DCDCDC',
   gray2: '#888888',
   black: '#2B2B2B',
+  shadow: 'rgb(108, 49, 49)',
 };
 
 export default {
