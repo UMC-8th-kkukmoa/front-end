@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 
-import Giftcard1 from '../../assets/images/giftcard1.svg';
-import Giftcard3 from '../../assets/images/giftcard3.svg';
-import Giftcard5 from '../../assets/images/giftcard5.svg';
-import Giftcard10 from '../../assets/images/giftcard10.svg';
+import giftcard1 from '../../assets/images/giftcard1.png';
+import giftcard3 from '../../assets/images/giftcard3.png';
+import giftcard5 from '../../assets/images/giftcard5.png';
+import giftcard10 from '../../assets/images/giftcard10.png';
 import Tosspay from '../../assets/images/tosspay.svg';
 
 import styles from './GiftCardPurchase.styles';
@@ -29,17 +29,14 @@ function GiftCardPurchase() {
 
   const total = numericPrice * quantityNumber;
 
-  const getGiftImage = (giftTitle: string | string[] | undefined) => {
-    let processedTitle = giftTitle;
-    if (Array.isArray(processedTitle)) [processedTitle] = processedTitle;
-    if (typeof processedTitle !== 'string') return null;
-
-    if (processedTitle.includes('1만원')) return <Giftcard1 width={164} height={98} />;
-    if (processedTitle.includes('3만원')) return <Giftcard3 width={164} height={98} />;
-    if (processedTitle.includes('5만원')) return <Giftcard5 width={164} height={98} />;
-    if (processedTitle.includes('10만원')) return <Giftcard10 width={164} height={98} />;
-    return null;
+  const giftImageMap: Record<number, any> = {
+    10000: giftcard1,
+    30000: giftcard3,
+    50000: giftcard5,
+    100000: giftcard10,
   };
+
+  const getGiftImage = (giftPrice: number) => giftImageMap[giftPrice] || null;
 
   return (
     <View style={styles.container}>
@@ -49,7 +46,13 @@ function GiftCardPurchase() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>구매상품</Text>
           <View style={styles.productBox}>
-            {getGiftImage(title)}
+            {getGiftImage(numericPrice) && (
+              <Image
+                source={getGiftImage(numericPrice)}
+                style={{ width: 164, height: 98, resizeMode: 'contain' }}
+              />
+            )}
+
             <View style={styles.productDetails}>
               <Text style={styles.productTitle}>{title}</Text>
               <Text style={styles.productPrice}>{formatPrice(total)}</Text>
