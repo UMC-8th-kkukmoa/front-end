@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import KkLoginTextbox from '../../../design/component/KkLoginTextbox';
+import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
 import styles from './SearchScreen.style';
@@ -25,7 +25,7 @@ export default function SearchScreen() {
         </TouchableOpacity>
 
         <View style={styles.searchWrapper}>
-          <KkLoginTextbox
+          <KkTextbox
             label=""
             placeholder="매장을 검색해보세요."
             type="text"
@@ -37,8 +37,9 @@ export default function SearchScreen() {
             onChangeText={setQuery}
             style={styles.textBox}
           />
+
           <TouchableOpacity style={styles.iconWrapper}>
-            <SearchIcon />
+            <SearchIcon style={{ margin: 5 }} />
           </TouchableOpacity>
         </View>
       </View>

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import colors from '../../../design/colors';
 
 export default StyleSheet.create({
   scrollContainer: {
@@ -9,7 +10,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 55,
-    shadowColor: 'rgb(108, 49, 49)',
+    shadowColor: colors.light.shadow,
     shadowOpacity: 0.1,
     shadowOffset: { width: 1.12, height: 3.37 },
     shadowRadius: 3,

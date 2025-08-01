@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../colors';
+import ArrowBackIcon from '../../assets/images/arrow_back.svg';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,17 +11,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-
-    elevation: 4,
   },
   backButton: {
     width: 40,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backArrow: {
-    fontSize: 24,
-    fontFamily: 'Pretendard-SemiBold',
   },
   title: {
     fontSize: 20,
@@ -31,16 +26,32 @@ const styles = StyleSheet.create({
 type HeaderProps = {
   title: string;
   onBackPress: () => void;
+  shadow?: boolean;
 };
 
-export default function Header({ title, onBackPress }: HeaderProps) {
+export default function Header({ title, onBackPress, shadow }: HeaderProps) {
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        shadow !== false && {
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOpacity: 0.1,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 3,
+        },
+      ]}
+    >
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-        <Text style={styles.backArrow}>←</Text>
+        <ArrowBackIcon color={colors.light.black} width={24} height={24} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <View style={{ width: 40 }} />
     </View>
   );
 }
+
+Header.defaultProps = {
+  shadow: true,
+};
