@@ -1,10 +1,3 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import MainScreen from '../../src/screens/main/MainScreen';
 
-export default function HomeScreen() {
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  );
-}
+export default MainScreen;
