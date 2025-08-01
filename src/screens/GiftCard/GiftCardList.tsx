@@ -51,7 +51,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const giftCards = [
+interface GiftCard {
+  id: number;
+  title: string;
+  price: string;
+  image: any;
+}
+
+const giftCards: GiftCard[] = [
   { id: 1, title: '꾹모아 금액권 1만원권', price: '10,000원', image: giftcard1 },
   { id: 2, title: '꾹모아 금액권 3만원권', price: '30,000원', image: giftcard3 },
   { id: 3, title: '꾹모아 금액권 5만원권', price: '50,000원', image: giftcard5 },
