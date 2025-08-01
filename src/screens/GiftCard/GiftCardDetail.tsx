@@ -1,36 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import GiftCardPurchaseModal from './GiftCardPurchaseModal';
 import styles from './GiftCardDetail.styles';
 
 import ShareIcon from '../../assets/images/share-icon.svg';
-import Giftcard1 from '../../assets/images/giftcard1.svg';
-import Giftcard3 from '../../assets/images/giftcard3.svg';
-import Giftcard5 from '../../assets/images/giftcard5.svg';
-import Giftcard10 from '../../assets/images/giftcard10.svg';
+import giftcard1 from '../../assets/images/giftcard1.png';
+import giftcard3 from '../../assets/images/giftcard3.png';
+import giftcard5 from '../../assets/images/giftcard5.png';
+import giftcard10 from '../../assets/images/giftcard10.png';
 
 const giftCardData = {
   1: {
     title: '꾹모아 금액권 1만원권',
     price: '10,000원',
-    Svg: Giftcard1,
+    image: giftcard1,
   },
   2: {
     title: '꾹모아 금액권 3만원권',
     price: '30,000원',
-    Svg: Giftcard3,
+    image: giftcard3,
   },
   3: {
     title: '꾹모아 금액권 5만원권',
     price: '50,000원',
-    Svg: Giftcard5,
+    image: giftcard5,
   },
   4: {
     title: '꾹모아 금액권 10만원권',
     price: '100,000원',
-    Svg: Giftcard10,
+    image: giftcard10,
   },
 };
 
@@ -63,14 +63,14 @@ export default function GiftCardDetailScreen() {
     );
   }
 
-  const { Svg: GiftImageComponent, title, price } = gift;
+  const { image, title, price } = gift;
 
   return (
     <>
       <View style={styles.container}>
         <Header title="금액권 구매" onBackPress={() => router.back()} />
         <View style={styles.content}>
-          <GiftImageComponent width={234} height={140} />
+          <Image source={image} style={{ width: 234, height: 140, resizeMode: 'contain' }} />
 
           <View style={styles.cardRow}>
             <View style={styles.textBox}>
