@@ -39,7 +39,7 @@ export default function SearchScreen() {
           />
 
           <TouchableOpacity style={styles.iconWrapper}>
-            <SearchIcon />
+            <SearchIcon style={{ margin: 5 }} />
           </TouchableOpacity>
         </View>
       </View>
