@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import LoginTextbox from '../../design/component/LoginTextbox';
+import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 210,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.light.white,
     paddingHorizontal: 24,
   },
   logo: {
@@ -48,7 +48,21 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+
+  const validateEmail = (inputEmail: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(inputEmail);
+  };
+
+  useEffect(() => {
+    if (email && !validateEmail(email)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  }, [email]);
 
   const isValid = email && password;
 
@@ -62,24 +76,29 @@ export default function LoginScreen() {
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />
 
       <View style={styles.form}>
-        <LoginTextbox
+        <KkTextbox
           label=""
           size="large"
+          style={{ width: '93%' }}
           value={email}
           onChangeText={setEmail}
           placeholder="이메일 주소"
           type="email"
-          variant={email ? 'loginEnabled' : 'disabled'}
+          variant={email ? 'primary' : 'secondary'}
+          enabled={!!email}
+          error={emailError}
         />
-
-        <LoginTextbox
+        <KkTextbox
           label=""
           size="large"
+          style={{ width: '93%' }}
           value={password}
           onChangeText={setPassword}
           placeholder="비밀번호"
           type="password"
-          variant={password ? 'loginEnabled' : 'disabled'}
+          variant={password ? 'primary' : 'secondary'}
+          enabled={!!password}
+          error={false}
         />
       </View>
 
@@ -89,6 +108,7 @@ export default function LoginScreen() {
           type={isValid ? 'primary' : 'disabled'}
           size="large"
           onPress={isValid ? handleLogin : () => {}}
+          shadow
         />
       </View>
 

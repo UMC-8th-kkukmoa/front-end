@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
+// import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +55,7 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
+  // const router = useRouter();
   return (
     <View style={styles.container}>
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />
@@ -61,15 +63,14 @@ export default function LoginChoiceScreen() {
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>이미 회원이신가요?</Text>
         <TouchableOpacity onPress={() => {}}>
-          {/* expo 네비게이션 사용 */}
           <Text style={styles.loginLink}>로그인하기</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.button}>
-        <KkButton label="카카오 로그인" type="primary" size="large" onPress={() => {}} />
+        <KkButton label="카카오 로그인" type="primary" size="large" shadow onPress={() => {}} />
 
-        <KkButton label="이메일 가입" type="secondary" size="large" onPress={() => {}} />
+        <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
       </View>
 
       <View style={styles.signupContainer}>
