@@ -1,96 +1,18 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
+  SafeAreaView,
   ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../design/component/Header';
 import KkTextbox from '../design/component/KkTextbox';
 import { KkButton } from '../design/component/KkButton';
 import colors from '../design/colors';
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 26,
-  },
-  title: {
-    fontSize: 18,
-    color: colors.light.black,
-    textAlign: 'center',
-    paddingVertical: 21,
-    fontWeight: 'bold',
-  },
-  textbox: {
-    marginBottom: 16,
-  },
-  agreementContainer: {
-    marginHorizontal: 8,
-    gap: 12,
-  },
-  agreementRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  agreementText: {
-    marginLeft: 8,
-    fontSize: 15,
-    color: colors.light.black,
-    fontFamily: 'Pretendard-Regular',
-  },
-  requiredText: {
-    color: colors.light.main,
-    fontFamily: 'Pretendard-Bold',
-  },
-  bottomContainer: {
-    backgroundColor: colors.light.white,
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  allAgreementContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  formContainer: {
-    gap: 12,
-  },
-  allAgreementRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  allAgreementText: {
-    marginLeft: 10,
-    fontSize: 16,
-    color: colors.light.black,
-    fontFamily: 'Pretendard-Regular',
-  },
-  button: {
-    marginTop: 20,
-  },
-  checkbox: {
-    padding: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusIcon: {
-    fontSize: 24,
-    color: colors.light.gray2,
-  },
-});
+import styles from './OwnerJoinShopScreen.style';
 
 function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void }) {
   return (
@@ -125,10 +47,7 @@ export default function OwnerJoinShopScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <Header title="입점 신청하기" onBackPress={() => {}} shadow={false} />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.content}>
             <Text style={styles.title}>계정 등록</Text>
