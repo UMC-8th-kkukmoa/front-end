@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './MainScreen.style';
@@ -120,12 +120,12 @@ function MainScreen() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
-  const toggleLike = (id: string) => {
+  const toggleLike = useCallback((id: string) => {
     setLikedMap((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
