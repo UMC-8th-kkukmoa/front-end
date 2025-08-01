@@ -7,6 +7,7 @@ import ReviewCard from '../ReviewCard/ReviewCard';
 import BackArrow from '../../../assets/images/arrow_back.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
+import colors from '../../../design/colors';
 
 // 가게 정보 더미데이터
 const mockStores = [
@@ -80,7 +81,7 @@ function StoreDetailScreen() {
         style={[styles.backButton, { top: insets.top + 12 }]}
         onPress={() => router.replace('/(tabs)/stores')}
       >
-        <BackArrow />
+        <BackArrow width={24} height={24} color={colors.light.black} />
       </TouchableOpacity>
 
       <View style={styles.storeImageArea} />
