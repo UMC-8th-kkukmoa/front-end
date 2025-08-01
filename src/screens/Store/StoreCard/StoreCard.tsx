@@ -82,4 +82,4 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
   );
 }
 
-export default StoreCard;
+export default React.memo(StoreCard);

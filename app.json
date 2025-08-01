@@ -7,8 +7,5 @@
     "edgeToEdgeEnabled": true,
     "package": "com.kkukmoa"
   },
-  "plugins": [
-    "expo-build-properties",
-    "expo-router"
-  ]
+  "plugins": ["expo-build-properties", "expo-router"]
 }
