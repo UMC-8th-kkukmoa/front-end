@@ -37,6 +37,7 @@ export default function SearchScreen() {
             onChangeText={setQuery}
             style={styles.textBox}
           />
+
           <TouchableOpacity style={styles.iconWrapper}>
             <SearchIcon style={{ margin: 5 }} />
           </TouchableOpacity>
