@@ -10,6 +10,7 @@ import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
+import QRcodeIcon from '../../assets/images/Group.svg';
 
 // 더미데이터 (10)
 const mockStores = [
@@ -137,6 +138,9 @@ function MainScreen() {
           </View>
           <View style={styles.rightIcons}>
             <TouchableOpacity>
+              <QRcodeIcon width={24} height={24} />
+            </TouchableOpacity>
+            <TouchableOpacity>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>
             <TouchableOpacity>
@@ -174,7 +178,7 @@ function MainScreen() {
         <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
           {/* 배너 (추후 컴포넌트 만들기) */}
           <View style={styles.banner}>
-            <BannerImage width={378} height={130} />
+            <BannerImage width="92%" height={130} />
           </View>
 
           {/* 가게 카드 리스트 */}
