@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
-import CustomDropdown from '../../design/component/KkDropdown';
+import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
+import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
 
 type Stamp = {
   id: number;
@@ -15,8 +16,6 @@ type ShopStampData = {
   shopName: string;
   stamps: Stamp[];
 };
-
-const presentIcon = require('../../assets/images/present_icon.png');
 
 const styles = StyleSheet.create({
   container: {
@@ -31,46 +30,20 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 8,
-    paddingBottom: 80,
+    paddingBottom: 40,
   },
   stampBoardWrapper: {
     paddingHorizontal: 10,
   },
-  fixedButton: {
-    position: 'absolute',
-    bottom: 30,
-    left: '50%',
-    transform: [{ translateX: -60 }],
-    backgroundColor: colors.light.black,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 120,
-    elevation: 5,
-  },
-  buttonText: {
-    color: colors.light.white,
-    fontSize: 16,
-    fontFamily: 'Pretendard-Medium',
-  },
-  icon: {
-    width: 18,
-    height: 18,
-    marginRight: 8,
-    resizeMode: 'contain',
-  },
 });
 
 export default function StampListScreen() {
+  const items = categoryData.map((cat) => ({
+    label: cat.name,
+    value: cat.name.toLowerCase(),
+    icon: cat.icon,
+  }));
   const [value, setValue] = useState<string | null>(null);
-  const [items] = useState([
-    { label: '음식점', value: 'optionA' },
-    { label: '카페', value: 'optionB' },
-    { label: '서점', value: 'optionC' },
-  ]);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -135,7 +108,7 @@ export default function StampListScreen() {
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.dropdownArea}>
-            <CustomDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
+            <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
           </View>
 
           {dummyStampBoards.map((shop) => (
@@ -144,11 +117,6 @@ export default function StampListScreen() {
             </View>
           ))}
         </ScrollView>
-
-        <View style={styles.fixedButton}>
-          <Image source={presentIcon} style={styles.icon} />
-          <Text style={styles.buttonText}>교환하기</Text>
-        </View>
       </View>
 
       <StampCompleteModal visible={isModalVisible} onClose={() => setModalVisible(false)} />

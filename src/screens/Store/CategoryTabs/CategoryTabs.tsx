@@ -9,7 +9,7 @@ import EducationIcon from '../../../assets/images/education.svg';
 import ExerciseIcon from '../../../assets/images/exercise.svg';
 import colors from '../../../design/colors';
 
-const categoryData = [
+export const categoryData = [
   { name: '음식점', icon: FoodIcon },
   { name: '카페', icon: CafeIcon },
   { name: '미용', icon: SalonIcon },
@@ -20,9 +20,11 @@ const categoryData = [
 type Props = {
   selected: string | null;
   onSelect: (name: string | null) => void;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
 };
 
-function CategoryTabs({ selected, onSelect }: Props) {
+function CategoryTabs({ selected, onSelect, paddingHorizontal = 25, paddingVertical = 5 }: Props) {
   const handleSelect = (name: string) => {
     onSelect(selected === name ? null : name);
   };
@@ -31,7 +33,13 @@ function CategoryTabs({ selected, onSelect }: Props) {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.scrollContainer}
+      contentContainerStyle={[
+        styles.scrollContainer,
+        {
+          paddingHorizontal,
+          paddingVertical,
+        },
+      ]}
     >
       {categoryData.map((category) => {
         const isSelected = selected === category.name;

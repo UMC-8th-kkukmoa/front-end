@@ -4,6 +4,7 @@ import Header from '../../design/component/Header';
 import CustomDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
 import CouponCard from './MyCouponCard';
+import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,14 +47,14 @@ const styles = StyleSheet.create({
 });
 
 export default function MyCouponListScreen() {
-  const [value, setValue] = useState<string | null>(null);
   const [bottomVisible, setBottomVisible] = useState(false);
 
-  const [items] = useState([
-    { label: '음식점', value: 'optionA' },
-    { label: '카페', value: 'optionB' },
-    { label: '서점', value: 'optionC' },
-  ]);
+  const items = categoryData.map((cat) => ({
+    label: cat.name,
+    value: cat.name.toLowerCase(),
+    icon: cat.icon,
+  }));
+  const [value, setValue] = useState<string | null>(null);
 
   const handleBack = () => {
     /* eslint-disable no-console */
