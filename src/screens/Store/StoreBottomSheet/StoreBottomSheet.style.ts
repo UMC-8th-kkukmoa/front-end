@@ -55,6 +55,6 @@ export default StyleSheet.create({
     bottom: 100,
     alignSelf: 'center',
     zIndex: 100,
-    shadowColor: 'rgb(108, 49, 49)',
+    shadowColor: colors.light.shadow,
   },
 });

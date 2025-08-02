@@ -16,7 +16,7 @@ export default StyleSheet.create({
   },
   backButton: {
     paddingLeft: 20,
-    paddingRight: 10,
+    paddingRight: 16.5,
   },
   searchWrapper: {
     alignItems: 'center',
@@ -24,10 +24,10 @@ export default StyleSheet.create({
     position: 'relative',
   },
   textBox: {
-    width: '95%',
+    width: '100%',
     borderRadius: 50,
     backgroundColor: colors.light.white,
-    shadowColor: 'rgb(108, 49, 49)',
+    shadowColor: colors.light.shadow,
     shadowOpacity: 0.1,
     shadowOffset: { width: 1.02, height: 3.07 },
     shadowRadius: 3,
@@ -35,8 +35,8 @@ export default StyleSheet.create({
   },
   iconWrapper: {
     position: 'absolute',
-    right: 25,
-    top: 13.5,
+    right: 20,
+    top: 17,
   },
   body: {
     flex: 1,

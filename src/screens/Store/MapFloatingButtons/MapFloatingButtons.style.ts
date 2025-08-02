@@ -13,7 +13,7 @@ export default StyleSheet.create({
   floatingButton: {
     borderRadius: 25,
     backgroundColor: colors.light.white,
-    shadowColor: 'rgb(108, 49, 49)',
+    shadowColor: colors.light.shadow,
     shadowOpacity: 0.1,
     shadowOffset: { width: 0.51, height: 1.53 },
     shadowRadius: 3,
