@@ -111,9 +111,8 @@ export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) 
   const selectedLabel = items.find((item) => item.value === value)?.label ?? '업종';
 
   const handleApply = () => {
-    if (tempValue !== null) {
-      onSelect(tempValue);
-    }
+    const appliedValue = tempValue || 'ALL';
+    onSelect(appliedValue);
     setOpen(false);
   };
 
@@ -149,7 +148,7 @@ export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) 
               selected={tempValue}
               onSelect={setTempValue}
               paddingHorizontal={5}
-              paddingVertical={15}
+              paddingVertical={18}
             />
             <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
               <Text style={styles.applyText}>적용하기</Text>
