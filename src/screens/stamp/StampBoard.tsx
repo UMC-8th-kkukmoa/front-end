@@ -16,6 +16,7 @@ const stampImg = require('../../assets/images/stamp.png');
 
 const styles = StyleSheet.create({
   container: {
+    width: 324,
     margin: 20,
     alignItems: 'center',
     backgroundColor: colors.light.main,
