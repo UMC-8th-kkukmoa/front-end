@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import handleKakaoLogin from '../../api/kakaoLogin';
@@ -56,7 +57,16 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
-  // const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const handleKakaoLoginPress = async () => {
+    const result = await handleKakaoLogin();
+    if (result !== null) {
+      // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image source={logoImage} style={styles.logo} resizeMode="contain" />
@@ -74,7 +84,7 @@ export default function LoginChoiceScreen() {
           type="primary"
           size="large"
           shadow
-          onPress={handleKakaoLogin}
+          onPress={handleKakaoLoginPress}
         />
 
         <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
