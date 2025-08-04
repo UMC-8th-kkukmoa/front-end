@@ -19,19 +19,21 @@ function AppLayout() {
   }
 
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={isAuthenticated}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="giftCard/GiftCardList" options={{ headerShown: false }} />
-        <Stack.Screen name="giftCard/GiftCardPurchase" options={{ headerShown: false }} />
-        <Stack.Screen name="giftCard/GiftCardDetail/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="myCoupon/MyCouponList" options={{ headerShown: false }} />
-        <Stack.Screen name="stamp/StampList" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="giftCard/GiftCardList" />
+        <Stack.Screen name="giftCard/GiftCardPurchase" />
+        <Stack.Screen name="giftCard/GiftCardDetail/[id]" />
+        <Stack.Screen name="myCoupon/MyCouponList" />
+        <Stack.Screen name="stamp/StampList" />
+        <Stack.Screen name="store/[id]" />
+        <Stack.Screen name="stamp/search" />
       </Stack.Protected>
 
       <Stack.Protected guard={!isAuthenticated}>
-        <Stack.Screen name="auth/LoginChoiceScreen" options={{ headerShown: false }} />
-        <Stack.Screen name="oauth" options={{ headerShown: false }} />
+        <Stack.Screen name="auth/LoginChoiceScreen" />
+        <Stack.Screen name="oauth" />
       </Stack.Protected>
     </Stack>
   );
