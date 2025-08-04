@@ -1,19 +1,10 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import * as Keychain from 'react-native-keychain';
 import { TokenResponse } from '../types/kakao';
+import saveTokens from '../utils/tokenStorege';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
 if (!KAKAO_LOGIN_URL) throw new Error('EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
-
-const saveTokens = async (accessToken: string, refreshToken: string) => {
-  await Keychain.setGenericPassword('accessToken', accessToken, {
-    service: 'com.kkukmoa.accessToken',
-  });
-  await Keychain.setGenericPassword('refreshToken', refreshToken, {
-    service: 'com.kkukmoa.refreshToken',
-  });
-};
 
 function timeout(ms: number): Promise<never> {
   return new Promise((_, reject) => {
