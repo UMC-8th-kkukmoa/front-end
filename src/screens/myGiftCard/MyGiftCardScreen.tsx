@@ -80,7 +80,7 @@ const giftcard3 = require('../../assets/images/giftcard3.png');
 const giftcard5 = require('../../assets/images/giftcard5.png');
 const giftcard10 = require('../../assets/images/giftcard10.png');
 
-export default function MyGiftcardsScreen() {
+export default function MyGiftCardScreen() {
   const router = useRouter();
 
   // 금액권 이미지 매핑

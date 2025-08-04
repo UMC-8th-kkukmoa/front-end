@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
@@ -63,6 +64,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function MyPageScreen() {
+  const router = useRouter();
+
   return (
     <View>
       <Header title="마이페이지" onBackPress={() => {}} />
@@ -71,7 +74,10 @@ export default function MyPageScreen() {
         <Section title="이용 내역">
           <SectionLabel label="내 스탬프" onClick={() => {}} />
           <SectionLabel label="내 쿠폰" onClick={() => {}} />
-          <SectionLabel label="내 금액권" onClick={() => {}} />
+          <SectionLabel
+            label="내 금액권"
+            onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
+          />
         </Section>
 
         <Section title="계정 관리">
