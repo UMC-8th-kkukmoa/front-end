@@ -39,7 +39,10 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
       // JWT인 경우
       if (encodedToken.includes('.')) {
         const payload = encodedToken.split('.')[1];
-        const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        const decodedPayload = Buffer.from(
+          payload.replace(/-/g, '+').replace(/_/g, '/'),
+          'base64',
+        ).toString();
         const jwtData = JSON.parse(decodedPayload);
         tokenData = {
           accessToken: encodedToken,
@@ -50,7 +53,7 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
         };
       } else {
         // Base64로 인코딩된 JSON인 경우
-        const decodedString = atob(encodedToken);
+        const decodedString = Buffer.from(encodedToken, 'base64').toString();
         tokenData = JSON.parse(decodedString);
       }
     } catch {
