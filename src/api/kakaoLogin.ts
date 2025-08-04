@@ -78,9 +78,13 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
       email: email || '',
       newUser: Boolean(newUser),
     };
-  } catch (error: any) {
-    if (error instanceof Error && error.message === 'TIMEOUT') {
-      console.warn('Login timed out.');
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'TIMEOUT') {
+        console.warn('로그인 시간이 초과되었습니다.');
+      } else {
+        console.error('카카오 로그인 실패:', error);
+      }
     }
     return null;
   }
