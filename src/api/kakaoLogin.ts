@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { TokenResponse } from '../types/kakao';
-import saveTokens from '../utils/tokenStorege';
+import saveTokens from '../utils/tokenStorage';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
 if (!KAKAO_LOGIN_URL) throw new Error('EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
