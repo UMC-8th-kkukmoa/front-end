@@ -17,8 +17,8 @@ apiClient.interceptors.request.use(async (config) => {
   // react-native-keychain은 RN에서만 사용 가능함
   if (Platform.OS !== 'web') {
     try {
-      const credential = await getGenericPassword();
-      if (credential && credential.password) {
+      const credential = await getGenericPassword({ service: 'com.kkukmoa.accessToken' });
+      if (credential) {
         newConfig.headers.Authorization = `Bearer ${credential.password}`;
       }
     } catch (error) {
