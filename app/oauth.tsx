@@ -15,7 +15,7 @@ export default function OAuthRedirectScreen() {
     };
 
     handleRedirect();
-  }, []);
+  }, [router]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
