@@ -63,7 +63,8 @@ export default function LoginChoiceScreen() {
     const result = await handleKakaoLogin();
     if (result !== null) {
       // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
-      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
+      // noinspection ES6MissingAwait
+      queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
     }
   };
 
