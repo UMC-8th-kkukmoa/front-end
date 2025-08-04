@@ -1,20 +1,32 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import * as Linking from 'expo-linking';
 import { View, ActivityIndicator } from 'react-native';
+import * as Keychain from 'react-native-keychain';
 
 export default function OAuthRedirectScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    const handleRedirect = async () => {
-      const initialUrl = await Linking.getInitialURL();
-      console.log('[OAuth Redirect] initialUrl:', initialUrl);
+    const checkAuth = async () => {
+      try {
+        const credential = await Keychain.getGenericPassword({
+          service: 'com.kkukmoa.accessToken',
+        });
 
-      router.replace('/(tabs)');
+        if (credential && credential.password) {
+          // 토큰이 저장되어 있으면 홈으로 이동
+          router.replace('/(tabs)');
+        } else {
+          // 없으면 로그인 화면으로 이동
+          router.replace('/auth/LoginChoiceScreen');
+        }
+      } catch (error) {
+        console.error('로그인 실패:', error);
+        router.replace('/auth/LoginChoiceScreen');
+      }
     };
 
-    handleRedirect();
+    checkAuth();
   }, [router]);
 
   return (
