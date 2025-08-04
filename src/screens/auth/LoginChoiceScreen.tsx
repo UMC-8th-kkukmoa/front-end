@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
+import handleKakaoLogin from '../../api/kakaoLogin';
 // import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
@@ -68,7 +69,13 @@ export default function LoginChoiceScreen() {
       </View>
 
       <View style={styles.button}>
-        <KkButton label="카카오 로그인" type="primary" size="large" shadow onPress={() => {}} />
+        <KkButton
+          label="카카오 로그인"
+          type="primary"
+          size="large"
+          shadow
+          onPress={handleKakaoLogin}
+        />
 
         <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
       </View>
