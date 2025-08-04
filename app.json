@@ -6,11 +6,29 @@
     "scheme": "kkukmoa",
     "newArchEnabled": true,
     "android": {
-      "package": "com.kkukmoa"
+      "package": "com.kkukmoa",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "kkukmoa",
+            "host": "oauth"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW", 
+          "data": {
+            "scheme": "kakao265b5816cef1409cf3f8a345bc136fbe"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "plugins": [
       "expo-build-properties",
-      "expo-router"
+      "expo-router",
+      "expo-web-browser"
     ]
   }
 }
