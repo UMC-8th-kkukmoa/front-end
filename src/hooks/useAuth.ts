@@ -32,7 +32,7 @@ const useAuth = () => {
     return { isAuthenticated: false };
   }
 
-  return { isAuthenticated: !!credentials };
+  return { isAuthenticated: !!(credentials && credentials.password) };
 };
 
 export default useAuth;

@@ -28,7 +28,7 @@ function AppLayout() {
         <Stack.Screen name="myCoupon/MyCouponList" />
         <Stack.Screen name="stamp/StampList" />
         <Stack.Screen name="store/[id]" />
-        <Stack.Screen name="stamp/search" />
+        <Stack.Screen name="store/search" />
       </Stack.Protected>
 
       <Stack.Protected guard={!isAuthenticated}>
