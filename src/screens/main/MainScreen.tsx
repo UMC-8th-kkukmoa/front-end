@@ -10,7 +10,6 @@ import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
-import QRcodeIcon from '../../assets/images/Group.svg';
 
 // 더미데이터 (10)
 const mockStores = [
@@ -137,9 +136,6 @@ function MainScreen() {
             <Text style={styles.location}>용인시 기흥구 신갈동</Text>
           </View>
           <View style={styles.rightIcons}>
-            <TouchableOpacity>
-              <QRcodeIcon width={24} height={24} />
-            </TouchableOpacity>
             <TouchableOpacity>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>

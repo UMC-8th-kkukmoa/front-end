@@ -5,8 +5,6 @@ export default StyleSheet.create({
   scrollContainer: {
     flexDirection: 'row',
     gap: 7,
-    paddingHorizontal: 25,
-    paddingVertical: 5,
   },
   tab: {
     flexDirection: 'row',
