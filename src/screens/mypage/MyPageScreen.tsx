@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
@@ -63,6 +64,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function MyPageScreen() {
+  const router = useRouter();
+
   return (
     <View>
       <Header title="마이페이지" onBackPress={() => {}} />
@@ -75,7 +78,12 @@ export default function MyPageScreen() {
         </Section>
 
         <Section title="계정 관리">
-          <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
+          <SectionLabel
+            label="비밀번호 재설정"
+            onClick={() => {
+              router.push('/passwordReset');
+            }}
+          />
           <SectionLabel label="사장님 로그인 (회원가입)" onClick={() => {}} />
           <SectionLabel label="로그아웃" onClick={() => {}} />
         </Section>

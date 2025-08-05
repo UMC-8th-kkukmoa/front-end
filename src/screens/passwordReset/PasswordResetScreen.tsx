@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Header from '../../design/component/Header';
-import KkLoginTextbox from '../../design/component/KkLoginTextbox';
+import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 
@@ -42,7 +42,7 @@ export default function PasswordResetScreen() {
     <View style={styles.container}>
       <Header title="비밀번호 재설정" onBackPress={() => {}} />
       <View style={styles.formContainer}>
-        <KkLoginTextbox
+        <KkTextbox
           style={styles.passwordField}
           label="현재 비밀번호"
           type="password"
@@ -56,7 +56,7 @@ export default function PasswordResetScreen() {
           placeholder="현재 비밀번호를 입력해 주세요"
           required
         />
-        <KkLoginTextbox
+        <KkTextbox
           style={styles.passwordField}
           label="변경할 비밀번호"
           type="password"
@@ -69,7 +69,7 @@ export default function PasswordResetScreen() {
           placeholder="변경할 비밀번호를 입력해주세요"
           required
         />
-        <KkLoginTextbox
+        <KkTextbox
           style={styles.passwordField}
           label="변경할 비밀번호"
           type="password"
