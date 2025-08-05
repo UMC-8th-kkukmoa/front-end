@@ -39,7 +39,12 @@ export default StyleSheet.create({
   used: {
     backgroundColor: colors.light.sub,
   },
-  statusText: {
+  statusTextUnused: {
+    color: colors.light.gray2,
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  statusTextUsed: {
     color: colors.light.white,
     fontSize: 12,
     lineHeight: 16,

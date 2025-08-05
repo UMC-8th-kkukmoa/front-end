@@ -69,8 +69,12 @@ export default function MyGiftCardScreen() {
                       item.status === 'UNUSED' ? styles.unused : styles.used,
                     ]}
                   >
-                    <Text style={styles.statusText}>
-                      {item.status === 'UNUSED' ? '사용 가능' : '사용 중'}
+                    <Text
+                      style={
+                        item.status === 'UNUSED' ? styles.statusTextUnused : styles.statusTextUsed
+                      }
+                    >
+                      {item.status === 'UNUSED' ? '사용 전' : '사용 중'}
                     </Text>
                   </View>
                 </View>
