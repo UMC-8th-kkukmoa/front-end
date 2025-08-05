@@ -92,7 +92,7 @@ export default function StampListScreen() {
         return;
       }
 
-      const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://kkukmoa.shop';
+      const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
       const url = `${API_BASE_URL}/v1/stamps/?store-type=${storeType}`;
 
       const response = await axios.get<StampApiResponse>(url, {
