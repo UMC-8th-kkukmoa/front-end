@@ -5,6 +5,7 @@ import StoreBottomSheet from '../StoreBottomSheet/StoreBottomSheet';
 import SearchBar from '../SearchBar/SearchBar';
 import CategoryTabs from '../CategoryTabs/CategoryTabs';
 import MapFloatingButtons from '../MapFloatingButtons/MapFloatingButtons';
+import KakaoMap from '../KakaoMap/KakaoMap';
 
 function Store() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // 중앙 카테고리 관리
@@ -12,7 +13,7 @@ function Store() {
   return (
     <View style={styles.container}>
       <View style={styles.mapArea}>
-        {/* 지도 컴포넌트 삽입 예정 */}
+        <KakaoMap />
         <MapFloatingButtons />
       </View>
 
