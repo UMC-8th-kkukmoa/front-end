@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Alert, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 export default function StampListScreen() {
   const router = useRouter();
 
-  const [value, setValue] = useState<string>('ALL');
+  const [value, setValue] = useState<string | null>(null);
   const [stampBoards, setStampBoards] = useState<ShopStampData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,14 +86,22 @@ export default function StampListScreen() {
   const fetchStamps = async (storeType: string) => {
     setLoading(true);
     try {
-      const token = await AsyncStorage.getItem('accessToken');
-      if (!token) {
-        showError('로그인이 필요합니다.');
+      const credentials = await Keychain.getGenericPassword({
+        service: 'com.kkukmoa.accessToken',
+      });
+
+      if (!credentials) {
+        Alert.alert('알림', '로그인이 필요합니다.');
         return;
       }
 
+      const token = credentials.password;
+
       const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
-      const url = `${API_BASE_URL}/v1/stamps/?store-type=${storeType}`;
+      const url =
+        storeType && storeType.trim() !== ''
+          ? `${API_BASE_URL}/v1/stamps?store-type=${storeType}`
+          : `${API_BASE_URL}/v1/stamps`;
 
       const response = await axios.get<StampApiResponse>(url, {
         headers: {

@@ -111,7 +111,7 @@ export default function KkDropdown({ items, value, onSelect }: KkDropdownProps) 
   const selectedLabel = items.find((item) => item.value === value)?.label ?? '업종';
 
   const handleApply = () => {
-    const appliedValue = tempValue || 'ALL';
+    const appliedValue = tempValue ?? '';
     onSelect(appliedValue);
     setOpen(false);
   };
