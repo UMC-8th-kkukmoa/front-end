@@ -1,13 +1,12 @@
 import React from 'react';
-import { Modal, StyleSheet, Pressable, Image, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, Pressable } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import colors from '../../design/colors';
-
-const barcodeImage = require('../../assets/images/barcodeExample.png');
 
 interface BarcodeModalProps {
   visible: boolean;
   onClose: () => void;
-  onUseCoupon: () => void;
+  qrValue: string;
 }
 
 const styles = StyleSheet.create({
@@ -18,25 +17,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: 280,
-    height: 180,
+    width: 240,
+    height: 240,
     backgroundColor: colors.light.white,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
-  },
-  barcodeImage: {
-    width: 260,
-    height: 160,
   },
 });
 
-export default function BarcodeModal({ visible, onClose, onUseCoupon }: BarcodeModalProps) {
-  const handleUse = () => {
-    onClose();
-    onUseCoupon();
-  };
-
+export default function BarcodeModal({ visible, onClose, qrValue }: BarcodeModalProps) {
   return (
     <Modal
       animationType="slide"
@@ -47,13 +38,7 @@ export default function BarcodeModal({ visible, onClose, onUseCoupon }: BarcodeM
     >
       <Pressable style={styles.modalBackground} onPress={onClose}>
         <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
-          <TouchableOpacity
-            onPress={handleUse}
-            accessibilityLabel="쿠폰 사용하기"
-            activeOpacity={0.8}
-          >
-            <Image source={barcodeImage} style={styles.barcodeImage} resizeMode="contain" />
-          </TouchableOpacity>
+          <QRCode value={qrValue} size={200} />
         </Pressable>
       </Pressable>
     </Modal>
