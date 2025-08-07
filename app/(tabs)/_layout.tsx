@@ -92,7 +92,7 @@ export default function Layout() {
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
-        backgroundColor: isStoreTab ? 'transparent' : 'white',
+        backgroundColor: colors.light.white,
       }}
     >
       <StatusBar barStyle="dark-content" />
