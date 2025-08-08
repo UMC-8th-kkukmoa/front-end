@@ -67,6 +67,7 @@ export default function StampListScreen() {
 
       if (!credentials) {
         Alert.alert('알림', '로그인이 필요합니다.');
+        setLoading(false);
         return;
       }
 
@@ -105,8 +106,9 @@ export default function StampListScreen() {
         });
       });
 
-      const newStampBoards: ShopStampData[] = Object.entries(shopMap).map(([shopName, stamps]) => {
-        const stampedCount = stamps.filter((s) => s.isStamped).length;
+      const newStampBoards: ShopStampData[] = Object.entries(shopMap).map(([shopName]) => {
+        const stampedCount =
+          data.result.stamps.find((s) => s.store_name === shopName)?.stamp_score ?? 0;
         const arr: Stamp[] = Array.from({ length: TOTAL_STAMPS }, (_, i) => ({
           id: i + 1,
           isStamped: i < stampedCount,
