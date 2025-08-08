@@ -94,31 +94,24 @@ export default function StampListScreen() {
         return;
       }
 
-      const shopMap: Record<string, Stamp[]> = {};
-
+      const shopScores: Record<string, number> = {};
       data.result.stamps.forEach((stamp) => {
-        if (!shopMap[stamp.store_name]) {
-          shopMap[stamp.store_name] = [];
-        }
-        shopMap[stamp.store_name].push({
-          id: stamp.id,
-          isStamped: stamp.stamp_score > 0,
-        });
+        shopScores[stamp.store_name] = stamp.stamp_score;
       });
 
-      const newStampBoards: ShopStampData[] = Object.entries(shopMap).map(([shopName]) => {
-        const stampedCount =
-          data.result.stamps.find((s) => s.store_name === shopName)?.stamp_score ?? 0;
-        const arr: Stamp[] = Array.from({ length: TOTAL_STAMPS }, (_, i) => ({
-          id: i + 1,
-          isStamped: i < stampedCount,
-        }));
+      const newStampBoards: ShopStampData[] = Object.entries(shopScores).map(
+        ([shopName, stampedCount]) => {
+          const arr: Stamp[] = Array.from({ length: TOTAL_STAMPS }, (_, i) => ({
+            id: i + 1,
+            isStamped: i < stampedCount,
+          }));
 
-        return {
-          shopName,
-          stamps: arr,
-        };
-      });
+          return {
+            shopName,
+            stamps: arr,
+          };
+        },
+      );
 
       setStampBoards(newStampBoards);
 
