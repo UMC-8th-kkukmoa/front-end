@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
@@ -10,6 +10,15 @@ import styles from './SearchScreen.style';
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const { from } = useLocalSearchParams();
+
+  const handleBack = () => {
+    if (from === 'stores') {
+      router.replace('/(tabs)/stores');
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,7 +26,7 @@ export default function SearchScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => router.replace('/(tabs)/stores')}
+          onPress={handleBack}
           style={styles.backButton}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
