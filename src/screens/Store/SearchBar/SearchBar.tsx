@@ -11,7 +11,7 @@ function SearchBar() {
     <TouchableOpacity
       style={styles.wrapper}
       activeOpacity={0.8}
-      onPress={() => router.push('/store/search')}
+      onPress={() => router.push('/store/search?from=stores')}
     >
       <SearchBarSvg />
     </TouchableOpacity>

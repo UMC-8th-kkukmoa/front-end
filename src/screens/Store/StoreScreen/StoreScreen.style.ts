@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import colors from '../../../design/colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,7 +8,6 @@ const styles = StyleSheet.create({
 
   mapArea: {
     flex: 1,
-    backgroundColor: colors.light.white,
   },
 
   headerArea: {
