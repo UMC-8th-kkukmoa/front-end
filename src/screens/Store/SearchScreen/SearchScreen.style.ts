@@ -35,8 +35,8 @@ export default StyleSheet.create({
   },
   iconWrapper: {
     position: 'absolute',
-    right: 20,
-    top: 17,
+    right: 15,
+    top: 12,
   },
   body: {
     flex: 1,

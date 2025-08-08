@@ -9,6 +9,20 @@ export default StyleSheet.create({
     paddingBottom: 150,
   },
 
+  // 리스트 없을때
+  emptyWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 91,
+  },
+
+  emptyText: {
+    fontFamily: 'Pretendard-Bold',
+    fontWeight: 700,
+    fontSize: 14,
+    color: colors.light.gray2,
+  },
+
   // 바텀시트 자체
   bottomSheetBackground: {
     backgroundColor: colors.light.white,
@@ -44,6 +58,7 @@ export default StyleSheet.create({
     gap: 6,
   },
   locationText: {
+    fontFamily: 'Pretendard-Bold',
     fontSize: 14,
     color: colors.light.gray2,
     fontWeight: '700',
