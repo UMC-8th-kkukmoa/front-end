@@ -51,7 +51,7 @@ export default function StampListScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
-    router.push('(tabs)/profile');
+    router.replace('/(tabs)/profile');
   };
 
   const showError = (message: string) => {
@@ -96,7 +96,8 @@ export default function StampListScreen() {
 
       const shopScores: Record<string, number> = {};
       data.result.stamps.forEach((stamp) => {
-        shopScores[stamp.store_name] = stamp.stamp_score;
+        const prev = shopScores[stamp.store_name] ?? 0;
+        shopScores[stamp.store_name] = Math.max(prev, stamp.stamp_score);
       });
 
       const newStampBoards: ShopStampData[] = Object.entries(shopScores).map(
