@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import * as Keychain from 'react-native-keychain';
 
 interface CouponWebSocketMessage {
   is_success: boolean;
@@ -11,44 +12,74 @@ interface CouponWebSocketMessage {
 
 const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
   const ws = useRef<WebSocket | null>(null);
+  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    const baseUrl = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
-    const wsUrl = `${baseUrl.replace(/^https?/, 'wss')}/ws`;
+    isMounted.current = true;
 
-    ws.current = new WebSocket(wsUrl);
-
-    ws.current.onopen = () => {
-      // eslint-disable-next-line no-console
-      console.log('WebSocket connected');
-    };
-
-    ws.current.onmessage = (event: MessageEvent) => {
+    const connectWebSocket = async () => {
       try {
-        const data: CouponWebSocketMessage = JSON.parse(event.data);
-        // eslint-disable-next-line no-console
-        console.log('WebSocket data:', data);
+        const baseUrl = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
 
-        if (data.is_success && data.qr_type === 'COUPON' && data.qr_info) {
-          onScanResult(data.qr_info);
+        const credentials = await Keychain.getGenericPassword();
+        const token = credentials ? credentials.password : null;
+
+        const wsUrl = `${baseUrl.replace(/^https?/, 'ws')}/ws${token ? `?token=${token}` : ''}`;
+
+        ws.current = new WebSocket(wsUrl);
+
+        ws.current.onopen = () => {
+          if (!isMounted.current) return;
+          console.log('WebSocket connected');
+        };
+
+        ws.current.onmessage = (event: MessageEvent) => {
+          try {
+            const data: CouponWebSocketMessage = JSON.parse(event.data);
+            console.log('WebSocket data:', data);
+
+            if (data.is_success && data.qr_type === 'COUPON' && data.qr_info) {
+              onScanResult(data.qr_info);
+            }
+          } catch (error) {
+            console.error('Failed to parse WebSocket message:', error);
+          }
+        };
+
+        ws.current.onerror = (error) => {
+          if (!isMounted.current) return;
+          console.error('WebSocket error:', error);
+        };
+
+        ws.current.onclose = () => {
+          if (!isMounted.current) return;
+          console.log('WebSocket disconnected');
+
+          reconnectTimeout.current = setTimeout(() => {
+            if (isMounted.current) {
+              connectWebSocket();
+            }
+          }, 3000);
+        };
+      } catch (e) {
+        console.error('WebSocket connection failed:', e);
+
+        if (isMounted.current) {
+          reconnectTimeout.current = setTimeout(() => {
+            connectWebSocket();
+          }, 3000);
         }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to parse WebSocket message:', error);
       }
     };
 
-    ws.current.onerror = (error) => {
-      // eslint-disable-next-line no-console
-      console.error('WebSocket error:', error);
-    };
-
-    ws.current.onclose = () => {
-      // eslint-disable-next-line no-console
-      console.log('WebSocket disconnected');
-    };
+    connectWebSocket();
 
     return () => {
+      isMounted.current = false;
+      if (reconnectTimeout.current) {
+        clearTimeout(reconnectTimeout.current);
+      }
       ws.current?.close();
     };
   }, [onScanResult]);
