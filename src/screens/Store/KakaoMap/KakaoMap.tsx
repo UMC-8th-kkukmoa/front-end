@@ -6,7 +6,6 @@ import colors from '../../../design/colors';
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   loadingText: {
@@ -15,11 +14,6 @@ const styles = StyleSheet.create({
     color: colors.light.gray2,
   },
 });
-
-interface KakaoMapProps {
-  center?: { lat: number; lng: number } | null;
-  zoom?: number;
-}
 
 function renderMapLoading() {
   // 임시 UI
@@ -31,12 +25,15 @@ function renderMapLoading() {
   );
 }
 
-// 일단 center 무시
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function KakaoMap({ center, zoom = 3 }: KakaoMapProps) {
+interface KakaoMapProps {
+  center?: { lat: number; lng: number } | null;
+  zoom?: number;
+  mapRef?: React.RefObject<WebView<unknown> | null>;
+}
+
+export default function KakaoMap({ center, zoom, mapRef }: KakaoMapProps) {
   const fallbackCenter = { lat: 37.5665, lng: 126.978 };
-  // 에뮬레이터 위치값이 이상해서 서울 시청으로 하드코딩 후 나중 배포시 수정
-  const finalCenter = fallbackCenter; // 추후: center ?? fallbackCenter;
+  const finalCenter = center ?? fallbackCenter;
 
   const rawHtml = `
     <!DOCTYPE html>
@@ -62,6 +59,20 @@ export default function KakaoMap({ center, zoom = 3 }: KakaoMapProps) {
             level: ${zoom}
           };
           var map = new kakao.maps.Map(container, options); 
+          
+          document.addEventListener("message", function(event) {
+          try {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'MOVE_TO_LOCATION') {
+              const { lat, lng } = data.payload;
+              const newCenter = new kakao.maps.LatLng(lat, lng);
+              map.setCenter(newCenter);
+            }
+          } catch (e) {
+            console.error('지도 메시지 처리 오류:', e);
+          }
+        });
         </script>
       </body>
     </html>
@@ -70,12 +81,14 @@ export default function KakaoMap({ center, zoom = 3 }: KakaoMapProps) {
   const html = rawHtml.replace('__APP_KEY__', process.env.EXPO_PUBLIC_KAKAO_MAP_KEY ?? '');
 
   return (
-    <WebView
+    <WebView<unknown>
+      ref={mapRef}
       originWhitelist={['*']}
       source={{ html }}
       style={{ flex: 1 }}
       startInLoadingState
       renderLoading={renderMapLoading}
+      javaScriptEnabled
     />
   );
 }

@@ -1,114 +1,12 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import axios from 'axios';
+import * as Keychain from 'react-native-keychain';
 import styles from './StoreBottomSheet.style';
 import MapPin from '../../../assets/images/mappin.svg';
 import MapButton from '../../../assets/images/mapbutton.svg';
 import StoreCard from '../StoreCard/StoreCard';
-
-// 더미데이터 (10)
-const mockStores = [
-  {
-    id: '1',
-    name: '꾹모아모아카페 성신여대입구점',
-    imageUrl: 'https://picsum.photos/200/140?1',
-    category: '카페',
-    distance: '2.16 km',
-    time: '09:00 ~ 21:00',
-    reviewCount: 21,
-    bookmarkCount: 39,
-  },
-  {
-    id: '2',
-    name: '달콤한디저트카페 강남역점',
-    imageUrl: 'https://picsum.photos/200/140?2',
-    category: '카페',
-    distance: '1.05 km',
-    time: '10:00 ~ 22:00',
-    reviewCount: 10,
-    bookmarkCount: 15,
-  },
-  {
-    id: '3',
-    name: '혼커피 홍대점',
-    imageUrl: 'https://picsum.photos/200/140?3',
-    category: '카페',
-    distance: '0.87 km',
-    time: '08:00 ~ 20:00',
-    reviewCount: 45,
-    bookmarkCount: 67,
-  },
-  {
-    id: '4',
-    name: '브레드마루 신촌본점',
-    imageUrl: 'https://picsum.photos/200/140?4',
-    category: '운동/건강',
-    distance: '3.42 km',
-    time: '07:30 ~ 19:00',
-    reviewCount: 34,
-    bookmarkCount: 22,
-  },
-  {
-    id: '5',
-    name: '모모티하우스 이태원점',
-    imageUrl: 'https://picsum.photos/200/140?5',
-    category: '음식점',
-    distance: '5.11 km',
-    time: '11:00 ~ 23:00',
-    reviewCount: 18,
-    bookmarkCount: 12,
-  },
-  {
-    id: '6',
-    name: '헬시핏짐 강남점',
-    imageUrl: 'https://picsum.photos/200/140?6',
-    category: '운동/건강',
-    distance: '2.45 km',
-    time: '06:00 ~ 23:00',
-    reviewCount: 50,
-    bookmarkCount: 40,
-  },
-  {
-    id: '7',
-    name: '헤어클래식 명동점',
-    imageUrl: 'https://picsum.photos/200/140?7',
-    category: '미용',
-    distance: '1.95 km',
-    time: '10:00 ~ 20:00',
-    reviewCount: 12,
-    bookmarkCount: 9,
-  },
-  {
-    id: '8',
-    name: '스터디팩토리 건대점',
-    imageUrl: 'https://picsum.photos/200/140?8',
-    category: '미용',
-    distance: '0.74 km',
-    time: '08:00 ~ 22:00',
-    reviewCount: 27,
-    bookmarkCount: 18,
-  },
-  {
-    id: '9',
-    name: '에그버거 서초점',
-    imageUrl: 'https://picsum.photos/200/140?9',
-    category: '음식점',
-    distance: '3.22 km',
-    time: '11:00 ~ 21:30',
-    reviewCount: 30,
-    bookmarkCount: 21,
-  },
-  {
-    id: '10',
-    name: '루프탑카페 이화여대점',
-    imageUrl: 'https://picsum.photos/200/140?10',
-    category: '카페',
-    distance: '1.11 km',
-    time: '09:30 ~ 22:00',
-    reviewCount: 16,
-    bookmarkCount: 25,
-  },
-];
 
 function BottomSheetHandle() {
   return (
@@ -128,11 +26,21 @@ function EmptyStoreList() {
 
 type Props = {
   selectedCategory: string | null;
+  address?: string | null;
+  location?: { lat: number; lng: number } | null;
 };
 
-function StoreBottomSheet({ selectedCategory }: Props) {
+function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['9%', '80%'], []);
+  const { height: screenHeight } = Dimensions.get('window');
+
+  const snapPoints = useMemo(() => {
+    const topSnap = screenHeight * 0.75;
+    const bottomSnap = screenHeight * 0.1;
+    return [bottomSnap, topSnap];
+  }, []);
+
+  const [storeList, setStoreList] = useState<any[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
@@ -149,7 +57,7 @@ function StoreBottomSheet({ selectedCategory }: Props) {
       setShowMapButton(false);
     }
 
-    // 80% 위로 열리지 않도록 고정
+    // 70% 위로 열리지 않도록 고정
     if (index > 1) {
       sheetRef.current?.snapToIndex(1);
     }
@@ -168,24 +76,84 @@ function StoreBottomSheet({ selectedCategory }: Props) {
       [id]: !prev[id],
     }));
   };
-  // 카테고리 필터링 & 거리 순 정렬
-  const filteredAndSortedStores = useMemo(() => {
-    const filtered = !selectedCategory
-      ? mockStores
-      : mockStores.filter((store) => store.category === selectedCategory);
 
-    const sorted = filtered
+  // API 호출
+  useEffect(() => {
+    const fetchStores = async () => {
+      if (!location) return;
+
+      const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
+      const params: any = {
+        latitude: location.lat,
+        longitude: location.lng,
+        offset: 0,
+        limit: 10,
+      };
+
+      let url = '';
+      if (selectedCategory) {
+        url = `${API_BASE_URL}/v1/stores/category`;
+        params.categoryType = selectedCategory;
+      } else {
+        url = `${API_BASE_URL}/v1/stores`;
+      }
+
+      try {
+        const credentials = await Keychain.getGenericPassword({
+          service: 'com.kkukmoa.accessToken',
+        });
+
+        if (!credentials) {
+          Alert.alert('알림', '로그인이 필요합니다.');
+          return;
+        }
+
+        const token = credentials.password;
+
+        const res = await axios.get(url, {
+          params,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+        });
+
+        if (res.data.isSuccess) {
+          const stores = res.data.result.map((store: any) => ({
+            id: store.storeId.toString(),
+            name: store.name,
+            imageUrl: store.storeImage,
+            category: selectedCategory ?? '기타',
+            distance: `${store.distance.toFixed(2)} km`,
+            time: `${store.openingHours} ~ ${store.closingHours}`,
+            reviewCount: store.reviewCount,
+            bookmarkCount: 0,
+          }));
+
+          // console.log('✅ 가게 데이터:', stores);
+          setStoreList(stores);
+        } else {
+          console.error('API 응답 실패:', res.data.message || '가게 정보를 불러오지 못했습니다.');
+        }
+      } catch (err: any) {
+        console.error('가게 조회 실패:', err?.message || err);
+      }
+    };
+
+    fetchStores();
+  }, [location, selectedCategory]);
+
+  const filteredAndSortedStores = useMemo(() => {
+    return storeList
       .map((store) => ({
         ...store,
         distanceValue: parseFloat(store.distance.replace(' km', '')),
       }))
       .sort((a, b) => a.distanceValue - b.distanceValue);
+  }, [storeList]);
 
-    return sorted;
-  }, [selectedCategory]);
-
-  // 가게 리스트 카드
-  const renderItem = ({ item }: { item: (typeof mockStores)[0] }) => (
+  const renderItem = ({ item }: { item: any }) => (
     <StoreCard item={item} isLiked={likedMap[item.id] === true} onToggleLike={toggleLike} />
   );
 
@@ -205,7 +173,7 @@ function StoreBottomSheet({ selectedCategory }: Props) {
       >
         <View style={styles.header}>
           <MapPin />
-          <Text style={styles.locationText}>용인시 기흥구 신갈동</Text>
+          <Text style={styles.locationText}>{address ?? '위치 불러오는 중...'}</Text>
         </View>
 
         <BottomSheetFlatList

@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/helper-define-polyfill-provider": "^0.6.5",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@react-native-community/cli": "19.1.0",
@@ -66,6 +67,7 @@
     "@types/styled-components-react-native": "^5.2.5",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "babel-preset-expo": "^13.2.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
