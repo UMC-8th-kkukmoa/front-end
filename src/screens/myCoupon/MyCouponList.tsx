@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -79,6 +79,7 @@ export default function MyCouponListScreen() {
   const [bottomVisible, setBottomVisible] = useState(false);
   const [value, setValue] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const items = categoryData.map((cat) => ({
     label: cat.name,
@@ -86,7 +87,7 @@ export default function MyCouponListScreen() {
     icon: cat.icon,
   }));
 
-  const fetchCoupons = async (storeType: string) => {
+  const fetchCoupons = async (storeType: string, signal?: AbortSignal) => {
     try {
       const credentials = await Keychain.getGenericPassword({
         service: 'com.kkukmoa.accessToken',
@@ -108,6 +109,7 @@ export default function MyCouponListScreen() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        signal,
       });
 
       const { data } = response;
@@ -120,7 +122,12 @@ export default function MyCouponListScreen() {
       }
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
-        console.error('쿠폰 목록 조회 오류:', error.response?.data || error.message);
+        if (error.name === 'CanceledError') {
+          // 요청 취소 시 무시
+          console.log('이전 요청 취소됨');
+        } else {
+          console.error('쿠폰 목록 조회 오류:', error.response?.data || error.message);
+        }
       } else {
         console.error('쿠폰 목록 조회 오류:', error);
       }
@@ -128,7 +135,12 @@ export default function MyCouponListScreen() {
   };
 
   useEffect(() => {
-    fetchCoupons(value || '');
+    const controller = new AbortController();
+    fetchCoupons(value || '', controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, [value]);
 
   const handleCouponUsed = useCallback((qrInfo: string) => {
@@ -136,10 +148,19 @@ export default function MyCouponListScreen() {
       const updated = prev.filter((coupon) => coupon.coupon_qrcode !== qrInfo);
       if (updated.length !== prev.length) {
         setBottomVisible(true);
-        setTimeout(() => setBottomVisible(false), 2000);
+        if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = setTimeout(() => setBottomVisible(false), 2000);
       }
       return updated;
     });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
   }, []);
 
   useQRCodeWebSocket(handleCouponUsed);

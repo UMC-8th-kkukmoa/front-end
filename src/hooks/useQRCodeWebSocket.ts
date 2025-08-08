@@ -22,9 +22,12 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
       try {
         const baseUrl = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
 
-        const credentials = await Keychain.getGenericPassword();
+        const credentials = await Keychain.getGenericPassword({
+          service: 'com.kkukmoa.accessToken',
+        });
         const token = credentials ? credentials.password : null;
 
+        // React Native WebSocket API는 커스텀 헤더를 지원하지 않아 토큰을 받아야 하면 URL 쿼리에 노출하는 수밖에 없음
         const wsUrl = `${baseUrl.replace(/^https?/, 'ws')}/ws${token ? `?token=${token}` : ''}`;
 
         ws.current = new WebSocket(wsUrl);
@@ -43,6 +46,9 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
               onScanResult(data.qr_info);
             }
           } catch (error) {
+            if (!__DEV__ && error instanceof Error) {
+              // TODO: 에러 리포팅 서비스 호출 (ex. Sentry.captureException(error))
+            }
             console.error('Failed to parse WebSocket message:', error);
           }
         };
