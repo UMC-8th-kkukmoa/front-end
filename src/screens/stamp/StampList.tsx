@@ -11,32 +11,7 @@ import StampCompleteModal from './StampCompleteModal';
 import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
 import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
-
-type Stamp = {
-  id: number;
-  isStamped: boolean;
-};
-
-type ShopStampData = {
-  shopName: string;
-  stamps: Stamp[];
-};
-
-interface StampApiResponse {
-  isSuccess: boolean;
-  code: string;
-  result: {
-    stamps: ApiStamp[];
-    total: number;
-  };
-  message: string;
-}
-
-interface ApiStamp {
-  id: number;
-  store_name: string;
-  stamp_score: number;
-}
+import { Stamp, ShopStampData, StampApiResponse } from '../../types/stamp';
 
 const TOTAL_STAMPS = 10;
 
