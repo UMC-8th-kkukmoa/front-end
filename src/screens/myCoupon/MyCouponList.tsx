@@ -110,7 +110,7 @@ export default function MyCouponListScreen() {
         },
       });
 
-      const data = await response.data;
+      const { data } = response;
 
       if (data.isSuccess) {
         setCoupons(data.result.coupon_list);
@@ -119,8 +119,11 @@ export default function MyCouponListScreen() {
         console.warn('쿠폰 목록 조회 실패:', data.message);
       }
     } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error('쿠폰 목록 조회 오류:', error?.response?.data || error.message);
+      if (axios.isAxiosError(error)) {
+        console.error('쿠폰 목록 조회 오류:', error.response?.data || error.message);
+      } else {
+        console.error('쿠폰 목록 조회 오류:', error);
+      }
     }
   };
 
