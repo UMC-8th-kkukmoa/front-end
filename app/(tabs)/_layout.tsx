@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePathname, router } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
@@ -80,9 +80,21 @@ function MainButton() {
 
 export default function Layout() {
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
+
+  const isStoreTab = pathname === '/stores';
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: isStoreTab ? 0 : insets.top, // stores 페이지만 상단 SafeArea 제거
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+        backgroundColor: colors.light.white,
+      }}
+    >
       <StatusBar barStyle="dark-content" />
       <Tabs>
         <TabSlot />
@@ -127,6 +139,6 @@ export default function Layout() {
           })}
         </TabList>
       </Tabs>
-    </SafeAreaView>
+    </View>
   );
 }

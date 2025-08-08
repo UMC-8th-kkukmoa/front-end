@@ -82,7 +82,7 @@ const mockStores = [
     id: '8',
     name: '스터디팩토리 건대점',
     imageUrl: 'https://picsum.photos/200/140?8',
-    category: '교육',
+    category: '미용',
     distance: '0.74 km',
     time: '08:00 ~ 22:00',
     reviewCount: 27,
@@ -118,13 +118,21 @@ function BottomSheetHandle() {
   );
 }
 
+function EmptyStoreList() {
+  return (
+    <View style={styles.emptyWrapper}>
+      <Text style={styles.emptyText}>아직 준비된 가게가 없습니다.</Text>
+    </View>
+  );
+}
+
 type Props = {
   selectedCategory: string | null;
 };
 
 function StoreBottomSheet({ selectedCategory }: Props) {
   const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['10%', '80%'], []);
+  const snapPoints = useMemo(() => ['9%', '80%'], []);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
@@ -207,6 +215,7 @@ function StoreBottomSheet({ selectedCategory }: Props) {
           contentContainerStyle={{ ...styles.listContentContainer, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled
+          ListEmptyComponent={EmptyStoreList}
         />
       </BottomSheet>
       {showMapButton && (
