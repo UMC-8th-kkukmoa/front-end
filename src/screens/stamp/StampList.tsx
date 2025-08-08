@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, Alert, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -58,7 +58,7 @@ export default function StampListScreen() {
     Alert.alert('오류', message);
   };
 
-  const fetchStamps = async (storeType: string) => {
+  const fetchStamps = useCallback(async (storeType?: string | null) => {
     setLoading(true);
     try {
       const credentials = await Keychain.getGenericPassword({
@@ -129,7 +129,11 @@ export default function StampListScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchStamps(value);
+  }, [value, fetchStamps]);
 
   const renderContent = () => {
     if (loading) {
@@ -154,10 +158,6 @@ export default function StampListScreen() {
       </View>
     ));
   };
-
-  useEffect(() => {
-    fetchStamps(value);
-  }, [value]);
 
   const items = categoryData.map((cat) => ({
     label: cat.name,
