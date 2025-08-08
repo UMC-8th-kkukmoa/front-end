@@ -10,11 +10,11 @@ import ExerciseIcon from '../../../assets/images/exercise.svg';
 import colors from '../../../design/colors';
 
 export const categoryData = [
-  { name: '음식점', value: 'RESTAURANT', icon: FoodIcon },
-  { name: '카페', value: 'CAFE', icon: CafeIcon },
-  { name: '미용', value: 'BEAUTY', icon: SalonIcon },
-  { name: '교육', value: 'EDUCATION', icon: EducationIcon },
-  { name: '운동/건강', value: 'HEALTH', icon: ExerciseIcon },
+  { name: '음식점', icon: FoodIcon },
+  { name: '카페', icon: CafeIcon },
+  { name: '미용', icon: SalonIcon },
+  { name: '교육', icon: EducationIcon },
+  { name: '운동/건강', icon: ExerciseIcon },
 ];
 
 type Props = {
@@ -25,8 +25,8 @@ type Props = {
 };
 
 function CategoryTabs({ selected, onSelect, paddingHorizontal = 25, paddingVertical = 5 }: Props) {
-  const handleSelect = (value: string) => {
-    onSelect(selected === value ? null : value);
+  const handleSelect = (name: string) => {
+    onSelect(selected === name ? null : name);
   };
 
   return (
@@ -42,21 +42,21 @@ function CategoryTabs({ selected, onSelect, paddingHorizontal = 25, paddingVerti
       ]}
     >
       {categoryData.map((category) => {
-        const isSelected = selected === category.value;
+        const isSelected = selected === category.name;
         const IconComponent = category.icon;
         const iconColor = isSelected ? colors.light.white : colors.light.sub;
         const textColor = isSelected ? colors.light.white : colors.light.gray2;
 
         return (
           <TouchableOpacity
-            key={category.value}
+            key={category.name}
             style={[
               styles.tab,
               {
                 backgroundColor: isSelected ? colors.light.sub : colors.light.white,
               },
             ]}
-            onPress={() => handleSelect(category.value)}
+            onPress={() => handleSelect(category.name)}
             activeOpacity={0.8}
           >
             <View style={styles.iconWrapper}>
