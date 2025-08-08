@@ -70,8 +70,8 @@ export default StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 16,
     marginLeft: 10,
-    width: 210,
     height: 55,
+    flex: 1,
   },
   searchPlaceholder: {
     flex: 1,
