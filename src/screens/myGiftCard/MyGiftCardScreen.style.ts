@@ -4,6 +4,7 @@ import colors from '../../design/colors';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.light.white,
   },
   cardContainer: {
     flex: 1,
@@ -25,7 +26,8 @@ export default StyleSheet.create({
   },
   daysLeft: {
     fontSize: 14,
-    color: '#888',
+    color: colors.light.gray2,
+    fontWeight: '600',
   },
   statusBadge: {
     paddingHorizontal: 11,

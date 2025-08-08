@@ -82,6 +82,7 @@ export default StyleSheet.create({
     marginBottom: 20,
     borderRadius: 12,
     alignItems: 'center',
+    flex: 1,
   },
   cardList: {
     flex: 1,
