@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 
@@ -39,8 +41,12 @@ function GiftCardPurchase() {
   const getGiftImage = (giftPrice: number) => giftImageMap[giftPrice] || null;
 
   return (
-    <View style={styles.container}>
-      <Header title="결제하기" onBackPress={() => router.back()} />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* eslint-disable-next-line react/style-prop-object */}
+      <StatusBar style="dark" />
+      <View style={styles.headerContainer}>
+        <Header title="결제하기" onBackPress={() => router.back()} shadow={false} />
+      </View>
 
       <View style={styles.content}>
         <View style={styles.section}>
@@ -104,7 +110,7 @@ function GiftCardPurchase() {
           <Text style={styles.buyButtonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

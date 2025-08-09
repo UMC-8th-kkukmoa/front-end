@@ -72,8 +72,8 @@ export default function MyPageScreen() {
 
       <View style={styles.container}>
         <Section title="이용 내역">
-          <SectionLabel label="내 스탬프" onClick={() => {}} />
-          <SectionLabel label="내 쿠폰" onClick={() => {}} />
+          <SectionLabel label="내 스탬프" onClick={() => router.push('/stamp/StampList')} />
+          <SectionLabel label="내 쿠폰" onClick={() => router.push('/myCoupon/MyCouponList')} />
           <SectionLabel
             label="내 금액권"
             onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
