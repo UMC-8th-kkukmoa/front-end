@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
 
   headerArea: {
     position: 'absolute',
-    top: 2,
   },
 });
 

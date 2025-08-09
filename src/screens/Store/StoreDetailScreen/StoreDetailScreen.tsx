@@ -1,26 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StatusBar,
+  Alert,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getStoreDetail, StoreDetail } from '../../../api/store';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
 import BackArrow from '../../../assets/images/arrow_back.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
 import colors from '../../../design/colors';
-
-// 가게 정보 더미데이터
-const mockStores = [
-  {
-    id: '8',
-    name: '스토리팩토리건대점',
-    imageUrl: 'https://picsum.photos/200/140?1',
-    category: '교육',
-    time: '오전 10시 ~ 오후 9시',
-    reviewCount: 27,
-    isLiked: false,
-  },
-];
 
 // 리뷰 더미데이터
 const mockReviews = [
@@ -56,21 +53,50 @@ function StoreDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
+  const storeId = Array.isArray(id) ? id[0] : id;
 
-  const store = mockStores.find((s) => s.id === id);
+  const [store, setStore] = useState<StoreDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isLiked, setIsLiked] = useState(false); // 찜 상태 API 연동 시 교체
 
-  const [isLiked, setIsLiked] = useState(store?.isLiked || false);
+  // 상세 API 호출
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!storeId) return;
+        const r = await getStoreDetail(storeId as string);
+        setStore(r);
+      } catch (e: any) {
+        Alert.alert('오류', e?.message || '가게 정보를 불러오지 못했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [storeId]);
 
-  // 가게 정보 없을때 임시 화면
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.light.main} />
+        <Text style={{ marginTop: 8, color: colors.light.gray2 }}>가게 정보를 불러오는 중...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // 임시 UI
   if (!store) {
-    return <Text>가게 정보를 불러올 수 없습니다.</Text>;
+    return (
+      <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <Text style={{ color: colors.light.gray2 }}>가게 정보를 불러올 수 없습니다.</Text>
+      </SafeAreaView>
+    );
   }
 
   const details = [
-    { label: '카테고리', value: store.category },
-    { label: '매장번호', value: '3203430500' },
-    { label: '가게위치', value: '경기도 용인시 기흥구 신갈로 149' },
-    { label: '운영시간', value: store.time },
+    { label: '카테고리', value: store.categoryName },
+    { label: '매장번호', value: store.merchantNumber || '-' },
+    { label: '가게위치', value: `${store.address} ${store.detailAddress ?? ''}`.trim() },
+    { label: '운영시간', value: `${store.openingHours} ~ ${store.closingHours}` },
   ];
 
   return (
@@ -84,7 +110,13 @@ function StoreDetailScreen() {
         <BackArrow width={24} height={24} color={colors.light.black} />
       </TouchableOpacity>
 
-      <View style={styles.storeImageArea} />
+      <View style={styles.storeImageArea}>
+        {store.storeImage ? (
+          <Image source={{ uri: store.storeImage }} style={styles.storeImage} resizeMode="cover" />
+        ) : (
+          <Text style={{ color: colors.light.gray2 }}>이미지가 없습니다.</Text>
+        )}
+      </View>
 
       <View style={styles.storeInfo}>
         <View style={styles.titleSection}>
