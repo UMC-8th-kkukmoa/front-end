@@ -8,7 +8,7 @@ import CouponLogo from '../../assets/images/coupon-logo.svg';
 interface CouponCardProps {
   title: string;
   shopName: string;
-  onUse: () => void;
+  coupon_qrcode: string;
 }
 
 const styles = StyleSheet.create({
@@ -54,18 +54,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function CouponCard({ title, shopName, onUse }: CouponCardProps) {
+export default function CouponCard({ title, shopName, coupon_qrcode }: CouponCardProps) {
   const [textBoxHeight, setTextBoxHeight] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
   const onTextBoxLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setTextBoxHeight(height);
-  };
-
-  const handleUseCoupon = () => {
-    setModalVisible(false);
-    onUse();
   };
 
   return (
@@ -98,7 +93,7 @@ export default function CouponCard({ title, shopName, onUse }: CouponCardProps) 
       <BarcodeModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onUseCoupon={handleUseCoupon}
+        qrValue={coupon_qrcode}
       />
     </>
   );
