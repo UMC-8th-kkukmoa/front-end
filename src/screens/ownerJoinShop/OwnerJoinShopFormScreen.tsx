@@ -55,7 +55,7 @@ export default function OwnerJoinShopFormScreen() {
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.content}>
-            <Text style={styles.title}>계정 등록</Text>
+            <Text style={styles.title}>매장 등록</Text>
 
             <View style={styles.formContainer}>
               <KkTextbox
@@ -152,18 +152,18 @@ export default function OwnerJoinShopFormScreen() {
               </View>
             </View>
           </View>
-
-          <View style={styles.bottomContainer}>
-            <KkButton
-              label="다음"
-              type={isNextDisabled ? 'disabled' : 'primary'}
-              size="large"
-              onPress={() => {}}
-              shadow
-              style={styles.button}
-            />
-          </View>
         </ScrollView>
+
+        <View style={styles.bottomContainer}>
+          <KkButton
+            label="다음"
+            type={isNextDisabled ? 'disabled' : 'primary'}
+            size="large"
+            onPress={() => {}}
+            shadow
+            style={styles.button}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

@@ -21,6 +21,7 @@ export default StyleSheet.create({
   },
   formContainer: {
     gap: 32,
+    marginBottom: 54,
   },
   storeAddressFormContainer: {
     gap: 4,
@@ -28,12 +29,18 @@ export default StyleSheet.create({
   bottomContainer: {
     backgroundColor: colors.light.white,
     padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    shadowColor: '#6C3131',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 10,
   },
   button: {
     marginVertical: 20,
-    marginHorizontal: 30,
   },
   label: {
     fontSize: 14,
