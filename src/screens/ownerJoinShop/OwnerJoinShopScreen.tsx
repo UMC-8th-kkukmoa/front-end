@@ -8,10 +8,10 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Header from '../design/component/Header';
-import KkTextbox from '../design/component/KkTextbox';
-import { KkButton } from '../design/component/KkButton';
-import colors from '../design/colors';
+import Header from '../../design/component/Header';
+import KkTextbox from '../../design/component/KkTextbox';
+import { KkButton } from '../../design/component/KkButton';
+import colors from '../../design/colors';
 import styles from './OwnerJoinShopScreen.style';
 
 function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void }) {
