@@ -10,7 +10,6 @@ import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
-import QRcodeIcon from '../../assets/images/Group.svg';
 
 // 더미데이터 (10)
 const mockStores = [
@@ -138,9 +137,6 @@ function MainScreen() {
           </View>
           <View style={styles.rightIcons}>
             <TouchableOpacity>
-              <QRcodeIcon width={24} height={24} />
-            </TouchableOpacity>
-            <TouchableOpacity>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>
             <TouchableOpacity>
@@ -166,7 +162,7 @@ function MainScreen() {
           <View style={styles.searchBarContainer}>
             <TouchableOpacity
               style={styles.searchTouchable}
-              onPress={() => router.push('/search')}
+              onPress={() => router.push('/store/search')}
               activeOpacity={0.8}
             >
               <Text style={styles.searchPlaceholder}>매장을 검색해보세요.</Text>

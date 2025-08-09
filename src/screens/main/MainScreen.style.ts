@@ -70,8 +70,8 @@ export default StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 16,
     marginLeft: 10,
-    width: 210,
     height: 55,
+    flex: 1,
   },
   searchPlaceholder: {
     flex: 1,
@@ -82,12 +82,12 @@ export default StyleSheet.create({
     marginBottom: 20,
     borderRadius: 12,
     alignItems: 'center',
+    flex: 1,
   },
   cardList: {
     flex: 1,
   },
   cardContainer: {
     paddingHorizontal: 18,
-    paddingBottom: 120,
   },
 });
