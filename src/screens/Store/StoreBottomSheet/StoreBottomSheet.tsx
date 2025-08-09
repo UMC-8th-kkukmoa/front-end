@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import axios from 'axios';
-import * as Keychain from 'react-native-keychain';
+import { getStoreList, getStoreListByCategory } from '../../../api/store';
 import styles from './StoreBottomSheet.style';
 import MapPin from '../../../assets/images/mappin.svg';
 import MapButton from '../../../assets/images/mapbutton.svg';
@@ -44,7 +43,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
-  const [showMapButton, setShowMapButton] = useState(false); // 지도보기 버튼 반응 느려서 추가
+  const [showMapButton, setShowMapButton] = useState(false);
 
   // 시트 관리
   const handleSheetChanges = useCallback((index: number) => {
@@ -82,45 +81,13 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
     const fetchStores = async () => {
       if (!location) return;
 
-      const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-
-      const params: any = {
-        latitude: location.lat,
-        longitude: location.lng,
-        offset: 0,
-        limit: 10,
-      };
-
-      let url = '';
-      if (selectedCategory) {
-        url = `${API_BASE_URL}/v1/stores/category`;
-        params.categoryType = selectedCategory;
-      } else {
-        url = `${API_BASE_URL}/v1/stores`;
-      }
-
       try {
-        const credentials = await Keychain.getGenericPassword({
-          service: 'com.kkukmoa.accessToken',
-        });
+        const stores = selectedCategory
+          ? await getStoreListByCategory(selectedCategory, location.lat, location.lng)
+          : await getStoreList(location.lat, location.lng);
 
-        if (!credentials) {
-          Alert.alert('알림', '로그인이 필요합니다.');
-          return;
-        }
-
-        const token = credentials.password;
-
-        const res = await axios.get(url, {
-          params,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-        });
-
-        if (res.data.isSuccess) {
-          const stores = res.data.result.map((store: any) => ({
+        const formatted = stores.map((store) => {
+          return {
             storeId: store.storeId.toString(),
             name: store.name,
             imageUrl: store.storeImage,
@@ -129,13 +96,10 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
             time: `${store.openingHours} ~ ${store.closingHours}`,
             reviewCount: store.reviewCount,
             bookmarkCount: 0,
-          }));
+          };
+        });
 
-          // console.log('✅ 가게 데이터:', stores);
-          setStoreList(stores);
-        } else {
-          Alert.alert('오류', res.data.message || '가게 정보를 불러오지 못했습니다.');
-        }
+        setStoreList(formatted);
       } catch (err: any) {
         Alert.alert('오류', err?.message || '가게 정보를 불러오는 중 문제가 발생했습니다.');
       }

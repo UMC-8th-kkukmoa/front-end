@@ -11,27 +11,13 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as Keychain from 'react-native-keychain';
-import axios from 'axios';
+import { getStoreDetail, StoreDetail } from '../../../api/store';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
 import BackArrow from '../../../assets/images/arrow_back.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
 import colors from '../../../design/colors';
-
-type StoreDetail = {
-  storeId: number;
-  name: string;
-  reviewCount: number;
-  categoryName: string;
-  merchantNumber: string;
-  address: string;
-  detailAddress: string;
-  storeImage: string;
-  openingHours: string;
-  closingHours: string;
-};
 
 // 리뷰 더미데이터
 const mockReviews = [
@@ -75,43 +61,18 @@ function StoreDetailScreen() {
 
   // 상세 API 호출
   useEffect(() => {
-    const fetchDetail = async () => {
+    (async () => {
       try {
         if (!storeId) return;
-
-        const creds = await Keychain.getGenericPassword({ service: 'com.kkukmoa.accessToken' });
-        if (!creds) {
-          Alert.alert('알림', '로그인이 필요합니다.');
-          router.replace('/(tabs)/stores');
-          return;
-        }
-
-        const token = creds.password;
-        const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-        const url = `${API_BASE_URL}/v1/stores/${storeId}`;
-
-        const res = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-        });
-
-        if (res.data?.isSuccess && res.data?.result) {
-          const r = res.data.result as StoreDetail;
-          setStore(r);
-        } else {
-          Alert.alert('오류', res.data?.message || '가게 정보를 불러오지 못했습니다.');
-        }
+        const r = await getStoreDetail(storeId as string);
+        setStore(r);
       } catch (e: any) {
         Alert.alert('오류', e?.message || '가게 정보를 불러오지 못했습니다.');
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchDetail();
-  }, [storeId, router]);
+    })();
+  }, [storeId]);
 
   if (loading) {
     return (
