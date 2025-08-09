@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 129,
+    height: 100,
     zIndex: 1,
   },
 });
