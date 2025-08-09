@@ -4,6 +4,7 @@ import colors from '../../../design/colors';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.light.white,
   },
 
   // 스토어 사진

@@ -14,6 +14,7 @@ export default StyleSheet.create({
   image: {
     width: '100%',
     height: 97,
+    backgroundColor: colors.light.gray1_35,
   },
   categoryBadge: {
     position: 'absolute',
