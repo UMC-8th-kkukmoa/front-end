@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
 });
 
 function renderMapLoading() {
-  // 임시 UI
   return (
     <View style={styles.loadingContainer}>
       <ActivityIndicator size="large" color={colors.light.main} />
@@ -40,7 +39,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef }: KakaoMapProps) {
     <html>
       <head>
         <meta charset="utf-8">
-        <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=__APP_KEY__"></script>
+        <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=__APP_KEY__&autoload=false"></script>
         <style>
           html, body, #map {
             width: 100%;
@@ -52,28 +51,52 @@ export default function KakaoMap({ center, zoom = 3, mapRef }: KakaoMapProps) {
       </head>
       <body>
         <div id="map"></div>
-        <script>
-          var container = document.getElementById('map');
-          var options = {
-            center: new kakao.maps.LatLng(${finalCenter.lat}, ${finalCenter.lng}),
-            level: ${zoom}
-          };
-          var map = new kakao.maps.Map(container, options); 
-          
-          document.addEventListener("message", function(event) {
-          try {
-            const data = JSON.parse(event.data);
+          <script>
+            (function () {
+              var map, ready = false;
+              var pending = [];
 
-            if (data.type === 'MOVE_TO_LOCATION') {
-              const { lat, lng } = data.payload;
-              const newCenter = new kakao.maps.LatLng(lat, lng);
-              map.setCenter(newCenter);
-            }
-          } catch (e) {
-            console.error('지도 메시지 처리 오류:', e);
-          }
-        });
-        </script>
+              function handleMessage(msg) {
+                try {
+                  var data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                  if (data.type === 'MOVE_TO_LOCATION') {
+                    var p = data.payload || {};
+                    if (!ready) { pending.push({ lat: p.lat, lng: p.lng }); return; }
+                    map.setCenter(new kakao.maps.LatLng(p.lat, p.lng));
+                  }
+                } catch (e) { console.error('지도 메시지 처리 오류:', e); }
+              }
+
+              // RN -> Web 브릿지 (document.message / window.message 둘 다 수신)
+              document.addEventListener('message', function (e) { handleMessage(e.data); });
+              window.addEventListener('message', function (e) { handleMessage(e.data); });
+
+              // 전역 함수( injectJavaScript 로 직접 호출용 )
+              window.KKUKMOA = {
+                moveTo: function(lat, lng){ handleMessage({ type:'MOVE_TO_LOCATION', payload:{ lat, lng } }); }
+              };
+
+              kakao.maps.load(function () {
+                var container = document.getElementById('map');
+                map = new kakao.maps.Map(container, {
+                  center: new kakao.maps.LatLng(${finalCenter.lat}, ${finalCenter.lng}),
+                  level: ${zoom}
+                });
+                ready = true;
+
+                // RN에 준비완료 알림(원하면 WebView onMessage로 받기)
+                if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_READY' }));
+                }
+
+                // 대기 중 이동들 처리
+                while (pending.length) {
+                  var t = pending.shift();
+                  map.setCenter(new kakao.maps.LatLng(t.lat, t.lng));
+                }
+              });
+            })();
+          </script>
       </body>
     </html>
   `;

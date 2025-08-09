@@ -65,7 +65,7 @@ export default StyleSheet.create({
   // 지도보기 버튼
   mapButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 50,
     alignSelf: 'center',
     zIndex: 100,
     shadowColor: colors.light.shadow,

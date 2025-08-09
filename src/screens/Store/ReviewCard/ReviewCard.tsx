@@ -5,7 +5,7 @@ import styles from './ReviewCard.style';
 
 interface ReviewCardProps {
   review: {
-    storeId: string;
+    id: string;
     name?: string;
     content: string;
     image?: string;

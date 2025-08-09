@@ -22,14 +22,14 @@ import colors from '../../../design/colors';
 // 리뷰 더미데이터
 const mockReviews = [
   {
-    storeId: '1',
+    id: '1',
     name: '미딩',
     content: '정말 맛있습니다! 또 올 것 같아요.',
     image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
   },
-  { storeId: '2', name: '미딩', content: '매장이 깔끔하고 친절했어요.' },
+  { id: '2', name: '미딩', content: '매장이 깔끔하고 친절했어요.' },
   {
-    storeId: '3',
+    id: '3',
     name: '미딩',
     content: '음료도 맛있고 분위기도 굿!',
     image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
@@ -53,7 +53,7 @@ function StoreDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
-  const storeId = id;
+  const storeId = Array.isArray(id) ? id[0] : id;
 
   const [store, setStore] = useState<StoreDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -155,7 +155,7 @@ function StoreDetailScreen() {
           data={mockReviews}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.storeId}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => <ReviewCard review={item} />}
           contentContainerStyle={{ paddingHorizontal: 30 }}
           ItemSeparatorComponent={ItemSeparator}

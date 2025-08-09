@@ -67,21 +67,26 @@ function Store() {
       try {
         const res = await fetch(
           `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`,
-          {
-            headers: {
-              Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
-            },
-          },
+          { headers: { Authorization: `KakaoAK ${KAKAO_REST_API_KEY}` } },
         );
-        const json = await res.json();
-        const region = json.documents?.[0];
 
-        if (region) {
-          const addressText = `${region.region_1depth_name} ${region.region_2depth_name} ${region.region_3depth_name}`;
-          setAddress(addressText);
+        if (!res.ok) {
+          setAddress('주소 미확인');
+          return;
         }
+
+        const json = await res.json();
+        const region = json?.documents?.[0];
+
+        if (!region) {
+          setAddress('주소 미확인');
+          return;
+        }
+
+        const addressText = `${region.region_1depth_name} ${region.region_2depth_name} ${region.region_3depth_name}`;
+        setAddress(addressText);
       } catch (error) {
-        console.error('카카오 주소 조회 실패:', error);
+        setAddress('주소 미확인');
       }
     })();
   }, []);

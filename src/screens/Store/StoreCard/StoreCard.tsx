@@ -15,7 +15,7 @@ import colors from '../../../design/colors';
 // 문자열 → SVG 컴포넌트 매핑
 const categoryMap: Record<string, { label: string; Icon: React.FC<any> }> = {
   CAFE: { label: '카페', Icon: CafeIcon },
-  FOOD: { label: '음식점', Icon: FoodIcon },
+  RESTAURANT: { label: '음식점', Icon: FoodIcon },
   EXERCISE: { label: '운동/건강', Icon: ExerciseIcon },
   EDUCATION: { label: '교육', Icon: EducationIcon },
   SALON: { label: '미용실', Icon: SalonIcon },
