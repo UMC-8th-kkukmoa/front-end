@@ -1,9 +1,10 @@
 import apiClient from './client';
+import type { MyGiftcard, DetailedGiftcard } from '../types/voucher';
 
 // 내 금액권 전체 목록 조회
-export const getMyGiftcards = async () => {
+export const getMyGiftcards = async (): Promise<MyGiftcard[]> => {
   try {
-    const response = await apiClient.get('/v1/vouchers');
+    const response = await apiClient.get<{ result: MyGiftcard[] }>('/v1/vouchers');
     return response.data.result;
   } catch (error) {
     console.error('금액권 목록 조회 실패:', error);
@@ -12,9 +13,9 @@ export const getMyGiftcards = async () => {
 };
 
 // 금액권 상세 조회
-export const getGiftcardDetail = async (uuid: string) => {
+export const getGiftcardDetail = async (uuid: string): Promise<DetailedGiftcard> => {
   try {
-    const response = await apiClient.get(`/v1/vouchers/${uuid}`);
+    const response = await apiClient.get<{ result: DetailedGiftcard }>(`/v1/vouchers/${uuid}`);
     return response.data.result;
   } catch (error) {
     console.error('금액권 상세 조회 실패:', error);
@@ -23,10 +24,16 @@ export const getGiftcardDetail = async (uuid: string) => {
 };
 
 // 금액권 일부 사용 처리
-export const useGiftcardAmount = async (uuid: string, amount: number) => {
+export const useGiftcardAmount = async (
+  uuid: string,
+  amount: number,
+): Promise<DetailedGiftcard> => {
   try {
-    const response = await apiClient.post(`/v1/vouchers/${uuid}/use`, null, { params: { amount } });
-
+    const response = await apiClient.post<{ result: DetailedGiftcard }>(
+      `/v1/vouchers/${uuid}/use`,
+      null,
+      { params: { amount } },
+    );
     return response.data.result;
   } catch (error) {
     console.error('금액권 사용 실패:', error);
