@@ -7,9 +7,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light.white,
     paddingBottom: 100,
   },
+  headerContainer: {
+    backgroundColor: colors.light.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1_35,
+    zIndex: 10,
+  },
   content: {
     paddingHorizontal: 20,
     paddingTop: 40,
+    paddingBottom: 80,
+  },
+  contentContainer: {
     alignItems: 'center',
   },
   cardRow: {
@@ -70,7 +79,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   footer: {
-    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,

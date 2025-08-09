@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import Header from '../../design/component/Header';
 import GiftCardPurchaseModal from './GiftCardPurchaseModal';
 import styles from './GiftCardDetail.styles';
@@ -67,9 +69,16 @@ export default function GiftCardDetailScreen() {
 
   return (
     <>
-      <View style={styles.container}>
-        <Header title="금액권 구매" onBackPress={() => router.back()} />
-        <View style={styles.content}>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {/* eslint-disable-next-line react/style-prop-object */}
+        <StatusBar style="dark" />
+        <View style={styles.headerContainer}>
+          <Header title="금액권 구매" onBackPress={() => router.back()} shadow={false} />
+        </View>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={[styles.contentContainer, { paddingBottom: 120 }]}
+        >
           <Image source={image} style={{ width: 234, height: 140, resizeMode: 'contain' }} />
 
           <View style={styles.cardRow}>
@@ -99,13 +108,13 @@ export default function GiftCardDetailScreen() {
               <Text style={styles.detailText}>꾹모아 가맹점에서 상품 결제 시 사용</Text>
             </View>
           </View>
-        </View>
+        </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity style={styles.purchaseButton} onPress={toggleModal}>
             <Text style={styles.purchaseButtonText}>구매하기</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
 
       <GiftCardPurchaseModal
         isVisible={isModalVisible}
