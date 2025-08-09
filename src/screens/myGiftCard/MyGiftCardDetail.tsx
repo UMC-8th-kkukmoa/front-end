@@ -95,7 +95,7 @@ export default function MyGiftcardDetail() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.scroll}>
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.inner}>
           <View style={styles.header}>

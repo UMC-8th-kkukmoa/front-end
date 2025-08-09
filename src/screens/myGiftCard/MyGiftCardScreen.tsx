@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
@@ -51,7 +59,7 @@ export default function MyGiftCardScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
+      <ScrollView style={styles.scroll}>
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.cardContainer}>
           {loading ? (
@@ -104,7 +112,7 @@ export default function MyGiftCardScreen() {
             />
           )}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

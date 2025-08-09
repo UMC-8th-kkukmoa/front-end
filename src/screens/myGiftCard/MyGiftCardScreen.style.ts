@@ -7,6 +7,9 @@ export default StyleSheet.create({
     backgroundColor: colors.light.white,
     overflow: 'hidden',
   },
+  scroll: {
+    backgroundColor: colors.light.white,
+  },
   cardContainer: {
     flex: 1,
     paddingHorizontal: 30,
