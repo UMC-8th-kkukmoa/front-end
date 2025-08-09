@@ -13,17 +13,17 @@ import ExerciseIcon from '../../../assets/images/exercise.svg';
 import colors from '../../../design/colors';
 
 // 문자열 → SVG 컴포넌트 매핑
-const categoryIconMap: Record<string, React.FC<any>> = {
-  카페: CafeIcon,
-  음식점: FoodIcon,
-  '운동/건강': ExerciseIcon,
-  교육: EducationIcon,
-  미용: SalonIcon,
+const categoryMap: Record<string, { label: string; Icon: React.FC<any> }> = {
+  CAFE: { label: '카페', Icon: CafeIcon },
+  FOOD: { label: '음식점', Icon: FoodIcon },
+  EXERCISE: { label: '운동/건강', Icon: ExerciseIcon },
+  EDUCATION: { label: '교육', Icon: EducationIcon },
+  SALON: { label: '미용실', Icon: SalonIcon },
 };
 
 type Props = {
   item: {
-    id: string;
+    storeId: string;
     name: string;
     imageUrl: string;
     category: string;
@@ -33,21 +33,21 @@ type Props = {
     bookmarkCount: number;
   };
   isLiked: boolean;
-  onToggleLike: (id: string) => void;
+  onToggleLike: (storeId: string) => void;
 };
 
 function StoreCard({ item, isLiked, onToggleLike }: Props) {
   const router = useRouter();
-  const CategoryIcon = categoryIconMap[item.category];
+  const categoryData = categoryMap[item.category];
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.id}`)}>
+    <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.storeId}`)}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
-      {CategoryIcon && (
+      {categoryData && (
         <View style={styles.categoryBadge}>
-          <CategoryIcon width={12} height={12} color={colors.light.sub} />
-          <Text style={styles.categoryLabel}>{item.category}</Text>
+          <categoryData.Icon width={12} height={12} color={colors.light.sub} />
+          <Text style={styles.categoryLabel}>{categoryData.label}</Text>
         </View>
       )}
 
@@ -73,7 +73,7 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
           style={styles.heart}
           onPress={(e) => {
             e.stopPropagation?.();
-            onToggleLike(item.id);
+            onToggleLike(item.storeId);
           }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >

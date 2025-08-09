@@ -70,10 +70,10 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   };
 
   // 하트 관리
-  const toggleLike = (id: string) => {
+  const toggleLike = (storeId: string) => {
     setLikedMap((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [storeId]: !prev[storeId],
     }));
   };
 
@@ -121,7 +121,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
 
         if (res.data.isSuccess) {
           const stores = res.data.result.map((store: any) => ({
-            id: store.storeId.toString(),
+            storeId: store.storeId.toString(),
             name: store.name,
             imageUrl: store.storeImage,
             category: selectedCategory ?? '기타',
@@ -134,10 +134,10 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
           // console.log('✅ 가게 데이터:', stores);
           setStoreList(stores);
         } else {
-          console.error('API 응답 실패:', res.data.message || '가게 정보를 불러오지 못했습니다.');
+          Alert.alert('오류', res.data.message || '가게 정보를 불러오지 못했습니다.');
         }
       } catch (err: any) {
-        console.error('가게 조회 실패:', err?.message || err);
+        Alert.alert('오류', err?.message || '가게 정보를 불러오는 중 문제가 발생했습니다.');
       }
     };
 
@@ -154,7 +154,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   }, [storeList]);
 
   const renderItem = ({ item }: { item: any }) => (
-    <StoreCard item={item} isLiked={likedMap[item.id] === true} onToggleLike={toggleLike} />
+    <StoreCard item={item} isLiked={likedMap[item.storeId] === true} onToggleLike={toggleLike} />
   );
 
   return (
@@ -178,7 +178,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
 
         <BottomSheetFlatList
           data={filteredAndSortedStores}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.storeId}
           renderItem={renderItem}
           contentContainerStyle={{ ...styles.listContentContainer, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}

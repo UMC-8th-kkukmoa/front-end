@@ -8,8 +8,14 @@ export default StyleSheet.create({
 
   // 스토어 사진
   storeImageArea: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 221,
     backgroundColor: colors.light.gray1_35,
+  },
+  storeImage: {
+    width: '100%',
+    height: '100%',
   },
 
   backButton: {
@@ -40,7 +46,6 @@ export default StyleSheet.create({
   },
   storeName: {
     fontSize: 22,
-    fontWeight: '700',
     fontFamily: 'Pretendard-Bold',
     minWidth: 260,
   },
@@ -67,7 +72,6 @@ export default StyleSheet.create({
   },
   detailText: {
     color: colors.light.black,
-    fontWeight: '400',
     fontFamily: 'Pretendard-Regular',
     fontSize: 13,
   },
@@ -85,7 +89,6 @@ export default StyleSheet.create({
   },
   reviewTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
     fontFamily: 'Pretendard-Bold',
   },
   buttonWapper: {
@@ -98,6 +101,6 @@ export default StyleSheet.create({
   seeAllButton: {
     fontSize: 9,
     color: colors.light.white,
-    fontWeight: '500',
+    fontFamily: 'Pretendard-Regular',
   },
 });

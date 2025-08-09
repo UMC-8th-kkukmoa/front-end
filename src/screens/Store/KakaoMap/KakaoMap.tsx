@@ -19,7 +19,7 @@ function renderMapLoading() {
   // 임시 UI
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" />
+      <ActivityIndicator size="large" color={colors.light.main} />
       <Text style={styles.loadingText}>지도 로딩 중...</Text>
     </View>
   );
@@ -31,7 +31,7 @@ interface KakaoMapProps {
   mapRef?: React.RefObject<WebView<unknown> | null>;
 }
 
-export default function KakaoMap({ center, zoom, mapRef }: KakaoMapProps) {
+export default function KakaoMap({ center, zoom = 3, mapRef }: KakaoMapProps) {
   const fallbackCenter = { lat: 37.5665, lng: 126.978 };
   const finalCenter = center ?? fallbackCenter;
 

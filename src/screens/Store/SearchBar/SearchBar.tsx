@@ -15,7 +15,12 @@ function SearchBar() {
       activeOpacity={0.8}
       onPress={() => router.push('/store/search?from=stores')}
     >
-      <View style={styles.searchBar}>
+      <View
+        style={styles.searchBar}
+        pointerEvents="none"
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
+      >
         <KkTextbox
           label=""
           placeholder="매장을 검색해보세요."
