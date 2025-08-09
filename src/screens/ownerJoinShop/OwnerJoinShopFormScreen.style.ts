@@ -29,10 +29,6 @@ export default StyleSheet.create({
   bottomContainer: {
     backgroundColor: colors.light.white,
     padding: 20,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     shadowColor: '#6C3131',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.15,
@@ -67,6 +63,9 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.light.gray2,
   },
+  fileRowError: {
+    borderColor: colors.light.main,
+  },
   fileSelectText: {
     fontSize: 12,
     backgroundColor: colors.light.gray1,
@@ -77,6 +76,10 @@ export default StyleSheet.create({
   },
   fileName: {
     color: colors.light.gray2,
+    fontSize: 14,
+  },
+  fileNameError: {
+    color: colors.light.main,
     fontSize: 14,
   },
 });

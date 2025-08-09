@@ -12,6 +12,7 @@ import Header from '../../design/component/Header';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import styles from './OwnerJoinShopFormScreen.style';
+import { uploadImage } from '../../api/images';
 
 export default function OwnerJoinShopFormScreen() {
   const [storeName, setStoreName] = useState('');
@@ -21,6 +22,9 @@ export default function OwnerJoinShopFormScreen() {
   const [businessHours, setBusinessHours] = useState('');
   const [contact, setContact] = useState('');
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState(false);
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -28,16 +32,35 @@ export default function OwnerJoinShopFormScreen() {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      const asset = result.assets[0];
-      const { uri } = asset;
-      setSelectedImageUri(uri);
+    if (result.canceled) return;
+
+    const asset = result.assets[0];
+    const { uri } = asset;
+    setSelectedImageUri(uri);
+    setUploadedImageUrl(null);
+    setUploadError(false);
+    try {
+      setIsUploading(true);
+      const url = await uploadImage('store', uri);
+      setUploadedImageUrl(url);
+    } catch (e) {
+      console.error('이미지 업로드 실패:', e);
+      setUploadError(true);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const isNextDisabled = useMemo(() => {
-    return !storeName || !address || !businessHours || !locationSet || !selectedImageUri;
-  }, [storeName, address, businessHours, locationSet, selectedImageUri]);
+    return (
+      !storeName ||
+      !address ||
+      !businessHours ||
+      !locationSet ||
+      !uploadedImageUrl ||
+      Boolean(uploadError)
+    );
+  }, [storeName, address, businessHours, locationSet, uploadedImageUrl, uploadError]);
 
   const getDisplayNameFromUri = (uri: string) => {
     try {
@@ -48,6 +71,14 @@ export default function OwnerJoinShopFormScreen() {
       return 'image';
     }
   };
+
+  const fileStatusText = useMemo(() => {
+    if (uploadError) return '이미지 업로드에 실패했습니다. 다시 시도해주세요.';
+    if (isUploading) return '업로드 중...';
+    if (uploadedImageUrl) return '업로드 완료';
+    if (selectedImageUri) return getDisplayNameFromUri(selectedImageUri);
+    return '선택한 파일 없음';
+  }, [uploadError, isUploading, uploadedImageUrl, selectedImageUri]);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -140,13 +171,14 @@ export default function OwnerJoinShopFormScreen() {
                 <Text style={styles.label}>
                   매장 대표사진<Text style={styles.required}> *</Text>
                 </Text>
-                <TouchableOpacity onPress={handlePickImage} style={styles.fileRow}>
+                <TouchableOpacity
+                  onPress={handlePickImage}
+                  style={[styles.fileRow, uploadError && styles.fileRowError]}
+                >
                   <Text style={styles.fileSelectText}>파일 선택</Text>
 
-                  <Text style={styles.fileName}>
-                    {selectedImageUri
-                      ? getDisplayNameFromUri(selectedImageUri)
-                      : '선택한 파일 없음'}
+                  <Text style={uploadError ? styles.fileNameError : styles.fileName}>
+                    {fileStatusText}
                   </Text>
                 </TouchableOpacity>
               </View>
