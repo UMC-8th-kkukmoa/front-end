@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Text, ScrollView, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 
@@ -13,6 +15,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+  },
+  headerContainer: {
+    backgroundColor: colors.light.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1_35,
+    zIndex: 10,
   },
   gridContainer: {
     flexDirection: 'row',
@@ -69,8 +77,12 @@ export default function GiftCardListScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Header title="금액권 구매" onBackPress={() => router.back()} />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* eslint-disable-next-line react/style-prop-object */}
+      <StatusBar style="dark" />
+      <View style={styles.headerContainer}>
+        <Header title="금액권 구매" onBackPress={() => router.back()} shadow={false} />
+      </View>
       <ScrollView contentContainerStyle={styles.gridContainer} showsVerticalScrollIndicator={false}>
         {giftCards.map((item) => (
           <Pressable
@@ -86,6 +98,6 @@ export default function GiftCardListScreen() {
           </Pressable>
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
