@@ -1,7 +1,7 @@
 export type MyGiftcard = {
   name: string;
   validDays: string;
-  status: 'UNUSED' | 'USED' | string;
+  status: '미사용' | '사용' | string;
   qrCodeUuid: string;
   daysLeft: string;
 };

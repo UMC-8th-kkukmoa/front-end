@@ -51,7 +51,7 @@ export default StyleSheet.create({
   },
   description: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 10,
   },
   brand: {
     fontSize: 12,
@@ -64,9 +64,10 @@ export default StyleSheet.create({
     fontWeight: '600',
   },
   barcode: {
-    height: 80,
-    width: '100%',
-    marginBottom: 8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 29,
   },
   infoBox: {
     backgroundColor: colors.light.gray1_35,

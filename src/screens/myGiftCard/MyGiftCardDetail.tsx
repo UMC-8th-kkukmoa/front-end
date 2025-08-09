@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import { getGiftcardDetail } from '../../api/voucherApi';
@@ -24,26 +25,17 @@ export default function MyGiftcardDetail() {
       try {
         const data = await getGiftcardDetail(qrCodeUuid);
         setVoucher(data);
+        console.log('금액권 상세 조회 성공:', data);
       } catch (error) {
         console.error('금액권 상세 조회 실패:', error);
       } finally {
         setLoading(false);
       }
     };
+    console.log('Fetching voucher with UUID:', qrCodeUuid);
 
     fetchVoucher();
   }, [qrCodeUuid]);
-
-  // const voucher = {
-  //   name: "금액권 10,000원권",
-  //   value: 5000,
-  //   remainingValue: 3000,
-  //   validDays: "2026-07-29",
-  //   status: "UNUSED",
-  //   qrCodeUuid: "f8c9b7a3-1234-5678",
-  //   qrCode: "iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjQuMywgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy",
-  //   daysLeft: "D-90"
-  // };
 
   // "YYYY-MM-DD" → "YYYY년 MM월 DD일"
   const formatDate = (dateStr: string) => {
@@ -102,44 +94,48 @@ export default function MyGiftcardDetail() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Header title="내 금액권" onBackPress={() => router.back()} />
-      <View style={styles.inner}>
-        <View style={styles.header}>
-          <Text style={styles.daysLeft}>{formatDaysLeft(voucher.daysLeft)}</Text>
-          <View style={[styles.statusBadge, voucher.status === 'USED' && styles.used]}>
-            <Text style={[styles.statusText, voucher.status === 'USED' && styles.usedText]}>
-              {voucher.status === 'USED' ? '사용 중' : '사용 전'}
-            </Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
+        <Header title="내 금액권" onBackPress={() => router.back()} />
+        <View style={styles.inner}>
+          <View style={styles.header}>
+            <Text style={styles.daysLeft}>{formatDaysLeft(voucher.daysLeft)}</Text>
+            <View style={[styles.statusBadge, voucher.status === '사용' && styles.used]}>
+              <Text style={[styles.statusText, voucher.status === '사용' && styles.usedText]}>
+                {voucher.status === '사용' ? '사용 중' : '사용 전'}
+              </Text>
+            </View>
+          </View>
+          <Image source={getGiftcardImage(voucher.name)} style={styles.cardImage} />
+
+          <View style={styles.description}>
+            <Text style={styles.brand}>꾹모아</Text>
+            <Text style={styles.title}>모바일 {formatVoucherTitle(voucher.name)}</Text>
+          </View>
+
+          <View style={styles.barcode}>
+            <Image
+              source={{ uri: `data:image/png;base64,${voucher.qrCode}` }}
+              style={{ width: 222, height: 140 }}
+              resizeMode="contain"
+            />
+          </View>
+
+          <View style={styles.infoBox}>
+            <View style={styles.row}>
+              <Text style={styles.label}>사용가능금액</Text>
+              <Text style={styles.value}>{voucher.remainingValue.toLocaleString()}원</Text>
+            </View>
+          </View>
+
+          <View style={styles.bottomRow}>
+            <View style={styles.row}>
+              <Text style={styles.subLabel}>유효기간</Text>
+              <Text style={styles.subValue}>{formatDate(voucher.validDays)}</Text>
+            </View>
           </View>
         </View>
-        <Image source={getGiftcardImage(voucher.name)} style={styles.cardImage} />
-
-        <View style={styles.description}>
-          <Text style={styles.brand}>꾹모아</Text>
-          <Text style={styles.title}>모바일 {formatVoucherTitle(voucher.name)}</Text>
-        </View>
-
-        <Image
-          source={{ uri: `data:image/png;base64,${voucher.qrCode}` }}
-          style={{ width: 222, height: 140 }}
-          resizeMode="contain"
-        />
-
-        <View style={styles.infoBox}>
-          <View style={styles.row}>
-            <Text style={styles.label}>사용가능금액</Text>
-            <Text style={styles.value}>{voucher.remainingValue.toLocaleString()}원</Text>
-          </View>
-        </View>
-
-        <View style={styles.bottomRow}>
-          <View style={styles.row}>
-            <Text style={styles.subLabel}>유효기간</Text>
-            <Text style={styles.subValue}>{formatDate(voucher.validDays)}</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

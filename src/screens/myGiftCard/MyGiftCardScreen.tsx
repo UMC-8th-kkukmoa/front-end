@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import styles from './MyGiftCardScreen.style';
@@ -37,6 +38,7 @@ export default function MyGiftCardScreen() {
       try {
         const data = await getMyGiftcards();
         setGiftcards(data);
+        console.log('금액권 목록 조회 성공:', data);
       } catch (error) {
         console.error('금액권 로딩 오류:', JSON.stringify(error, null, 2));
       } finally {
@@ -48,57 +50,61 @@ export default function MyGiftCardScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Header title="내 금액권" onBackPress={() => router.back()} />
-      <View style={styles.cardContainer}>
-        {loading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color="#aaa" />
-          </View>
-        ) : (
-          <FlatList
-            data={giftcards}
-            keyExtractor={(item) => item.qrCodeUuid}
-            renderItem={({ item }) => {
-              const imageSource = getGiftcardImage(item.name);
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Header title="내 금액권" onBackPress={() => router.back()} />
+        <View style={styles.cardContainer}>
+          {loading ? (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="large" color="#aaa" />
+            </View>
+          ) : (
+            <FlatList
+              data={giftcards}
+              keyExtractor={(item) => item.qrCodeUuid}
+              renderItem={({ item }) => {
+                const imageSource = getGiftcardImage(item.name);
 
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
-                >
-                  <View style={styles.header}>
-                    <Text style={styles.daysLeft}>{formatDaysLeft(item.daysLeft)}</Text>
+                return (
+                  <TouchableOpacity
+                    style={styles.card}
+                    onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
+                  >
+                    <View style={styles.header}>
+                      <Text style={styles.daysLeft}>{formatDaysLeft(item.daysLeft)}</Text>
 
-                    <View
-                      style={[
-                        styles.statusBadge,
-                        item.status === 'UNUSED' ? styles.unused : styles.used,
-                      ]}
-                    >
-                      <Text
-                        style={
-                          item.status === 'UNUSED' ? styles.statusTextUnused : styles.statusTextUsed
-                        }
+                      <View
+                        style={[
+                          styles.statusBadge,
+                          item.status === '미사용' ? styles.unused : styles.used,
+                        ]}
                       >
-                        {item.status === 'UNUSED' ? '사용 전' : '사용 중'}
-                      </Text>
+                        <Text
+                          style={
+                            item.status === '미사용'
+                              ? styles.statusTextUnused
+                              : styles.statusTextUsed
+                          }
+                        >
+                          {item.status === '미사용' ? '사용 전' : '사용 중'}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
 
-                  <Image source={imageSource} style={styles.image} />
-                </TouchableOpacity>
-              );
-            }}
-            // 빈 목록일 때 표시 (임시)
-            ListEmptyComponent={
-              <Text style={{ textAlign: 'center', marginTop: 40, color: '#888' }}>
-                사용 가능한 금액권이 없습니다.
-              </Text>
-            }
-          />
-        )}
+                    <Image source={imageSource} style={styles.image} />
+                  </TouchableOpacity>
+                );
+              }}
+              // 빈 목록일 때 표시
+              ListEmptyComponent={
+                <Text style={{ textAlign: 'center', marginTop: 40, color: '#888' }}>
+                  사용 가능한 금액권이 없습니다.
+                </Text>
+              }
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
