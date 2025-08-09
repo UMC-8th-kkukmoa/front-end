@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import Header from '../../design/component/Header';
 import CustomDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
@@ -10,6 +13,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+  },
+  headerContainer: {
+    backgroundColor: colors.light.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1_35,
+    zIndex: 10,
   },
   dropdownArea: {
     height: 45,
@@ -47,6 +56,7 @@ const styles = StyleSheet.create({
 });
 
 export default function MyCouponListScreen() {
+  const router = useRouter();
   const [bottomVisible, setBottomVisible] = useState(false);
 
   const items = categoryData.map((cat) => ({
@@ -55,12 +65,6 @@ export default function MyCouponListScreen() {
     icon: cat.icon,
   }));
   const [value, setValue] = useState<string | null>(null);
-
-  const handleBack = () => {
-    /* eslint-disable no-console */
-    console.log('뒤로가기 눌림');
-    /* eslint-enable no-console */
-  };
 
   const [coupons, setCoupons] = useState([
     { id: 1, title: '리워드 쿠폰', shopName: '꾹모아카페 성신여대입구점' },
@@ -76,8 +80,12 @@ export default function MyCouponListScreen() {
 
   return (
     <>
-      <View style={styles.container}>
-        <Header title="내 쿠폰" onBackPress={handleBack} />
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {/* eslint-disable-next-line react/style-prop-object */}
+        <StatusBar style="dark" />
+        <View style={styles.headerContainer}>
+          <Header title="내 쿠폰" onBackPress={() => router.back()} shadow={false} />
+        </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.dropdownArea}>
@@ -93,7 +101,7 @@ export default function MyCouponListScreen() {
             />
           ))}
         </ScrollView>
-      </View>
+      </SafeAreaView>
       {bottomVisible && (
         <View style={styles.bottomSheet}>
           <Text style={styles.sheetText}>사용 처리 되었습니다.</Text>

@@ -1,26 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, ScrollView, Alert, Text } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import * as Keychain from 'react-native-keychain';
+import axios from 'axios';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
 import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
 import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
+import { Stamp, ShopStampData, StampApiResponse } from '../../types/stamp';
 
-type Stamp = {
-  id: number;
-  isStamped: boolean;
-};
-
-type ShopStampData = {
-  shopName: string;
-  stamps: Stamp[];
-};
+const TOTAL_STAMPS = 10;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+  },
+  headerContainer: {
+    backgroundColor: colors.light.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1_35,
+    zIndex: 10,
   },
   dropdownArea: {
     height: 45,
@@ -34,90 +38,145 @@ const styles = StyleSheet.create({
   },
   stampBoardWrapper: {
     paddingHorizontal: 10,
+    alignItems: 'center',
   },
 });
 
 export default function StampListScreen() {
-  const items = categoryData.map((cat) => ({
-    label: cat.name,
-    value: cat.name.toLowerCase(),
-    icon: cat.icon,
-  }));
-  const [value, setValue] = useState<string | null>(null);
+  const router = useRouter();
 
+  const [value, setValue] = useState<string | null>(null);
+  const [stampBoards, setStampBoards] = useState<ShopStampData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
-    /* eslint-disable no-console */
-    console.log('뒤로가기 눌림');
-    /* eslint-enable no-console */
+    router.replace('/(tabs)/profile');
   };
 
-  const dummyStampBoards: ShopStampData[] = [
-    {
-      shopName: '서울카츠',
-      stamps: Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        isStamped: i < 10,
-      })),
-    },
-    {
-      shopName: '닭한마리 공릉본점',
-      stamps: Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        isStamped: i < 5,
-      })),
-    },
-    {
-      shopName: '포카포카',
-      stamps: Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        isStamped: i < 1,
-      })),
-    },
-    {
-      shopName: '후라토 식당',
-      stamps: Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        isStamped: i < 7,
-      })),
-    },
-    {
-      shopName: '카멜로연남',
-      stamps: Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        isStamped: i < 4,
-      })),
-    },
-  ];
+  const showError = (message: string) => {
+    Alert.alert('오류', message);
+  };
 
-  useEffect(() => {
-    const hasCompletedShop = dummyStampBoards.some((shop: ShopStampData) =>
-      shop.stamps.every((stamp: Stamp) => stamp.isStamped),
-    );
+  const fetchStamps = useCallback(async (storeType?: string | null) => {
+    setLoading(true);
+    try {
+      const credentials = await Keychain.getGenericPassword({
+        service: 'com.kkukmoa.accessToken',
+      });
 
-    if (hasCompletedShop) {
-      setModalVisible(true);
+      if (!credentials) {
+        Alert.alert('알림', '로그인이 필요합니다.');
+        setLoading(false);
+        return;
+      }
+
+      const token = credentials.password;
+
+      const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
+      const url =
+        storeType && storeType.trim() !== ''
+          ? `${API_BASE_URL}/v1/stamps?store-type=${storeType}`
+          : `${API_BASE_URL}/v1/stamps`;
+
+      const response = await axios.get<StampApiResponse>(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+
+      const { data } = response;
+
+      if (!data.isSuccess || !data.result || !Array.isArray(data.result.stamps)) {
+        showError(data.message || '데이터를 불러오는데 실패했습니다.');
+        setStampBoards([]);
+        return;
+      }
+
+      const shopScores: Record<string, number> = {};
+      data.result.stamps.forEach((stamp) => {
+        const prev = shopScores[stamp.store_name] ?? 0;
+        shopScores[stamp.store_name] = Math.max(prev, stamp.stamp_score);
+      });
+
+      const newStampBoards: ShopStampData[] = Object.entries(shopScores).map(
+        ([shopName, stampedCount]) => {
+          const arr: Stamp[] = Array.from({ length: TOTAL_STAMPS }, (_, i) => ({
+            id: i + 1,
+            isStamped: i < stampedCount,
+          }));
+
+          return {
+            shopName,
+            stamps: arr,
+          };
+        },
+      );
+
+      setStampBoards(newStampBoards);
+
+      const hasCompletedShop = newStampBoards.some((shop) =>
+        shop.stamps.every((stamp) => stamp.isStamped),
+      );
+      setModalVisible(hasCompletedShop);
+    } catch (error: any) {
+      showError(error?.message || '알 수 없는 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
+  useEffect(() => {
+    fetchStamps(value);
+  }, [value, fetchStamps]);
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <View style={{ alignItems: 'center', marginTop: 40 }}>
+          <Text>로딩 중...</Text>
+        </View>
+      );
+    }
+
+    if (stampBoards.length === 0 || stampBoards.every((shop) => shop.stamps.length === 0)) {
+      return (
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
+          <Text>등록된 스탬프가 없습니다.</Text>
+        </View>
+      );
+    }
+
+    return stampBoards.map((shop) => (
+      <View key={shop.shopName} style={styles.stampBoardWrapper}>
+        <StampBoard shopName={shop.shopName} stamps={shop.stamps} />
+      </View>
+    ));
+  };
+
+  const items = categoryData.map((cat) => ({
+    label: cat.name,
+    value: cat.value,
+    icon: cat.icon,
+  }));
+
   return (
     <>
-      <View style={styles.container}>
-        <Header title="스탬프" onBackPress={handleBack} />
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {/* eslint-disable-next-line react/style-prop-object */}
+        <StatusBar style="dark" />
+        <View style={styles.headerContainer}>
+          <Header title="스탬프" onBackPress={handleBack} shadow={false} />
+        </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.dropdownArea}>
             <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
           </View>
-
-          {dummyStampBoards.map((shop) => (
-            <View key={shop.shopName} style={styles.stampBoardWrapper}>
-              <StampBoard shopName={shop.shopName} stamps={shop.stamps} />
-            </View>
-          ))}
+          {renderContent()}
         </ScrollView>
-      </View>
+      </SafeAreaView>
 
       <StampCompleteModal visible={isModalVisible} onClose={() => setModalVisible(false)} />
     </>

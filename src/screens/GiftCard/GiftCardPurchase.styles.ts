@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light.white,
   },
+  headerContainer: {
+    backgroundColor: colors.light.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light.gray1_35,
+    zIndex: 10,
+  },
   content: {
     flex: 1,
   },
