@@ -100,9 +100,9 @@ export default function MyGiftcardDetail() {
         <View style={styles.inner}>
           <View style={styles.header}>
             <Text style={styles.daysLeft}>{formatDaysLeft(voucher.daysLeft)}</Text>
-            <View style={[styles.statusBadge, voucher.status === '사용' && styles.used]}>
-              <Text style={[styles.statusText, voucher.status === '사용' && styles.usedText]}>
-                {voucher.status === '사용' ? '사용 중' : '사용 전'}
+            <View style={[styles.statusBadge, voucher.status === '사용중' && styles.used]}>
+              <Text style={[styles.statusText, voucher.status === '사용중' && styles.usedText]}>
+                {voucher.status === '사용중' ? '사용 중' : '사용 전'}
               </Text>
             </View>
           </View>
