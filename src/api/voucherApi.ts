@@ -22,21 +22,3 @@ export const getGiftcardDetail = async (uuid: string): Promise<DetailedGiftcard>
     throw error;
   }
 };
-
-// 금액권 일부 사용 처리
-export const useGiftcardAmount = async (
-  uuid: string,
-  amount: number,
-): Promise<DetailedGiftcard> => {
-  try {
-    const response = await apiClient.post<{ result: DetailedGiftcard }>(
-      `/v1/vouchers/${uuid}/use`,
-      null,
-      { params: { amount } },
-    );
-    return response.data.result;
-  } catch (error) {
-    console.error('금액권 사용 실패:', error);
-    throw error;
-  }
-};
