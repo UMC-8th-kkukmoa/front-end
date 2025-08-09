@@ -61,8 +61,10 @@ export default function KakaoMap({ center, zoom = 3, mapRef }: KakaoMapProps) {
                   var data = typeof msg === 'string' ? JSON.parse(msg) : msg;
                   if (data.type === 'MOVE_TO_LOCATION') {
                     var p = data.payload || {};
-                    if (!ready) { pending.push({ lat: p.lat, lng: p.lng }); return; }
-                    map.setCenter(new kakao.maps.LatLng(p.lat, p.lng));
+                    var lat = Number(p.lat), lng = Number(p.lng);
+                    if (!isFinite(lat) || !isFinite(lng)) { console.warn('잘못된 좌표:', p); return; }
+                    if (!ready) { pending.push({ lat: lat, lng: lng }); return; }
+                    map.setCenter(new kakao.maps.LatLng(lat, lng));
                   }
                 } catch (e) { console.error('지도 메시지 처리 오류:', e); }
               }
