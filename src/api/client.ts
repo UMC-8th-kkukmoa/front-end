@@ -3,6 +3,8 @@ import { Platform } from 'react-native';
 import { getGenericPassword, setGenericPassword } from 'react-native-keychain';
 import reissueTokens from './reissueTokens';
 
+let refreshPromise: Promise<{ accessToken: string; refreshToken?: string } | null> | null = null;
+
 const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 if (!baseUrl) {
   throw new Error('EXPO_PUBLIC_BASE_URL is not defined.');
@@ -35,22 +37,34 @@ apiClient.interceptors.request.use(async (config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const originalRequest = (error.config || {}) as any;
 
     // eslint-disable-next-line no-underscore-dangle
     if (error.response?.status === 401 && !originalRequest._retry) {
       // eslint-disable-next-line no-underscore-dangle
       originalRequest._retry = true;
 
-      const newTokens = await reissueTokens();
+      if (!refreshPromise) {
+        refreshPromise = reissueTokens().finally(() => {
+          refreshPromise = null;
+        });
+      }
+      const newTokens = await refreshPromise;
 
       if (newTokens) {
         try {
+          originalRequest.headers = originalRequest.headers || {};
+
+          // Keychain 업데이트
           await setGenericPassword('accessToken', newTokens.accessToken, {
             service: 'com.kkukmoa.accessToken',
           });
-
-          // 요청 헤더에 새 accessToken 설정
+          if (newTokens.refreshToken) {
+            await setGenericPassword('refreshToken', newTokens.refreshToken, {
+              service: 'com.kkukmoa.refreshToken',
+            });
+          }
           originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
 
           return await apiClient(originalRequest);
