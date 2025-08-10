@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
@@ -66,10 +67,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function MyPageScreen() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     try {
       await logout();
+      await queryClient.clear();
+      router.replace('/auth/LoginChoiceScreen');
     } catch (error) {
       console.error('로그아웃 중 에러:', error);
     }
