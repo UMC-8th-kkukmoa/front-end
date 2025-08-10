@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
+import logout from '../../api/logout';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,6 +67,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function MyPageScreen() {
   const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('로그아웃 중 에러:', error);
+    }
+  };
+
   return (
     <View>
       <Header title="마이페이지" onBackPress={() => {}} />
@@ -80,7 +89,7 @@ export default function MyPageScreen() {
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
           <SectionLabel label="사장님 로그인 (회원가입)" onClick={() => {}} />
-          <SectionLabel label="로그아웃" onClick={() => {}} />
+          <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </View>
     </View>

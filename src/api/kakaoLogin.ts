@@ -1,26 +1,24 @@
 import * as WebBrowser from 'expo-web-browser';
-import * as Linking from 'expo-linking';
 import { TokenResponse } from '../types/kakao';
-import saveTokens from '../utils/tokenStorage';
+import { saveTokens } from '../utils/tokenStorage';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
-if (!KAKAO_LOGIN_URL) throw new Error('EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
+if (!KAKAO_LOGIN_URL) throw new Error('[KakaoLogin] EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
 
 function timeout(ms: number): Promise<never> {
   return new Promise((_, reject) => {
-    setTimeout(() => {
-      reject(new Error('TIMEOUT'));
-    }, ms);
+    setTimeout(() => reject(new Error('TIMEOUT')), ms);
   });
 }
 
 const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
   try {
-    const redirectUrl = Linking.createURL('oauth');
+    const redirectUrl = 'kkukmoa://oauth';
     const loginUrl = `${KAKAO_LOGIN_URL}?redirect_uri=${encodeURIComponent(redirectUrl)}&mobile=true`;
 
     const timeoutPromise = timeout(60000);
 
+    // 카카오 로그인 창 열기
     const result = (await Promise.race([
       WebBrowser.openAuthSessionAsync(loginUrl, redirectUrl, { showInRecents: true }),
       timeoutPromise,
@@ -28,64 +26,34 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
 
     if (result.type !== 'success' || !result.url) return null;
 
+    // 딥링크에서 코드 추출
     const url = new URL(result.url);
-    const encodedToken = url.searchParams.get('token');
-    const error = url.searchParams.get('error');
-    if (error || !encodedToken) return null;
+    const exchangeCode = url.searchParams.get('code');
+    if (!exchangeCode) return null;
 
-    let tokenData;
-    // 토큰 디코딩
-    try {
-      // JWT인 경우
-      if (encodedToken.includes('.')) {
-        const payload = encodedToken.split('.')[1];
-        const decodedPayload = Buffer.from(
-          payload.replace(/-/g, '+').replace(/_/g, '/'),
-          'base64',
-        ).toString();
-        const jwtData = JSON.parse(decodedPayload);
-        tokenData = {
-          accessToken: encodedToken,
-          refreshToken: encodedToken,
-          userId: jwtData.sub || jwtData.user_id,
-          email: jwtData.email || jwtData.sub,
-          newUser: false,
-        };
-      } else {
-        // Base64로 인코딩된 JSON인 경우
-        const decodedString = Buffer.from(encodedToken, 'base64').toString();
-        tokenData = JSON.parse(decodedString);
-      }
-    } catch {
-      // 디코딩 실패 시 원본 토큰 사용
-      tokenData = {
-        accessToken: encodedToken,
-        refreshToken: encodedToken,
-        userId: null,
-        email: null,
-        newUser: false,
-      };
-    }
+    // 교환 코드로 토큰 발급 요청
+    const tokenRes = await fetch(
+      `https://kkukmoa.shop/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
 
-    const { accessToken, refreshToken, userId, email, newUser } = tokenData;
-    if (!accessToken) return null;
+    if (!tokenRes.ok) return null;
 
-    await saveTokens(accessToken, refreshToken || accessToken);
+    const { accessToken, refreshToken } = await tokenRes.json();
+    if (!accessToken || !refreshToken) return null;
+
+    await saveTokens(accessToken, refreshToken);
 
     return {
-      id: userId ? parseInt(userId, 10) : 0,
-      tokenResponseDto: { accessToken, refreshToken: refreshToken || accessToken },
-      email: email || '',
-      newUser: Boolean(newUser),
+      id: 0,
+      tokenResponseDto: { accessToken, refreshToken },
+      email: '',
+      newUser: false,
     };
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === 'TIMEOUT') {
-        console.warn('로그인 시간이 초과되었습니다.');
-      } else {
-        console.error('카카오 로그인 실패:', error);
-      }
-    }
+  } catch {
     return null;
   }
 };
