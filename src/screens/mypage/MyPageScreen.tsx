@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
@@ -68,14 +68,20 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function MyPageScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
     try {
       await logout();
-      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
       router.replace('/auth/LoginChoiceScreen');
     } catch (error) {
       console.error('로그아웃 중 에러:', error);
+      Alert.alert('로그아웃 실패', '네트워크 상태를 확인해주세요.');
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
