@@ -2,7 +2,7 @@ import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePathname, router } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
@@ -13,7 +13,6 @@ import colors from '../../src/design/colors';
 const styles = StyleSheet.create({
   tabLayout: {
     justifyContent: 'space-evenly',
-    paddingBottom: 14,
     backgroundColor: colors.light.white,
     zIndex: 2,
   },
@@ -53,16 +52,19 @@ function IconWrapper({ isSelected, children }: { isSelected: boolean; children: 
 
 export default function Layout() {
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
   const isStoreTab = pathname === '/stores';
 
   return (
     <SafeAreaView
-      edges={isStoreTab ? ['left', 'right', 'bottom'] : undefined}
+      edges={['left', 'right', 'bottom']}
       style={{
         flex: 1,
+        paddingTop: isStoreTab ? 0 : insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
         backgroundColor: colors.light.white,
-        position: 'relative',
-        overflow: 'visible',
       }}
     >
       <StatusBar barStyle="dark-content" />
@@ -70,7 +72,7 @@ export default function Layout() {
         start={{ x: 0, y: 10 }}
         end={{ x: 0, y: 0 }}
         colors={[colors.light.shadow, 'rgba(0,0,0,0)']}
-        style={[styles.topFadeOverlay, { bottom: 30 }]}
+        style={[styles.topFadeOverlay, { bottom: 50 }]}
       />
       <Tabs>
         <TabSlot />
