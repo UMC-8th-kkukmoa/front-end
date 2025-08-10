@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
-import { getGenericPassword, setGenericPassword } from 'react-native-keychain';
+import { getGenericPassword } from 'react-native-keychain';
 import reissueTokens from './reissueTokens';
 
 let refreshPromise: Promise<{ accessToken: string; refreshToken?: string } | null> | null = null;
@@ -56,16 +56,6 @@ apiClient.interceptors.response.use(
       if (newTokens) {
         try {
           originalRequest.headers = originalRequest.headers || {};
-
-          // Keychain 업데이트
-          await setGenericPassword('accessToken', newTokens.accessToken, {
-            service: 'com.kkukmoa.accessToken',
-          });
-          if (newTokens.refreshToken) {
-            await setGenericPassword('refreshToken', newTokens.refreshToken, {
-              service: 'com.kkukmoa.refreshToken',
-            });
-          }
           originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
 
           return await apiClient(originalRequest);
