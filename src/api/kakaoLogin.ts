@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import axios from 'axios';
 import { TokenResponse } from '../types/kakao';
 import { saveTokens } from '../utils/tokenStorage';
 
@@ -32,28 +33,32 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
     if (!exchangeCode) return null;
 
     // 교환 코드로 토큰 발급 요청
-    const tokenRes = await fetch(
+    const response = await axios.post(
       `https://kkukmoa.shop/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      },
+      null,
+      { headers: { 'Content-Type': 'application/json' } },
     );
 
-    if (!tokenRes.ok) return null;
+    const { accessToken, refreshToken, id, email, newUser } = response.data;
 
-    const { accessToken, refreshToken } = await tokenRes.json();
     if (!accessToken || !refreshToken) return null;
 
     await saveTokens(accessToken, refreshToken);
 
     return {
-      id: 0,
+      id: id ?? 0,
       tokenResponseDto: { accessToken, refreshToken },
-      email: '',
-      newUser: false,
+      email: email ?? '',
+      newUser: newUser ?? false,
     };
-  } catch {
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'TIMEOUT') {
+        console.warn('로그인 시간이 초과되었습니다.');
+      } else {
+        console.error('카카오 로그인 실패:', error);
+      }
+    }
     return null;
   }
 };

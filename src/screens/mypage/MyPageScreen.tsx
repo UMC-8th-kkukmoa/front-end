@@ -72,7 +72,7 @@ export default function MyPageScreen() {
   const handleLogout = async () => {
     try {
       await logout();
-      await queryClient.clear();
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
       router.replace('/auth/LoginChoiceScreen');
     } catch (error) {
       console.error('로그아웃 중 에러:', error);
