@@ -63,8 +63,9 @@ function Store() {
 
       setLocation({ lat: latitude, lng: longitude });
 
-      // console.log('현재위치 : ', latitude, longitude);
+      console.log('현재위치 : ', latitude, longitude);
       try {
+        console.log('KAKAO_REST_API_KEY', KAKAO_REST_API_KEY?.slice(0, 6));
         const res = await fetch(
           `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`,
           { headers: { Authorization: `KakaoAK ${KAKAO_REST_API_KEY}` } },

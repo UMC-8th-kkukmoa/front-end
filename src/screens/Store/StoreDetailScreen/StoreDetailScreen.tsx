@@ -146,7 +146,7 @@ function StoreDetailScreen() {
       <View style={styles.reviewSection}>
         <View style={styles.reviewHeader}>
           <Text style={styles.reviewTitle}>리뷰</Text>
-          <TouchableOpacity style={styles.buttonWapper}>
+          <TouchableOpacity style={styles.buttonWrapper}>
             <Text style={styles.seeAllButton}>전체보기</Text>
           </TouchableOpacity>
         </View>

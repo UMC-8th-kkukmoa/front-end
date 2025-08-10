@@ -4,6 +4,7 @@ import colors from '../../../design/colors';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.light.white,
   },
 
   // 스토어 사진
@@ -91,7 +92,7 @@ export default StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Pretendard-Bold',
   },
-  buttonWapper: {
+  buttonWrapper: {
     alignItems: 'center',
     paddingHorizontal: 11,
     paddingVertical: 3,
