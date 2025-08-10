@@ -14,16 +14,22 @@ export const saveTokens = async (accessToken: string, refreshToken: string) => {
   }
 };
 
-export const getAccessToken = async () => {
-  const creds = await Keychain.getGenericPassword({
-    service: 'com.kkukmoa.accessToken',
-  });
-  return creds ? creds.password : null;
+export const getAccessToken = async (): Promise<string | null> => {
+  try {
+    const creds = await Keychain.getGenericPassword({ service: 'com.kkukmoa.accessToken' });
+    return creds ? creds.password : null;
+  } catch (error) {
+    console.error('Failed to get access token:', error);
+    return null;
+  }
 };
 
-export const getRefreshToken = async () => {
-  const creds = await Keychain.getGenericPassword({
-    service: 'com.kkukmoa.refreshToken',
-  });
-  return creds ? creds.password : null;
+export const getRefreshToken = async (): Promise<string | null> => {
+  try {
+    const creds = await Keychain.getGenericPassword({ service: 'com.kkukmoa.refreshToken' });
+    return creds ? creds.password : null;
+  } catch (error) {
+    console.error('Failed to get refresh token:', error);
+    return null;
+  }
 };
