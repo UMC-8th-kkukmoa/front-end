@@ -1,20 +1,16 @@
-import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
-import { saveTokens } from '../utils/tokenStorage';
+import { getRefreshToken, saveTokens } from '../utils/tokenStorage';
 
 const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 if (!baseUrl) throw new Error('EXPO_PUBLIC_BASE_URL is not defined.');
 
 const reissueTokens = async () => {
   try {
-    const refreshTokenCreds = await Keychain.getGenericPassword({
-      service: 'com.kkukmoa.refreshToken',
-    });
-    if (!refreshTokenCreds) {
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) {
       console.warn('No refresh token found');
       return null;
     }
-    const refreshToken = refreshTokenCreds.password;
 
     const { data } = await axios.post(
       `${baseUrl}/v1/users/reissue`,
