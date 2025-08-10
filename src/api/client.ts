@@ -39,6 +39,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const originalRequest = (error.config || {}) as any;
+    if (!originalRequest) return Promise.reject(error);
 
     // eslint-disable-next-line no-underscore-dangle
     if (error.response?.status === 401 && !originalRequest._retry) {
