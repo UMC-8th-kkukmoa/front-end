@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import handleKakaoLogin from '../../api/kakaoLogin';
-// import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
