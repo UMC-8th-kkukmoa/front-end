@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
 import axios from 'axios';
 import { TokenResponse } from '../types/kakao';
 import { saveTokens } from '../utils/tokenStorage';
@@ -14,7 +15,7 @@ function timeout(ms: number): Promise<never> {
 
 const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
   try {
-    const redirectUrl = 'kkukmoa://oauth';
+    const redirectUrl = Linking.createURL('oauth');
     const loginUrl = `${KAKAO_LOGIN_URL}?redirect_uri=${encodeURIComponent(redirectUrl)}&mobile=true`;
 
     const timeoutPromise = timeout(60000);
