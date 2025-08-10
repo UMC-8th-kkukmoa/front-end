@@ -44,7 +44,7 @@ function SectionHeader({ title }: { title: string }) {
   return <Text style={styles.header}>{title}</Text>;
 }
 
-function SectionLabel({ label, onClick }: { label: string; onClick: () => void }) {
+function SectionLabel({ label, onClick }: { label: string; onClick: () => void | Promise<void> }) {
   return (
     <TouchableOpacity onPress={onClick}>
       <View style={styles.label}>
