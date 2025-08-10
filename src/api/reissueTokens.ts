@@ -23,8 +23,13 @@ const reissueTokens = async () => {
     await saveTokens(accessToken, newRefreshToken);
 
     return { accessToken, refreshToken: newRefreshToken };
-  } catch (error) {
-    console.error('토큰 재발급 실패:', error);
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error && 'isAxiosError' in (error as any)) {
+      const err = error as import('axios').AxiosError<any>;
+      console.error('토큰 재발급 실패 status:', err.response?.status, 'message:', err.message);
+    } else {
+      console.error('토큰 재발급 실패:', (error as Error)?.message ?? error);
+    }
     return null;
   }
 };
