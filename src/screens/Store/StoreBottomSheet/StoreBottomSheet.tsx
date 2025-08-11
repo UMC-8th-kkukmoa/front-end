@@ -38,7 +38,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
     const topSnap = screenHeight * 0.65;
     const bottomSnap = screenHeight * 0.09;
     return [bottomSnap, topSnap];
-  }, []);
+  }, [screenHeight]);
 
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
