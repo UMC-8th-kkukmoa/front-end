@@ -59,7 +59,7 @@ export default StyleSheet.create({
     width: 282,
     height: 172,
     borderRadius: 8,
-    marginTop: 14,
+    marginTop: 10,
     marginBottom: 15,
     alignSelf: 'center',
   },
