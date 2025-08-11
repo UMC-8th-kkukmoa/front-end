@@ -1,10 +1,19 @@
 // 공통 API 래퍼
-export type BaseResponse<T> = {
-  isSuccess: boolean;
+export type ApiSuccess<T> = {
+  isSuccess: true;
   code?: string;
   message?: string;
-  result?: T;
+  result: T;
 };
+
+export type ApiFail = {
+  isSuccess: false;
+  code: string;
+  message: string;
+  result?: never;
+};
+
+export type BaseResponse<T> = ApiSuccess<T> | ApiFail;
 
 // 상세 DTO (백엔드 원본)
 export type StoreDetail = {

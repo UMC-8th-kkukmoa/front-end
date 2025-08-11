@@ -2,6 +2,16 @@ import * as Location from 'expo-location';
 
 const KAKAO_REST_API_KEY = process.env.EXPO_PUBLIC_KAKAO_REST_API_KEY;
 
+function withTimeout<T>(fn: () => Promise<T>, ms: number): Promise<T> {
+  let t: ReturnType<typeof setTimeout>;
+  return Promise.race<T | never>([
+    fn(),
+    new Promise<never>((_, reject) => {
+      t = setTimeout(() => reject(new Error(`위치 조회 타임아웃(${ms}ms)`)), ms);
+    }),
+  ]).finally(() => clearTimeout(t));
+}
+
 // 현재 위치 권한 요청 + 좌표 반환
 export async function getCurrentCoords() {
   const { status } = await Location.requestForegroundPermissionsAsync();
@@ -9,11 +19,10 @@ export async function getCurrentCoords() {
     throw new Error('위치 권한 거부됨');
   }
 
-  const loc = await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Highest,
-    timeout: 5000,
-    maximumAge: 0,
-  } as any);
+  const loc = await withTimeout(
+    () => Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest }),
+    5000,
+  );
 
   return { lat: loc.coords.latitude, lng: loc.coords.longitude };
 }

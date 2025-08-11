@@ -35,7 +35,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   const { height: screenHeight } = Dimensions.get('window');
 
   const snapPoints = useMemo(() => {
-    const topSnap = screenHeight * 0.7;
+    const topSnap = screenHeight * 0.65;
     const bottomSnap = screenHeight * 0.09;
     return [bottomSnap, topSnap];
   }, []);
@@ -95,7 +95,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
     setSheetIndex(index);
 
     // 바텀시트 상태에 따라 지도 버튼 관리
-    if (index === 1) {
+    if (index >= 1) {
       setShowMapButton(true);
     } else {
       setShowMapButton(false);
