@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import { getGiftcardDetail } from '../../api/voucherApi';
 import styles from './MyGiftcardDetail.style';
@@ -15,27 +16,15 @@ export default function MyGiftcardDetail() {
   const { qrCodeUuid } = useLocalSearchParams<{ qrCodeUuid: string }>();
   const router = useRouter();
 
-  const [voucher, setVoucher] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!qrCodeUuid) return;
-
-    const fetchVoucher = async () => {
-      try {
-        const data = await getGiftcardDetail(qrCodeUuid);
-        setVoucher(data);
-        console.log('금액권 상세 조회 성공:', data);
-      } catch (error) {
-        console.error('금액권 상세 조회 실패:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    console.log('Fetching voucher with UUID:', qrCodeUuid);
-
-    fetchVoucher();
-  }, [qrCodeUuid]);
+  const {
+    data: voucher,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['giftcardDetail', qrCodeUuid],
+    queryFn: () => getGiftcardDetail(qrCodeUuid!),
+    enabled: !!qrCodeUuid,
+  });
 
   // "YYYY-MM-DD" → "YYYY년 MM월 DD일"
   const formatDate = (dateStr: string) => {
@@ -59,25 +48,7 @@ export default function MyGiftcardDetail() {
     return daysLeft.replace(/D-?(\d+)/, 'D - $1');
   };
 
-  const formatVoucherTitle = (name: string) => {
-    return name.replace(/(\d+),?(\d+)?원권/, (match, p1, p2) => {
-      const amount = p2 ? p1 + p2 : p1;
-      switch (amount) {
-        case '10000':
-          return '1만원권';
-        case '30000':
-          return '3만원권';
-        case '50000':
-          return '5만원권';
-        case '100000':
-          return '10만원권';
-        default:
-          return match;
-      }
-    });
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#aaa" />
@@ -85,7 +56,7 @@ export default function MyGiftcardDetail() {
     );
   }
 
-  if (!voucher) {
+  if (isError || !voucher) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>금액권 정보를 불러올 수 없습니다.</Text>
@@ -110,7 +81,7 @@ export default function MyGiftcardDetail() {
 
           <View style={styles.description}>
             <Text style={styles.brand}>꾹모아</Text>
-            <Text style={styles.title}>모바일 {formatVoucherTitle(voucher.name)}</Text>
+            <Text style={styles.title}>모바일 {voucher.name}권</Text>
           </View>
 
           <View style={styles.barcode}>
