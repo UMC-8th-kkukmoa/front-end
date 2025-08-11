@@ -13,12 +13,12 @@ import ExerciseIcon from '../../../assets/images/exercise.svg';
 import colors from '../../../design/colors';
 
 // 문자열 → SVG 컴포넌트 매핑
-const categoryMap: Record<string, { label: string; Icon: React.FC<any> }> = {
-  CAFE: { label: '카페', Icon: CafeIcon },
-  RESTAURANT: { label: '음식점', Icon: FoodIcon },
-  EXERCISE: { label: '운동/건강', Icon: ExerciseIcon },
-  EDUCATION: { label: '교육', Icon: EducationIcon },
-  SALON: { label: '미용실', Icon: SalonIcon },
+const categoryIconMap: Record<string, React.FC<any>> = {
+  카페: CafeIcon,
+  음식점: FoodIcon,
+  '운동/건강': ExerciseIcon,
+  교육: EducationIcon,
+  미용실: SalonIcon,
 };
 
 type Props = {
@@ -26,7 +26,7 @@ type Props = {
     storeId: string;
     name: string;
     imageUrl: string;
-    category: string;
+    categoryName: string;
     distance: string;
     time: string;
     reviewCount: number;
@@ -38,16 +38,16 @@ type Props = {
 
 function StoreCard({ item, isLiked, onToggleLike }: Props) {
   const router = useRouter();
-  const categoryData = categoryMap[item.category];
+  const IconComponent = categoryIconMap[item.categoryName];
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.storeId}`)}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
-      {categoryData && (
+      {IconComponent && (
         <View style={styles.categoryBadge}>
-          <categoryData.Icon width={12} height={12} color={colors.light.sub} />
-          <Text style={styles.categoryLabel}>{categoryData.label}</Text>
+          <IconComponent width={12} height={12} color={colors.light.sub} />
+          <Text style={styles.categoryLabel}>{item.categoryName}</Text>
         </View>
       )}
 

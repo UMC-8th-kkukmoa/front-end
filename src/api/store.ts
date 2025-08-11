@@ -1,34 +1,5 @@
 import apiClient from './client';
-
-export type StoreDetail = {
-  storeId: number;
-  name: string;
-  reviewCount: number;
-  categoryName: string;
-  merchantNumber: string;
-  address: string;
-  detailAddress: string;
-  storeImage: string;
-  openingHours: string;
-  closingHours: string;
-};
-
-export type StoreListItem = {
-  storeId: number;
-  name: string;
-  storeImage: string;
-  distance: number;
-  openingHours: string;
-  closingHours: string;
-  reviewCount: number;
-};
-
-type BaseResponse<T> = {
-  isSuccess: boolean;
-  code?: string;
-  message?: string;
-  result?: T;
-};
+import type { BaseResponse, StoreDetail, StoreListItem } from '../types/store';
 
 // 상세 조회
 export async function getStoreDetail(storeId: string | number): Promise<StoreDetail> {

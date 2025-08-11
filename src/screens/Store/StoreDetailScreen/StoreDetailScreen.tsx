@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   FlatList,
   StatusBar,
-  Alert,
   ActivityIndicator,
   Image,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getStoreDetail, StoreDetail } from '../../../api/store';
+import { useQuery } from '@tanstack/react-query';
+import { getStoreDetail } from '../../../api/store';
+import type { StoreDetail } from '../../../types/store';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
 import BackArrow from '../../../assets/images/arrow_back.svg';
@@ -55,26 +56,22 @@ function StoreDetailScreen() {
   const { id } = useLocalSearchParams();
   const storeId = Array.isArray(id) ? id[0] : id;
 
-  const [store, setStore] = useState<StoreDetail | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isLiked, setIsLiked] = useState(false); // 찜 상태 API 연동 시 교체
 
-  // 상세 API 호출
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!storeId) return;
-        const r = await getStoreDetail(storeId as string);
-        setStore(r);
-      } catch (e: any) {
-        Alert.alert('오류', e?.message || '가게 정보를 불러오지 못했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [storeId]);
+  // 상세 데이터 패칭
+  const {
+    data: store,
+    isPending,
+    isError,
+  } = useQuery<StoreDetail>({
+    queryKey: ['storeDetail', storeId],
+    queryFn: () => getStoreDetail(storeId as string),
+    enabled: !!storeId,
+    retry: 0,
+    staleTime: 60_000,
+  });
 
-  if (loading) {
+  if (isPending) {
     return (
       <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
         <ActivityIndicator size="large" color={colors.light.main} />
@@ -83,8 +80,7 @@ function StoreDetailScreen() {
     );
   }
 
-  // 임시 UI
-  if (!store) {
+  if (isError || !store) {
     return (
       <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
         <Text style={{ color: colors.light.gray2 }}>가게 정보를 불러올 수 없습니다.</Text>

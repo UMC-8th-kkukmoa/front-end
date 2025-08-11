@@ -10,10 +10,10 @@ export default StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.light.white,
     paddingHorizontal: 16,
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.08)',
+    zIndex: 1,
   },
   backButton: {
     paddingLeft: 20,
@@ -41,5 +41,9 @@ export default StyleSheet.create({
   },
   body: {
     flex: 1,
+  },
+
+  bottomShadow: {
+    height: 20,
   },
 });

@@ -43,7 +43,6 @@ export default StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    height: 101,
   },
   title: {
     fontFamily: 'Pretendard-Bold',

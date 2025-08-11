@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 
   headerArea: {
     position: 'absolute',
+    paddingTop: 50,
   },
 });
 

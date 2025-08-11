@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { useQuery } from '@tanstack/react-query';
 import { getStoreList, getStoreListByCategory } from '../../../api/store';
 import styles from './StoreBottomSheet.style';
 import MapPin from '../../../assets/images/mappin.svg';
@@ -34,16 +35,60 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   const { height: screenHeight } = Dimensions.get('window');
 
   const snapPoints = useMemo(() => {
-    const topSnap = screenHeight * 0.75;
-    const bottomSnap = screenHeight * 0.1;
+    const topSnap = screenHeight * 0.7;
+    const bottomSnap = screenHeight * 0.09;
     return [bottomSnap, topSnap];
   }, []);
 
-  const [storeList, setStoreList] = useState<any[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
   const [showMapButton, setShowMapButton] = useState(false);
+
+  // 데이터 패칭
+  const {
+    data: storeList = [],
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['stores', selectedCategory, location?.lat, location?.lng],
+    enabled: !!location,
+    // 선택된 카테고리 or 그냥 목록 조회
+    queryFn: async () => {
+      if (!location) return [];
+      return selectedCategory
+        ? getStoreListByCategory(selectedCategory, location.lat, location.lng)
+        : getStoreList(location.lat, location.lng);
+    },
+
+    select: (stores) =>
+      stores
+        .map((store) => {
+          const km = Number(store.distance);
+          return {
+            storeId: String(store.storeId),
+            name: store.name,
+            imageUrl: store.storeImage,
+            categoryName: store.categoryName,
+            distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
+            time: `${store.openingHours} ~ ${store.closingHours}`,
+            reviewCount: store.reviewCount,
+            bookmarkCount: 0,
+            distanceKm: Number.isNaN(km) ? 0 : km,
+          };
+        })
+        .sort((a, b) => a.distanceKm - b.distanceKm),
+    retry: 1,
+  });
+
+  React.useEffect(() => {
+    if (isError && error) {
+      Alert.alert(
+        '오류',
+        (error as Error).message || '가게 정보를 불러오는 중 문제가 발생했습니다.',
+      );
+    }
+  }, [isError, error]);
 
   // 시트 관리
   const handleSheetChanges = useCallback((index: number) => {
@@ -76,47 +121,6 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
     }));
   };
 
-  // API 호출
-  useEffect(() => {
-    const fetchStores = async () => {
-      if (!location) return;
-
-      try {
-        const stores = selectedCategory
-          ? await getStoreListByCategory(selectedCategory, location.lat, location.lng)
-          : await getStoreList(location.lat, location.lng);
-
-        const formatted = stores.map((store) => {
-          return {
-            storeId: store.storeId.toString(),
-            name: store.name,
-            imageUrl: store.storeImage,
-            category: selectedCategory ?? '기타',
-            distance: `${store.distance.toFixed(2)} km`,
-            time: `${store.openingHours} ~ ${store.closingHours}`,
-            reviewCount: store.reviewCount,
-            bookmarkCount: 0,
-          };
-        });
-
-        setStoreList(formatted);
-      } catch (err: any) {
-        Alert.alert('오류', err?.message || '가게 정보를 불러오는 중 문제가 발생했습니다.');
-      }
-    };
-
-    fetchStores();
-  }, [location, selectedCategory]);
-
-  const filteredAndSortedStores = useMemo(() => {
-    return storeList
-      .map((store) => ({
-        ...store,
-        distanceValue: parseFloat(store.distance.replace(' km', '')),
-      }))
-      .sort((a, b) => a.distanceValue - b.distanceValue);
-  }, [storeList]);
-
   const renderItem = ({ item }: { item: any }) => (
     <StoreCard item={item} isLiked={likedMap[item.storeId] === true} onToggleLike={toggleLike} />
   );
@@ -141,7 +145,7 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
         </View>
 
         <BottomSheetFlatList
-          data={filteredAndSortedStores}
+          data={storeList}
           keyExtractor={(item) => item.storeId}
           renderItem={renderItem}
           contentContainerStyle={{ ...styles.listContentContainer, flexGrow: 1 }}

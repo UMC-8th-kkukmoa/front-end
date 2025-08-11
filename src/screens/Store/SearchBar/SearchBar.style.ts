@@ -3,14 +3,13 @@ import colors from '../../../design/colors';
 
 export default StyleSheet.create({
   wrapper: {
-    paddingTop: 50,
     paddingBottom: 13,
   },
   searchBar: {
     flex: 1,
     alignItems: 'center',
     position: 'relative',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   textBox: {
     width: '100%',

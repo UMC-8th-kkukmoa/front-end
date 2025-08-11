@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders } from 'axios';
+import axios from 'axios';
 import { Platform } from 'react-native';
 import { getGenericPassword } from 'react-native-keychain';
 import reissueTokens from './reissueTokens';
@@ -17,8 +17,6 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(async (config) => {
   const newConfig = { ...config };
-
-  newConfig.headers = AxiosHeaders.from(config.headers || {});
 
   // react-native-keychain은 RN에서만 사용 가능함
   if (Platform.OS !== 'web') {
