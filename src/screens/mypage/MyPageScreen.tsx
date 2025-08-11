@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
@@ -103,7 +103,20 @@ export default function MyPageScreen() {
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
           <SectionLabel label="사장님 로그인 (회원가입)" onClick={() => {}} />
-          <SectionLabel label="로그아웃" onClick={handleLogout} />
+          <SectionLabel
+            label="로그아웃"
+            onClick={() =>
+              Alert.alert(
+                '로그아웃',
+                '로그아웃 하시겠습니까?',
+                [
+                  { text: '예', onPress: handleLogout },
+                  { text: '아니요', style: 'cancel' },
+                ],
+                { cancelable: true },
+              )
+            }
+          />
         </Section>
       </View>
     </View>
