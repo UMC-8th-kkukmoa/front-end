@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import styles from './MyGiftCardScreen.style';
 import { getMyGiftcards } from '../../api/voucherApi';
@@ -22,8 +23,6 @@ const giftcard10 = require('../../assets/images/giftcard10.png');
 
 export default function MyGiftCardScreen() {
   const router = useRouter();
-  const [giftcards, setGiftcards] = useState<MyGiftcard[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // 금액권 이미지 매핑
   const getGiftcardImage = (name: string) => {
@@ -41,28 +40,17 @@ export default function MyGiftCardScreen() {
     return daysLeft.replace(/D-?(\d+)/, 'D - $1');
   };
 
-  useEffect(() => {
-    const fetchGiftcards = async () => {
-      try {
-        const data = await getMyGiftcards();
-        setGiftcards(data);
-        console.log('금액권 목록 조회 성공:', data);
-      } catch (error) {
-        console.error('금액권 로딩 오류:', JSON.stringify(error, null, 2));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGiftcards();
-  }, []);
+  const { data: giftcards, isLoading } = useQuery<MyGiftcard[]>({
+    queryKey: ['myGiftcards'],
+    queryFn: getMyGiftcards,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll}>
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.cardContainer}>
-          {loading ? (
+          {isLoading ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <ActivityIndicator size="large" color="#aaa" />
             </View>
