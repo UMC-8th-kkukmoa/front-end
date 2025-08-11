@@ -38,14 +38,13 @@ export default StyleSheet.create({
   },
   searchRow: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     marginBottom: 20,
     marginTop: 10,
   },
   buttonGroup: {
     flexDirection: 'row',
     gap: 8,
-    marginLeft: 10,
   },
   iconButton: {
     borderWidth: 1,
@@ -83,11 +82,12 @@ export default StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     flex: 1,
+    paddingHorizontal: 16,
   },
   cardList: {
     flex: 1,
   },
   cardContainer: {
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
   },
 });

@@ -174,7 +174,7 @@ function MainScreen() {
         <ScrollView showsVerticalScrollIndicator={false} style={styles.cardList}>
           {/* 배너 (추후 컴포넌트 만들기) */}
           <View style={styles.banner}>
-            <BannerImage width="92%" height={130} />
+            <BannerImage width="100%" height={130} />
           </View>
 
           {/* 가게 카드 리스트 */}
