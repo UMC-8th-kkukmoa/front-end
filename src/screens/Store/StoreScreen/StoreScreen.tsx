@@ -1,40 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { View } from 'react-native';
-import * as Location from 'expo-location';
+import { WebView } from 'react-native-webview';
+import { useQuery } from '@tanstack/react-query';
 import styles from './StoreScreen.style';
 import StoreBottomSheet from '../StoreBottomSheet/StoreBottomSheet';
 import SearchBar from '../SearchBar/SearchBar';
 import CategoryTabs from '../CategoryTabs/CategoryTabs';
 import MapFloatingButtons from '../MapFloatingButtons/MapFloatingButtons';
 import KakaoMap from '../KakaoMap/KakaoMap';
+import { getCurrentCoords, getAddressFromCoords } from '../../../utils/location';
 
 function Store() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // 중앙 카테고리 관리
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const mapRef = useRef<WebView<unknown>>(null);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('위치 권한이 거부되었습니다.');
-        return;
-      }
+  const {
+    data: coords,
+    isPending: isLocLoading,
+    refetch: refetchCoords,
+  } = useQuery({
+    queryKey: ['coords'],
+    queryFn: getCurrentCoords,
+    retry: 0,
+  });
 
-      const loc = await Location.getCurrentPositionAsync({});
-      setLocation({
-        lat: loc.coords.latitude,
-        lng: loc.coords.longitude,
-      });
-    })();
-  }, []);
+  const { data: address, isPending: isAddrLoading } = useQuery({
+    queryKey: ['address', coords?.lat, coords?.lng],
+    queryFn: () => getAddressFromCoords(coords!.lat, coords!.lng),
+    enabled: !!coords,
+    staleTime: 60_000,
+  });
+
+  // 현재 위치로 이동 버튼
+  const handleMoveToCurrentLocation = async () => {
+    const res = await refetchCoords(); // 새 좌표 강제 갱신
+    const newCoords = res.data;
+    if (newCoords && mapRef.current) {
+      mapRef.current.postMessage(
+        JSON.stringify({
+          type: 'MOVE_TO_LOCATION',
+          payload: newCoords,
+        }),
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.mapArea}>
-        <KakaoMap center={location} zoom={1} />
-        <MapFloatingButtons />
+        <KakaoMap center={coords ?? null} zoom={2} mapRef={mapRef} />
+        <MapFloatingButtons onPressTarget={handleMoveToCurrentLocation} />
       </View>
 
       <View style={styles.headerArea}>
@@ -42,7 +57,11 @@ function Store() {
         <CategoryTabs selected={selectedCategory} onSelect={setSelectedCategory} />
       </View>
 
-      <StoreBottomSheet selectedCategory={selectedCategory} />
+      <StoreBottomSheet
+        selectedCategory={selectedCategory}
+        address={isLocLoading || isAddrLoading ? '위치 불러오는 중...' : (address ?? '주소 미확인')}
+        location={coords ?? null}
+      />
     </View>
   );
 }

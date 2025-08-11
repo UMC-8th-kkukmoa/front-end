@@ -17,6 +17,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(async (config) => {
   const newConfig = { ...config };
+
   // react-native-keychain은 RN에서만 사용 가능함
   if (Platform.OS !== 'web') {
     try {
