@@ -6,7 +6,7 @@ export type MyGiftcard = {
   daysLeft: string;
 };
 
-export type DetailedGiftcard = MyGiftcard & {
+export type DetailedGiftCard = MyGiftcard & {
   value: number;
   remainingValue: number;
   qrCode: string;

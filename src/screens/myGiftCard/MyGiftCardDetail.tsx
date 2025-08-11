@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
-import { getGiftcardDetail } from '../../api/voucherApi';
-import styles from './MyGiftcardDetail.style';
+import { getGiftCardDetail } from '../../api/voucherApi';
+import styles from './MyGiftCardDetail.style';
 
 const giftcard1 = require('../../assets/images/giftcard1.png');
 const giftcard3 = require('../../assets/images/giftcard3.png');
@@ -21,8 +21,8 @@ export default function MyGiftcardDetail() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['giftcardDetail', qrCodeUuid],
-    queryFn: () => getGiftcardDetail(qrCodeUuid!),
+    queryKey: ['getGiftCardDetail', qrCodeUuid],
+    queryFn: () => getGiftCardDetail(qrCodeUuid!),
     enabled: !!qrCodeUuid,
   });
 

@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import styles from './MyGiftCardScreen.style';
-import { getMyGiftcards } from '../../api/voucherApi';
+import { getMyGiftCards } from '../../api/voucherApi';
 import { MyGiftcard } from '../../types/voucher';
 
 const giftcard1 = require('../../assets/images/giftcard1.png');
@@ -40,9 +40,9 @@ export default function MyGiftCardScreen() {
     return daysLeft.replace(/D-?(\d+)/, 'D - $1');
   };
 
-  const { data: giftcards, isLoading } = useQuery<MyGiftcard[]>({
-    queryKey: ['myGiftcards'],
-    queryFn: getMyGiftcards,
+  const { data: giftCards, isLoading } = useQuery<MyGiftcard[]>({
+    queryKey: ['myGiftCards'],
+    queryFn: getMyGiftCards,
   });
 
   return (
@@ -56,7 +56,7 @@ export default function MyGiftCardScreen() {
             </View>
           ) : (
             <FlatList
-              data={giftcards}
+              data={giftCards}
               keyExtractor={(item) => item.qrCodeUuid}
               renderItem={({ item }) => {
                 const imageSource = getGiftcardImage(item.name);

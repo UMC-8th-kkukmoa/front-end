@@ -1,3 +1,3 @@
-import MyGiftcardDetail from '../../src/screens/myGiftCard/MyGiftCardDetail';
+import MyGiftCardDetail from '../../src/screens/myGiftCard/MyGiftCardDetail';
 
-export default MyGiftcardDetail;
+export default MyGiftCardDetail;
