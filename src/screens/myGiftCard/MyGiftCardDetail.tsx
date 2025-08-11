@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import { getGiftCardDetail } from '../../api/voucherApi';
-import styles from './MyGiftCardDetai.style';
+import styles from './MyGiftCardDetail.style';
 
 const giftcard1 = require('../../assets/images/giftcard1.png');
 const giftcard3 = require('../../assets/images/giftcard3.png');
