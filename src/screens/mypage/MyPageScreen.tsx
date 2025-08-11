@@ -98,6 +98,8 @@ export default function MyPageScreen() {
             label="내 금액권"
             onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
           />
+          <SectionLabel label="결제 내역" onClick={() => {}} />
+          <SectionLabel label="받은 선물함" onClick={() => {}} />
         </Section>
 
         <Section title="계정 관리">
