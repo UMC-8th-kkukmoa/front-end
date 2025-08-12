@@ -1,12 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
@@ -21,6 +14,18 @@ import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
+
+function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
+  return (
+    <>
+      <View style={styles.banner}>
+        <BannerImage width="100%" height={130} />
+      </View>
+      {isLoading && <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />}
+      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+    </>
+  );
+}
 
 function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -130,31 +135,19 @@ function MainScreen() {
           </View>
         </View>
 
-        <ScrollView>
-          <View style={styles.banner}>
-            <BannerImage width="100%" height={130} />
-          </View>
-
-          {isLoading && (
-            <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />
-          )}
-          {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
-
-          {/* 가게 카드 리스트 */}
-          <View style={styles.cardContainer}>
-            <FlatList
-              data={transformedStoreList}
-              keyExtractor={(item) => item.storeId}
-              renderItem={({ item }) => (
-                <StoreCard
-                  item={item}
-                  isLiked={likedMap[item.storeId] === true}
-                  onToggleLike={() => toggleLike(item.storeId)}
-                />
-              )}
+        <FlatList
+          data={transformedStoreList}
+          keyExtractor={(item) => item.storeId}
+          ListHeaderComponent={<StoreListHeader isLoading={isLoading} isError={isError} />}
+          renderItem={({ item }) => (
+            <StoreCard
+              item={item}
+              isLiked={likedMap[item.storeId] === true}
+              onToggleLike={() => toggleLike(item.storeId)}
             />
-          </View>
-        </ScrollView>
+          )}
+          contentContainerStyle={styles.cardContainer}
+        />
       </View>
     </View>
   );

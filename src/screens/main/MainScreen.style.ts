@@ -80,13 +80,12 @@ export default StyleSheet.create({
     fontSize: 14,
   },
   banner: {
-    borderRadius: 12,
+    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   cardContainer: {
-    paddingTop: 16,
     paddingHorizontal: 16,
   },
 });
