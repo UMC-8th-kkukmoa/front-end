@@ -70,16 +70,20 @@ function MainScreen() {
       coords ? getStoreList(coords.lat, coords.lng, 0, 10) : Promise.resolve(emptyStoreListPage),
   });
 
-  const transformedStoreList = storeList.stores.map((store) => ({
-    storeId: store.storeId.toString(),
-    name: store.name,
-    imageUrl: store.storeImage,
-    categoryName: store.categoryName,
-    distance: `${store.distance.toFixed(2)} km`,
-    time: `${store.openingHours} ~ ${store.closingHours}`,
-    reviewCount: store.reviewCount,
-    bookmarkCount: 0,
-  }));
+  const transformedStoreList = React.useMemo(
+    () =>
+      storeList.stores.map((store) => ({
+        storeId: store.storeId.toString(),
+        name: store.name,
+        imageUrl: store.storeImage,
+        categoryName: store.categoryName,
+        distance: `${store.distance.toFixed(2)} km`,
+        time: `${store.openingHours} ~ ${store.closingHours}`,
+        reviewCount: store.reviewCount,
+        bookmarkCount: 0,
+      })),
+    [storeList.stores],
+  );
 
   const toggleLike = useCallback((id: string) => {
     setLikedMap((prev) => ({
