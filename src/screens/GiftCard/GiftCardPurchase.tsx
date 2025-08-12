@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import * as Keychain from 'react-native-keychain';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import PaymentModal from '../../design/component/PaymentModal';
@@ -58,6 +59,7 @@ function GiftCardPurchase() {
       }
 
       const token = credentials.password;
+      console.log('토큰:', token);
 
       const response = await fetch(`${API_BASE_URL}/v1/payments/prepare`, {
         method: 'POST',
@@ -73,19 +75,23 @@ function GiftCardPurchase() {
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('결제 준비 실패:', errorData);
+        Alert.alert('오류', errorData.message || '결제 준비 중 오류가 발생했습니다.');
+        return;
+      }
+
       const result = await response.json();
 
-      if (response.ok && result.orderId) {
-        setPaymentData({
-          orderId: result.orderId,
-          orderName: result.orderName,
-          amount: result.amount,
-        });
-        setShowPaymentModal(true);
-      } else {
-        Alert.alert('오류', '결제 준비 중 오류가 발생했습니다.');
-      }
+      setPaymentData({
+        orderId: result.orderId,
+        orderName: result.orderName,
+        amount: result.amount,
+      });
+      setShowPaymentModal(true);
     } catch (error) {
+      console.error('preparePayment 네트워크 오류:', error);
       Alert.alert('오류', '네트워크 오류가 발생했습니다.');
     }
   };

@@ -191,6 +191,7 @@ export default function PaymentModal({
     useState<PaymentMethodWidgetControl | null>(null);
   const [agreementWidgetControl, setAgreementWidgetControl] =
     useState<AgreementWidgetControl | null>(null);
+  const [widgetKey, setWidgetKey] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isWidgetReady, setIsWidgetReady] = useState(false);
 
@@ -295,7 +296,7 @@ export default function PaymentModal({
               {/* 결제수단 섹션 */}
               <View style={styles.paymentMethodSection}>
                 <PaymentMethodWidget
-                  key={`paymentMethod-${visible}`}
+                  key={widgetKey}
                   selector="payment-methods"
                   onLoadEnd={() => {
                     paymentWidgetControl
@@ -321,7 +322,7 @@ export default function PaymentModal({
               {/* 약관 섹션 */}
               <View style={styles.agreementSection}>
                 <AgreementWidget
-                  key={`agreement-${visible}`}
+                  key={widgetKey}
                   selector="agreement"
                   onLoadEnd={() => {
                     paymentWidgetControl
