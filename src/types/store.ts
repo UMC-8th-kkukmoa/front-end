@@ -40,3 +40,12 @@ export type StoreListItem = {
   categoryName: string;
   reviewCount: number;
 };
+
+export type StoreListPage = {
+  stores: StoreListItem[];
+  page: number;
+  totalPages: number;
+  totalElements: number;
+  isFirst: boolean;
+  isLast: boolean;
+};
