@@ -122,6 +122,9 @@ function MainScreen() {
             </Text>
           </View>
           <View style={styles.rightIcons}>
+            <TouchableOpacity onPress={() => router.push('/qrcode')}>
+              <QRIcon width={24} height={24} />
+            </TouchableOpacity>
             <TouchableOpacity>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>

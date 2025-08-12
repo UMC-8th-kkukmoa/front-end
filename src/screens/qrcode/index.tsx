@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Animated,
   Button,
   Linking,
   StyleSheet,
@@ -26,21 +25,56 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 1,
   },
+  title: {
+    position: 'absolute',
+    top: 50,
+    color: colors.light.white,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  dimOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  dim: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  centerTexts: {
+    position: 'absolute',
+    top: '28%',
+    alignItems: 'center',
+  },
+  shopName: {
+    color: '#FF8A3D',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  instruction: {
+    color: colors.light.white,
+    fontSize: 16,
+  },
+  scanBox: {
+    position: 'absolute',
+  },
+  corner: {
+    position: 'absolute',
+    width: 36,
+    height: 36,
+    borderColor: '#2E2E2E',
+  },
 });
 
 export default function QRScannerScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const device = useCameraDevice('back');
   const navigation = useNavigation();
-  const [qrFrame, setQrFrame] = useState<{
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  } | null>(null);
-  const isAnimating = useRef(false);
-  const animationProgress = useRef(new Animated.Value(0)).current;
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const minDim = Math.min(screenWidth, screenHeight);
+  const cutoutSize = Math.min(minDim * 0.6, 280);
+  const boxTop = (screenHeight - cutoutSize) / 2;
+  const boxLeft = (screenWidth - cutoutSize) / 2;
 
   useEffect(() => {
     (async () => {
@@ -52,31 +86,8 @@ export default function QRScannerScreen() {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: (codes) => {
-      if (codes.length > 0 && !isAnimating.current && codes[0].frame) {
-        const { frame, value } = codes[0];
-
-        isAnimating.current = true;
-        setQrFrame(frame);
-        animationProgress.setValue(0);
-
-        Animated.timing(animationProgress, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: false,
-        }).start(() => {
-          setTimeout(() => {
-            Animated.timing(animationProgress, {
-              toValue: 0,
-              duration: 400,
-              useNativeDriver: false,
-            }).start(() => {
-              setQrFrame(null);
-              isAnimating.current = false;
-            });
-          }, 500);
-        });
-
-        // TODO: QR 코드 핸들링
+      if (codes.length > 0) {
+        const { value } = codes[0];
         // eslint-disable-next-line no-console
         console.log(`QR: ${value}`);
       }
@@ -89,77 +100,6 @@ export default function QRScannerScreen() {
       await Linking.openSettings();
     }
     setHasPermission(status === 'granted');
-  };
-
-  const renderOverlay = () => {
-    if (!qrFrame) {
-      return null;
-    }
-
-    const overlayStyle = {
-      position: 'absolute' as const,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-    };
-
-    const holeTop = animationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, qrFrame.y],
-    });
-
-    const holeLeft = animationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, qrFrame.x],
-    });
-
-    const holeRight = animationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [screenWidth, qrFrame.x + qrFrame.width],
-    });
-
-    const holeBottom = animationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [screenHeight, qrFrame.y + qrFrame.height],
-    });
-    const holeHeight = Animated.subtract(holeBottom, holeTop);
-
-    return (
-      <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'transparent' }}>
-        <Animated.View style={[overlayStyle, { top: 0, left: 0, right: 0, height: holeTop }]} />
-        <Animated.View
-          style={[
-            overlayStyle,
-            {
-              top: holeTop,
-              left: 0,
-              width: holeLeft,
-              height: holeHeight,
-            },
-          ]}
-        />
-        <Animated.View
-          style={[
-            overlayStyle,
-            {
-              top: holeTop,
-              left: holeRight,
-              right: 0,
-              height: holeHeight,
-            },
-          ]}
-        />
-        <Animated.View
-          style={[
-            overlayStyle,
-            {
-              bottom: 0,
-              left: 0,
-              right: 0,
-              top: holeBottom,
-            },
-          ]}
-        />
-      </View>
-    );
   };
 
   if (!device) {
@@ -182,7 +122,55 @@ export default function QRScannerScreen() {
   return (
     <View style={styles.container}>
       <Camera style={StyleSheet.absoluteFill} device={device} isActive codeScanner={codeScanner} />
-      {renderOverlay()}
+
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        <View style={[styles.dim, { left: 0, right: 0, top: 0, height: boxTop }]} />
+        <View style={[styles.dim, { top: boxTop, left: 0, width: boxLeft, height: cutoutSize }]} />
+        <View
+          style={[
+            styles.dim,
+            { top: boxTop, left: boxLeft + cutoutSize, right: 0, height: cutoutSize },
+          ]}
+        />
+        <View style={[styles.dim, { left: 0, right: 0, top: boxTop + cutoutSize, bottom: 0 }]} />
+      </View>
+
+      {/* TODO: Header로 바꿔보기 */}
+      <Text style={styles.title}>스탬프 QR 적립</Text>
+
+      <View style={styles.centerTexts}>
+        {/* TODO: 실제 매장 이름으로 바꾸기 */}
+        <Text style={styles.shopName}>미진카페</Text>
+        <Text style={styles.instruction}>매장QR을 스캔해주세요.</Text>
+      </View>
+
+      <View
+        style={[
+          styles.scanBox,
+          {
+            width: cutoutSize,
+            height: cutoutSize,
+            top: boxTop,
+            left: boxLeft,
+          },
+        ]}
+      >
+        {/* TODO: 중간에 빈 사각형을 만들기 위해서 4개 사각형을 만듦; 중간에 구멍을 뚫는 건 불가능한 듯 */}
+        <View style={[styles.corner, { top: 0, left: 0, borderTopWidth: 8, borderLeftWidth: 8 }]} />
+        <View
+          style={[styles.corner, { top: 0, right: 0, borderTopWidth: 8, borderRightWidth: 8 }]}
+        />
+        <View
+          style={[styles.corner, { bottom: 0, left: 0, borderBottomWidth: 8, borderLeftWidth: 8 }]}
+        />
+        <View
+          style={[
+            styles.corner,
+            { bottom: 0, right: 0, borderBottomWidth: 8, borderRightWidth: 8 },
+          ]}
+        />
+      </View>
+
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
         <LeftArrowIcon width={24} height={24} color={colors.light.white} />
       </TouchableOpacity>
