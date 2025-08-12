@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
+import PaymentModal from '../../design/component/PaymentModal';
 
 import giftcard1 from '../../assets/images/giftcard1.png';
 import giftcard3 from '../../assets/images/giftcard3.png';
@@ -22,6 +23,8 @@ function GiftCardPurchase() {
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
   const [isPayMethodSelected, setIsPayMethodSelected] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
 
   const priceStr = Array.isArray(price) ? price[0] : price;
   const quantityStr = Array.isArray(quantity) ? quantity[0] : quantity;
@@ -39,6 +42,110 @@ function GiftCardPurchase() {
   };
 
   const getGiftImage = (giftPrice: number) => giftImageMap[giftPrice] || null;
+
+  const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
+
+  // 결제 준비 API 호출
+  const preparePayment = async () => {
+    try {
+      const credentials = await Keychain.getGenericPassword({
+        service: 'com.kkukmoa.accessToken',
+      });
+
+      if (!credentials) {
+        Alert.alert('알림', '로그인이 필요합니다.');
+        return;
+      }
+
+      const token = credentials.password;
+
+      const response = await fetch(`${API_BASE_URL}/v1/payments/prepare`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderName: `${title} ${quantityNumber}개`,
+          amount: total,
+          voucherUnitPrice: numericPrice,
+          voucherQuantity: quantityNumber,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.orderId) {
+        setPaymentData({
+          orderId: result.orderId,
+          orderName: result.orderName,
+          amount: result.amount,
+        });
+        setShowPaymentModal(true);
+      } else {
+        Alert.alert('오류', '결제 준비 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      Alert.alert('오류', '네트워크 오류가 발생했습니다.');
+    }
+  };
+
+  // 결제 승인 API 호출
+  const confirmPayment = async (paymentResult: any) => {
+    try {
+      const credentials = await Keychain.getGenericPassword({
+        service: 'com.kkukmoa.accessToken',
+      });
+
+      if (!credentials) {
+        Alert.alert('알림', '로그인이 필요합니다.');
+        return;
+      }
+
+      const token = credentials.password;
+
+      const response = await fetch(`${API_BASE_URL}/v1/payments/confirm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          paymentKey: paymentResult.paymentKey,
+          orderId: paymentResult.orderId,
+          amount: paymentResult.amount,
+          voucherUnitPrice: numericPrice,
+          voucherQuantity: quantityNumber,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.isSuccess) {
+        Alert.alert('결제 완료', '기프트카드 구매가 완료되었습니다.', [
+          { text: '확인', onPress: () => router.back() },
+        ]);
+      } else {
+        Alert.alert('오류', '결제 승인 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      Alert.alert('오류', '결제 승인 중 네트워크 오류가 발생했습니다.');
+    } finally {
+      setShowPaymentModal(false);
+    }
+  };
+
+  const handlePayment = () => {
+    if (!(isAgreed && isPayMethodSelected)) {
+      return;
+    }
+    preparePayment();
+  };
+
+  const handleCloseModal = () => {
+    setShowPaymentModal(false);
+    setPaymentData(null); // paymentData도 초기화
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -94,11 +201,13 @@ function GiftCardPurchase() {
               style={{ marginRight: 8 }}
             />
           </TouchableOpacity>
-          <Text style={styles.agreementText}>
-            <Text style={{ color: colors.light.main }}>(필수) </Text>
-            결제 서비스 이용 약관, 개인정보 처리 동의
-          </Text>
-          <Icon name="add" size={18} color={colors.light.gray1} style={{ marginLeft: 'auto' }} />
+          <View>
+            <Text style={styles.agreementText}>
+              <Text style={{ color: colors.light.main }}>(필수) </Text>
+              결제 서비스 이용 약관, 개인정보 처리 동의
+            </Text>
+            <Icon name="add" size={18} color={colors.light.gray1} style={{ marginLeft: 'auto' }} />
+          </View>
         </View>
         <TouchableOpacity
           style={[
@@ -106,10 +215,20 @@ function GiftCardPurchase() {
             !(isAgreed && isPayMethodSelected) && { backgroundColor: colors.light.gray1 },
           ]}
           disabled={!(isAgreed && isPayMethodSelected)}
+          onPress={handlePayment}
         >
           <Text style={styles.buyButtonText}>결제하기</Text>
         </TouchableOpacity>
       </View>
+
+      {paymentData && (
+        <PaymentModal
+          visible={showPaymentModal}
+          onClose={handleCloseModal}
+          paymentData={paymentData}
+          onPaymentSuccess={confirmPayment}
+        />
+      )}
     </SafeAreaView>
   );
 }
