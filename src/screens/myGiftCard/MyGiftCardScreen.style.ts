@@ -46,6 +46,47 @@ export default StyleSheet.create({
   used: {
     backgroundColor: colors.light.sub,
   },
+  completed: {
+    backgroundColor: colors.light.gray2,
+  },
+  expired: {
+    backgroundColor: colors.light.gray2,
+  },
+  statusTextCompleted: {
+    color: colors.light.white,
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  statusTextExpired: {
+    color: colors.light.white,
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    width: '50%',
+    marginHorizontal: 30,
+    marginTop: 19,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  tabText: {
+    fontSize: 15,
+    color: colors.light.gray2,
+  },
+  activeTab: {
+    borderBottomWidth: 3,
+    borderBottomColor: colors.light.main,
+  },
+  activeTabText: {
+    color: colors.light.black,
+    fontWeight: '600',
+  },
   statusTextUnused: {
     color: colors.light.gray2,
     fontWeight: '600',
@@ -54,6 +95,7 @@ export default StyleSheet.create({
   },
   statusTextUsed: {
     color: colors.light.white,
+    fontWeight: '600',
     fontSize: 12,
     lineHeight: 16,
   },

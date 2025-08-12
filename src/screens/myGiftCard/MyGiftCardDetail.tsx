@@ -40,6 +40,12 @@ export default function MyGiftcardDetail() {
     return giftcard10;
   };
 
+  const STATUS_TEXT_MAP = {
+    사용중: '사용 중',
+    미사용: '사용 전',
+    사용됨: '사용 완료',
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll}>
@@ -65,7 +71,7 @@ export default function MyGiftcardDetail() {
                 <Text style={styles.daysLeft}>D - {voucher.daysLeft}</Text>
                 <View style={[styles.statusBadge, voucher.status === '사용중' && styles.used]}>
                   <Text style={[styles.statusText, voucher.status === '사용중' && styles.usedText]}>
-                    {voucher.status === '사용중' ? '사용 중' : '사용 전'}
+                    {STATUS_TEXT_MAP[voucher.status] || voucher.status}
                   </Text>
                 </View>
               </View>
