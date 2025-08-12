@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 import colors from '../../design/colors';
+
+const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 44;
 
 export default StyleSheet.create({
   container: {
@@ -8,7 +10,7 @@ export default StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: colors.light.main,
-    paddingTop: 25,
+    paddingTop: STATUSBAR_HEIGHT,
     paddingBottom: 0,
     paddingHorizontal: 20,
   },
@@ -78,16 +80,13 @@ export default StyleSheet.create({
     fontSize: 14,
   },
   banner: {
-    marginBottom: 20,
     borderRadius: 12,
     alignItems: 'center',
     flex: 1,
     paddingHorizontal: 16,
   },
-  cardList: {
-    flex: 1,
-  },
   cardContainer: {
+    paddingTop: 27,
     paddingHorizontal: 16,
   },
 });
