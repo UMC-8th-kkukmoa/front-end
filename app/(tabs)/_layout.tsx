@@ -6,7 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePathname, router } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
-import StoresIcon from '../../src/assets/images/map-pin.svg';
+import StoresIcon from '../../src/assets/images/mapIcon.svg';
 import ProfileIcon from '../../src/assets/images/user.svg';
 import colors from '../../src/design/colors';
 
