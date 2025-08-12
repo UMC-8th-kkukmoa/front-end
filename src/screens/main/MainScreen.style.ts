@@ -88,4 +88,9 @@ export default StyleSheet.create({
   cardContainer: {
     paddingHorizontal: 16,
   },
+  loading: {
+    alignItems: 'center',
+    paddingBottom: '50%',
+    color: colors.light.main,
+  },
 });

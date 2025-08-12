@@ -21,7 +21,7 @@ function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: 
       <View style={styles.banner}>
         <BannerImage width="100%" height={130} />
       </View>
-      {isLoading && <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />}
+      {isLoading && <ActivityIndicator style={styles.loading} />}
       {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
     </>
   );
