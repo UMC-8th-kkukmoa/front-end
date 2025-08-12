@@ -34,6 +34,8 @@ export default StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   button: {
     marginVertical: 20,

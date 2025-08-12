@@ -25,6 +25,7 @@ export default function OwnerJoinShopFormScreen() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState(false);
+
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -53,12 +54,7 @@ export default function OwnerJoinShopFormScreen() {
 
   const isNextDisabled = useMemo(() => {
     return (
-      !storeName ||
-      !address ||
-      !businessHours ||
-      !locationSet ||
-      !uploadedImageUrl ||
-      Boolean(uploadError)
+      !storeName || !address || !businessHours || !locationSet || !uploadedImageUrl || uploadError
     );
   }, [storeName, address, businessHours, locationSet, uploadedImageUrl, uploadError]);
 
