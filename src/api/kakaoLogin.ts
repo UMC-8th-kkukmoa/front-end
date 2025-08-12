@@ -40,7 +40,7 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
       { headers: { 'Content-Type': 'application/json' } },
     );
 
-    const { accessToken, refreshToken, id, email, newUser } = response.data;
+    const { accessToken, refreshToken, id, email, newUser } = response.data.result ?? {};
 
     if (!accessToken || !refreshToken) return null;
 

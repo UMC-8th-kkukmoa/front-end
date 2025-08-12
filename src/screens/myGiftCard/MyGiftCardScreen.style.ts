@@ -5,6 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+    overflow: 'hidden',
   },
   scroll: {
     marginTop: 10,
@@ -47,6 +48,7 @@ export default StyleSheet.create({
   },
   statusTextUnused: {
     color: colors.light.gray2,
+    fontWeight: '600',
     fontSize: 12,
     lineHeight: 16,
   },

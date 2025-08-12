@@ -35,7 +35,6 @@ export default function MyGiftCardScreen() {
     data: giftCards,
     isLoading,
     isError,
-    refetch,
   } = useQuery<MyGiftcard[]>({
     queryKey: ['myGiftCards'],
     queryFn: getMyGiftCards,
@@ -43,70 +42,76 @@ export default function MyGiftCardScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="내 금액권" onBackPress={() => router.back()} />
-      <ScrollView style={styles.scroll}>
-        <View style={styles.cardContainer}>
-          {isLoading && (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" color="#aaa" />
-            </View>
-          )}
-          {!isLoading && isError && (
-            <View style={{ alignItems: 'center', marginTop: 40 }}>
-              <Text style={{ color: '#888', marginBottom: 12 }}>
-                금액권 목록을 불러올 수 없습니다.
-              </Text>
-              <TouchableOpacity onPress={() => refetch()}>
-                <Text style={{ color: '#007AFF' }}>다시 시도</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {!isLoading && !isError && (
-            <FlatList
-              data={giftCards ?? []}
-              keyExtractor={(item) => item.qrCodeUuid}
-              renderItem={({ item }) => {
-                const imageSource = getGiftcardImage(item.amount);
-
-                return (
-                  <TouchableOpacity
-                    style={styles.card}
-                    onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
-                  >
-                    <View style={styles.header}>
-                      <Text style={styles.daysLeft}>D - {item.daysLeft}</Text>
-
-                      <View
-                        style={[
-                          styles.statusBadge,
-                          item.status === '미사용' ? styles.unused : styles.used,
-                        ]}
-                      >
-                        <Text
-                          style={
-                            item.status === '미사용'
-                              ? styles.statusTextUnused
-                              : styles.statusTextUsed
-                          }
-                        >
-                          {item.status === '미사용' ? '사용 전' : '사용 중'}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <Image source={imageSource} style={styles.image} />
-                  </TouchableOpacity>
-                );
-              }}
-              ListEmptyComponent={
-                <Text style={{ textAlign: 'center', marginTop: 40, color: '#888' }}>
-                  사용 가능한 금액권이 없습니다.
+      <View style={styles.container}>
+        <Header title="내 금액권" onBackPress={() => router.back()} />
+        <ScrollView style={styles.scroll}>
+          <View style={styles.cardContainer}>
+            {isLoading && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '50%',
+                }}
+              >
+                <ActivityIndicator size="large" color="#aaa" />
+              </View>
+            )}
+            {!isLoading && isError && (
+              <View style={{ alignItems: 'center', marginTop: 40 }}>
+                <Text style={{ color: '#888', marginBottom: 12 }}>
+                  금액권 목록을 불러올 수 없습니다.
                 </Text>
-              }
-            />
-          )}
-        </View>
-      </ScrollView>
+              </View>
+            )}
+            {!isLoading && !isError && (
+              <FlatList
+                data={giftCards ?? []}
+                keyExtractor={(item) => item.qrCodeUuid}
+                renderItem={({ item }) => {
+                  const imageSource = getGiftcardImage(item.amount);
+
+                  return (
+                    <TouchableOpacity
+                      style={styles.card}
+                      onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
+                    >
+                      <View style={styles.header}>
+                        <Text style={styles.daysLeft}>D - {item.daysLeft}</Text>
+
+                        <View
+                          style={[
+                            styles.statusBadge,
+                            item.status === '미사용' ? styles.unused : styles.used,
+                          ]}
+                        >
+                          <Text
+                            style={
+                              item.status === '미사용'
+                                ? styles.statusTextUnused
+                                : styles.statusTextUsed
+                            }
+                          >
+                            {item.status === '미사용' ? '사용 전' : '사용 중'}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <Image source={imageSource} style={styles.image} />
+                    </TouchableOpacity>
+                  );
+                }}
+                ListEmptyComponent={
+                  <Text style={{ textAlign: 'center', marginTop: 40, color: '#888' }}>
+                    사용 가능한 금액권이 없습니다.
+                  </Text>
+                }
+              />
+            )}
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

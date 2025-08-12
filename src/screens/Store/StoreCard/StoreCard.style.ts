@@ -13,7 +13,8 @@ export default StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 120,
+    height: 97,
+    backgroundColor: colors.light.gray1_35,
   },
   categoryBadge: {
     position: 'absolute',
@@ -32,23 +33,22 @@ export default StyleSheet.create({
     paddingVertical: 4,
   },
   categoryLabel: {
+    fontFamily: 'Pretendard-Regular',
     marginBottom: 2.3,
     color: colors.light.gray2,
     marginLeft: 3.5,
     fontSize: 8.3,
-    fontWeight: '400',
     lineHeight: 12.4,
   },
   content: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    height: 115,
   },
   title: {
+    fontFamily: 'Pretendard-Bold',
     width: 210,
     fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 13,
+    marginBottom: 10,
     color: colors.light.black,
     minHeight: 48,
   },
@@ -58,7 +58,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   subInfo: {
-    fontSize: 10,
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 9,
     color: colors.light.gray2,
   },
   footer: {
@@ -74,7 +75,8 @@ export default StyleSheet.create({
     borderColor: colors.light.gray1,
   },
   tagText: {
-    fontSize: 10,
+    fontFamily: 'Pretendard-Medium',
+    fontSize: 9,
     lineHeight: 16,
     color: colors.light.gray2,
   },

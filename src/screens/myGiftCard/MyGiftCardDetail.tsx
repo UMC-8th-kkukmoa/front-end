@@ -40,63 +40,65 @@ export default function MyGiftcardDetail() {
     return giftcard10;
   };
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#aaa" />
-      </View>
-    );
-  }
-
-  if (isError || !voucher) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>금액권 정보를 불러올 수 없습니다.</Text>
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll}>
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.inner}>
-          <View style={styles.header}>
-            <Text style={styles.daysLeft}>D - {voucher.daysLeft}</Text>
-            <View style={[styles.statusBadge, voucher.status === '사용중' && styles.used]}>
-              <Text style={[styles.statusText, voucher.status === '사용중' && styles.usedText]}>
-                {voucher.status === '사용중' ? '사용 중' : '사용 전'}
+          {isLoading && (
+            <View
+              style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '50%' }}
+            >
+              <ActivityIndicator size="large" color="#aaa" />
+            </View>
+          )}
+          {!voucher && isError && (
+            <View style={{ alignItems: 'center', marginTop: 40 }}>
+              <Text style={{ color: '#888', marginBottom: 12 }}>
+                금액권 정보를 불러올 수 없습니다.
               </Text>
             </View>
-          </View>
-          <Image source={getGiftcardImage(voucher.value)} style={styles.cardImage} />
+          )}
+          {voucher && (
+            <>
+              <View style={styles.header}>
+                <Text style={styles.daysLeft}>D - {voucher.daysLeft}</Text>
+                <View style={[styles.statusBadge, voucher.status === '사용중' && styles.used]}>
+                  <Text style={[styles.statusText, voucher.status === '사용중' && styles.usedText]}>
+                    {voucher.status === '사용중' ? '사용 중' : '사용 전'}
+                  </Text>
+                </View>
+              </View>
+              <Image source={getGiftcardImage(voucher.value)} style={styles.cardImage} />
 
-          <View style={styles.description}>
-            <Text style={styles.brand}>꾹모아</Text>
-            <Text style={styles.title}>모바일 {voucher.name}권</Text>
-          </View>
+              <View style={styles.description}>
+                <Text style={styles.brand}>꾹모아</Text>
+                <Text style={styles.title}>모바일 {voucher.name}권</Text>
+              </View>
 
-          <View style={styles.barcode}>
-            <Image
-              source={{ uri: `data:image/png;base64,${voucher.qrCode}` }}
-              style={{ width: 222, height: 140 }}
-              resizeMode="contain"
-            />
-          </View>
+              <View style={styles.barcode}>
+                <Image
+                  source={{ uri: `data:image/png;base64,${voucher.qrCode}` }}
+                  style={{ width: 222, height: 140 }}
+                  resizeMode="contain"
+                />
+              </View>
 
-          <View style={styles.infoBox}>
-            <View style={styles.row}>
-              <Text style={styles.label}>사용가능금액</Text>
-              <Text style={styles.value}>{voucher.remainingValue.toLocaleString()}원</Text>
-            </View>
-          </View>
+              <View style={styles.infoBox}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>사용가능금액</Text>
+                  <Text style={styles.value}>{voucher.remainingValue.toLocaleString()}원</Text>
+                </View>
+              </View>
 
-          <View style={styles.bottomRow}>
-            <View style={styles.row}>
-              <Text style={styles.subLabel}>유효기간</Text>
-              <Text style={styles.subValue}>{formatDate(voucher.validDays)}</Text>
-            </View>
-          </View>
+              <View style={styles.bottomRow}>
+                <View style={styles.row}>
+                  <Text style={styles.subLabel}>유효기간</Text>
+                  <Text style={styles.subValue}>{formatDate(voucher.validDays)}</Text>
+                </View>
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
