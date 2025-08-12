@@ -54,7 +54,7 @@ function IconWrapper({ isSelected, children }: { isSelected: boolean; children: 
 export default function Layout() {
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
-  const isStoreTab = pathname === '/stores';
+  const isStoreTab = pathname === '/stores' || pathname === '/';
 
   return (
     <SafeAreaView

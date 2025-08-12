@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 import colors from '../../design/colors';
+
+const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 44;
 
 export default StyleSheet.create({
   container: {
@@ -8,7 +10,7 @@ export default StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: colors.light.main,
-    paddingTop: 25,
+    paddingTop: STATUSBAR_HEIGHT,
     paddingBottom: 0,
     paddingHorizontal: 20,
   },
@@ -38,14 +40,13 @@ export default StyleSheet.create({
   },
   searchRow: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     marginBottom: 20,
     marginTop: 10,
   },
   buttonGroup: {
     flexDirection: 'row',
     gap: 8,
-    marginLeft: 10,
   },
   iconButton: {
     borderWidth: 1,
@@ -70,8 +71,8 @@ export default StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 16,
     marginLeft: 10,
-    width: 210,
     height: 55,
+    flex: 1,
   },
   searchPlaceholder: {
     flex: 1,
@@ -79,15 +80,13 @@ export default StyleSheet.create({
     fontSize: 14,
   },
   banner: {
-    marginBottom: 20,
     borderRadius: 12,
     alignItems: 'center',
-  },
-  cardList: {
     flex: 1,
+    paddingHorizontal: 16,
   },
   cardContainer: {
-    paddingHorizontal: 18,
-    paddingBottom: 120,
+    paddingTop: 16,
+    paddingHorizontal: 16,
   },
 });
