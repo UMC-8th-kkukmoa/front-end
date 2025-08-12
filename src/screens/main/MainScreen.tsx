@@ -116,10 +116,11 @@ function MainScreen() {
           <BannerImage width="100%" height={130} />
         </View>
 
+        {isLoading && <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />}
+        {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+
         {/* 가게 카드 리스트 */}
         <View style={styles.cardContainer}>
-          {isLoading && <ActivityIndicator />}
-          {isError && <Text>에러가 발생했습니다.</Text>}
           <FlatList
             data={transformedStoreList}
             keyExtractor={(item) => item.storeId}
