@@ -28,8 +28,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 100,
+    height: 50,
     zIndex: 1,
+    bottom: 80,
   },
 });
 
@@ -69,10 +70,10 @@ export default function Layout() {
     >
       <StatusBar barStyle="dark-content" />
       <LinearGradient
-        start={{ x: 0, y: 10 }}
+        start={{ x: 0, y: 1 }}
         end={{ x: 0, y: 0 }}
-        colors={[colors.light.shadow, 'rgba(0,0,0,0)']}
-        style={[styles.topFadeOverlay, { bottom: 50 }]}
+        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+        style={[styles.topFadeOverlay]}
       />
       <Tabs>
         <TabSlot />
