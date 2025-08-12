@@ -20,10 +20,6 @@ const logout = async () => {
     });
 
     console.log('로그아웃 성공:', response.data);
-
-    // 토큰 삭제
-    await Keychain.resetGenericPassword({ service: 'com.kkukmoa.accessToken' });
-    await Keychain.resetGenericPassword({ service: 'com.kkukmoa.refreshToken' });
   } catch (error: any) {
     if (error.response) {
       console.error('로그아웃 실패 status:', error.response.status);
@@ -31,7 +27,10 @@ const logout = async () => {
     } else {
       console.error('로그아웃 실패:', error);
     }
-    throw error;
+  } finally {
+    // 토큰 삭제
+    await Keychain.resetGenericPassword({ service: 'com.kkukmoa.accessToken' });
+    await Keychain.resetGenericPassword({ service: 'com.kkukmoa.refreshToken' });
   }
 };
 
