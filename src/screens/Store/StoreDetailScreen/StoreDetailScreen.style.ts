@@ -7,11 +7,21 @@ export default StyleSheet.create({
     backgroundColor: colors.light.white,
   },
 
+  header: {
+    paddingHorizontal: 28,
+    backgroundColor: colors.light.white,
+    paddingVertical: 16,
+  },
+
+  backButton: {
+    width: 24, // 상단 헤더 전체가 눌리기에 하드코딩으로 제어
+    justifyContent: 'center',
+  },
   // 스토어 사진
   storeImageArea: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 221,
+    height: 170,
     backgroundColor: colors.light.gray1_35,
   },
   storeImage: {
@@ -19,15 +29,16 @@ export default StyleSheet.create({
     height: '100%',
   },
 
-  backButton: {
-    position: 'absolute',
-    padding: 8,
-    left: 16,
-    zIndex: 10,
-  },
-
   infoArea: {
     flex: 1,
+  },
+
+  // 그림자
+  bottomShadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 20,
   },
 
   // 스토어 정보
@@ -37,7 +48,7 @@ export default StyleSheet.create({
     borderBottomColor: colors.light.gray1,
   },
   titleSection: {
-    marginBottom: 45,
+    marginBottom: 43,
   },
   headerRow: {
     flexDirection: 'row',
@@ -86,7 +97,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 26,
   },
   reviewTitle: {
     fontSize: 22,

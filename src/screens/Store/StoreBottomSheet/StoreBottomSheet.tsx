@@ -104,7 +104,6 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
               categoryName: store.categoryName,
               distance: `${distanceKm.toFixed(2)} km`,
               time: `${store.openingHours} ~ ${store.closingHours}`,
-              reviewCount: store.reviewCount,
               bookmarkCount: 0,
               distanceKm,
             };

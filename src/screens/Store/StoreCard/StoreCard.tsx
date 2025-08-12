@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { getReviewCount } from '../../../api/review';
 import styles from './StoreCard.style';
 import Arrow from '../../../assets/images/arrow.svg';
 import Like from '../../../assets/images/like.svg';
@@ -29,7 +31,6 @@ type Props = {
     categoryName: string;
     distance: string;
     time: string;
-    reviewCount: number;
     bookmarkCount: number;
   };
   isLiked: boolean;
@@ -39,6 +40,14 @@ type Props = {
 function StoreCard({ item, isLiked, onToggleLike }: Props) {
   const router = useRouter();
   const IconComponent = categoryIconMap[item.categoryName];
+
+  const { data: reviewCount, isLoading } = useQuery({
+    queryKey: ['reviewCount', item.storeId],
+    queryFn: () => getReviewCount(item.storeId),
+    enabled: !!item.storeId,
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.storeId}`)}>
@@ -60,10 +69,10 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
 
           <View style={styles.footer}>
             <View style={styles.tag}>
-              <Text style={styles.tagText}>리뷰 {item.reviewCount}</Text>
+              <Text style={styles.tagText}>리뷰 {isLoading ? '0' : (reviewCount ?? 0)}</Text>
             </View>
             <View style={styles.tag}>
-              <Text style={styles.tagText}>찜 {item.bookmarkCount}</Text>
+              <Text style={styles.tagText}>찜 {item.bookmarkCount ?? 0}</Text>
             </View>
             <Arrow style={{ marginLeft: 6 }} />
           </View>
