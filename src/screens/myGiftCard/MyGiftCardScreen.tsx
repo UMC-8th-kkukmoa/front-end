@@ -25,19 +25,21 @@ export default function MyGiftCardScreen() {
   const router = useRouter();
 
   // 금액권 이미지 매핑
-  const getGiftcardImage = (name: string) => {
-    const amountStr = name.match(/\d+(,\d+)?/)?.[0] ?? '0';
-    const amount = parseInt(amountStr.replace(',', ''), 10);
+  // const getGiftcardImage = (name: string) => {
+  //   const amountStr = name.match(/\d+(,\d+)?/)?.[0] ?? '0';
+  //   const amount = parseInt(amountStr.replace(',', ''), 10);
 
+  //   if (amount <= 10000) return giftcard1;
+  //   if (amount <= 30000) return giftcard3;
+  //   if (amount <= 50000) return giftcard5;
+  //   return giftcard10;
+  // };
+
+  const getGiftcardImage = (amount: number) => {
     if (amount <= 10000) return giftcard1;
     if (amount <= 30000) return giftcard3;
     if (amount <= 50000) return giftcard5;
     return giftcard10;
-  };
-
-  // "D - 0" 형식으로 변환
-  const formatDaysLeft = (daysLeft: string) => {
-    return daysLeft.replace(/D-?(\d+)/, 'D - $1');
   };
 
   const { data: giftCards, isLoading } = useQuery<MyGiftcard[]>({
@@ -59,7 +61,7 @@ export default function MyGiftCardScreen() {
               data={giftCards}
               keyExtractor={(item) => item.qrCodeUuid}
               renderItem={({ item }) => {
-                const imageSource = getGiftcardImage(item.name);
+                const imageSource = getGiftcardImage(item.amount);
 
                 return (
                   <TouchableOpacity
@@ -67,7 +69,7 @@ export default function MyGiftCardScreen() {
                     onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
                   >
                     <View style={styles.header}>
-                      <Text style={styles.daysLeft}>{formatDaysLeft(item.daysLeft)}</Text>
+                      <Text style={styles.daysLeft}>D - {item.daysLeft}</Text>
 
                       <View
                         style={[

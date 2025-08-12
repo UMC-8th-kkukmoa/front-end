@@ -33,19 +33,11 @@ export default function MyGiftcardDetail() {
   };
 
   // 금액권 이미지 매핑 함수
-  const getGiftcardImage = (name: string) => {
-    const amountStr = name.match(/\d+(,\d+)?/)?.[0] ?? '0';
-    const amount = parseInt(amountStr.replace(',', ''), 10);
-
-    if (amount <= 10000) return giftcard1;
-    if (amount <= 30000) return giftcard3;
-    if (amount <= 50000) return giftcard5;
+  const getGiftcardImage = (value: number) => {
+    if (value <= 10000) return giftcard1;
+    if (value <= 30000) return giftcard3;
+    if (value <= 50000) return giftcard5;
     return giftcard10;
-  };
-
-  // "D - 0" 형식으로 변환
-  const formatDaysLeft = (daysLeft: string) => {
-    return daysLeft.replace(/D-?(\d+)/, 'D - $1');
   };
 
   if (isLoading) {
@@ -70,14 +62,14 @@ export default function MyGiftcardDetail() {
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.inner}>
           <View style={styles.header}>
-            <Text style={styles.daysLeft}>{formatDaysLeft(voucher.daysLeft)}</Text>
+            <Text style={styles.daysLeft}>D - {voucher.daysLeft}</Text>
             <View style={[styles.statusBadge, voucher.status === '사용중' && styles.used]}>
               <Text style={[styles.statusText, voucher.status === '사용중' && styles.usedText]}>
                 {voucher.status === '사용중' ? '사용 중' : '사용 전'}
               </Text>
             </View>
           </View>
-          <Image source={getGiftcardImage(voucher.name)} style={styles.cardImage} />
+          <Image source={getGiftcardImage(voucher.value)} style={styles.cardImage} />
 
           <View style={styles.description}>
             <Text style={styles.brand}>꾹모아</Text>
