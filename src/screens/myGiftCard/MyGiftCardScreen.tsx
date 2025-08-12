@@ -24,17 +24,6 @@ const giftcard10 = require('../../assets/images/giftcard10.png');
 export default function MyGiftCardScreen() {
   const router = useRouter();
 
-  // 금액권 이미지 매핑
-  // const getGiftcardImage = (name: string) => {
-  //   const amountStr = name.match(/\d+(,\d+)?/)?.[0] ?? '0';
-  //   const amount = parseInt(amountStr.replace(',', ''), 10);
-
-  //   if (amount <= 10000) return giftcard1;
-  //   if (amount <= 30000) return giftcard3;
-  //   if (amount <= 50000) return giftcard5;
-  //   return giftcard10;
-  // };
-
   const getGiftcardImage = (amount: number) => {
     if (amount <= 10000) return giftcard1;
     if (amount <= 30000) return giftcard3;
@@ -42,7 +31,12 @@ export default function MyGiftCardScreen() {
     return giftcard10;
   };
 
-  const { data: giftCards, isLoading } = useQuery<MyGiftcard[]>({
+  const {
+    data: giftCards,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery<MyGiftcard[]>({
     queryKey: ['myGiftCards'],
     queryFn: getMyGiftCards,
   });
@@ -52,13 +46,24 @@ export default function MyGiftCardScreen() {
       <ScrollView style={styles.scroll}>
         <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.cardContainer}>
-          {isLoading ? (
+          {isLoading && (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <ActivityIndicator size="large" color="#aaa" />
             </View>
-          ) : (
+          )}
+          {!isLoading && isError && (
+            <View style={{ alignItems: 'center', marginTop: 40 }}>
+              <Text style={{ color: '#888', marginBottom: 12 }}>
+                금액권 목록을 불러올 수 없습니다.
+              </Text>
+              <TouchableOpacity onPress={() => refetch()}>
+                <Text style={{ color: '#007AFF' }}>다시 시도</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {!isLoading && !isError && (
             <FlatList
-              data={giftCards}
+              data={giftCards ?? []}
               keyExtractor={(item) => item.qrCodeUuid}
               renderItem={({ item }) => {
                 const imageSource = getGiftcardImage(item.amount);
@@ -93,7 +98,6 @@ export default function MyGiftCardScreen() {
                   </TouchableOpacity>
                 );
               }}
-              // 빈 목록일 때 표시
               ListEmptyComponent={
                 <Text style={{ textAlign: 'center', marginTop: 40, color: '#888' }}>
                   사용 가능한 금액권이 없습니다.
