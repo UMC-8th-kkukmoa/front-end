@@ -5,15 +5,15 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
-    overflow: 'hidden',
   },
   scroll: {
+    marginTop: 10,
     backgroundColor: colors.light.white,
   },
   cardContainer: {
     flex: 1,
     paddingHorizontal: 30,
-    paddingTop: 15,
+    paddingTop: 5,
   },
   card: {
     backgroundColor: '#DCDCDC59',

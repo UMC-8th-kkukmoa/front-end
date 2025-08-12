@@ -43,8 +43,8 @@ export default function MyGiftCardScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header title="내 금액권" onBackPress={() => router.back()} />
       <ScrollView style={styles.scroll}>
-        <Header title="내 금액권" onBackPress={() => router.back()} />
         <View style={styles.cardContainer}>
           {isLoading && (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

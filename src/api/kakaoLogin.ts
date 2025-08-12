@@ -35,7 +35,7 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
 
     // 교환 코드로 토큰 발급 요청
     const response = await axios.post(
-      `https://kkukmoa.shop/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
+      `${process.env.EXPO_PUBLIC_BASE_URL}/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
       null,
       { headers: { 'Content-Type': 'application/json' } },
     );
