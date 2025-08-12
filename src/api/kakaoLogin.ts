@@ -35,12 +35,14 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
 
     // 교환 코드로 토큰 발급 요청
     const response = await axios.post(
-      `https://kkukmoa.shop/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
+      `${process.env.EXPO_PUBLIC_BASE_URL}/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
       null,
       { headers: { 'Content-Type': 'application/json' } },
     );
 
-    const { accessToken, refreshToken, id, email, newUser } = response.data;
+    const { accessToken, refreshToken, id, email, newUser } = response.data.result ?? {};
+
+    console.log('카카오 로그인 성공:', response.data);
 
     if (!accessToken || !refreshToken) return null;
 

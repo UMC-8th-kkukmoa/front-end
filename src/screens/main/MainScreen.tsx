@@ -1,5 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
@@ -13,6 +20,7 @@ import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
+import { StoreListPage } from '../../types/store';
 
 function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -37,17 +45,27 @@ function MainScreen() {
     }
   }, [location]);
 
+  const emptyStoreListPage: StoreListPage = {
+    stores: [],
+    page: 0,
+    totalPages: 0,
+    totalElements: 0,
+    isFirst: true,
+    isLast: true,
+  };
+
   const {
-    data: storeList = [],
+    data: storeList = emptyStoreListPage,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<StoreListPage>({
     queryKey: ['storeList', coords?.lat, coords?.lng],
     enabled: !!coords,
-    queryFn: () => (coords ? getStoreList(coords.lat, coords.lng, 0, 10) : Promise.resolve([])),
+    queryFn: () =>
+      coords ? getStoreList(coords.lat, coords.lng, 0, 10) : Promise.resolve(emptyStoreListPage),
   });
 
-  const transformedStoreList = storeList.map((store) => ({
+  const transformedStoreList = storeList.stores.map((store) => ({
     storeId: store.storeId.toString(),
     name: store.name,
     imageUrl: store.storeImage,
@@ -112,27 +130,31 @@ function MainScreen() {
           </View>
         </View>
 
-        <View style={styles.banner}>
-          <BannerImage width="100%" height={130} />
-        </View>
+        <ScrollView>
+          <View style={styles.banner}>
+            <BannerImage width="100%" height={130} />
+          </View>
 
-        {isLoading && <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />}
-        {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+          {isLoading && (
+            <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />
+          )}
+          {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
 
-        {/* 가게 카드 리스트 */}
-        <View style={styles.cardContainer}>
-          <FlatList
-            data={transformedStoreList}
-            keyExtractor={(item) => item.storeId}
-            renderItem={({ item }) => (
-              <StoreCard
-                item={item}
-                isLiked={likedMap[item.storeId] === true}
-                onToggleLike={() => toggleLike(item.storeId)}
-              />
-            )}
-          />
-        </View>
+          {/* 가게 카드 리스트 */}
+          <View style={styles.cardContainer}>
+            <FlatList
+              data={transformedStoreList}
+              keyExtractor={(item) => item.storeId}
+              renderItem={({ item }) => (
+                <StoreCard
+                  item={item}
+                  isLiked={likedMap[item.storeId] === true}
+                  onToggleLike={() => toggleLike(item.storeId)}
+                />
+              )}
+            />
+          </View>
+        </ScrollView>
       </View>
     </View>
   );

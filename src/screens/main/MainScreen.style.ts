@@ -86,7 +86,7 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
   },
   cardContainer: {
-    paddingTop: 27,
+    paddingTop: 16,
     paddingHorizontal: 16,
   },
 });
