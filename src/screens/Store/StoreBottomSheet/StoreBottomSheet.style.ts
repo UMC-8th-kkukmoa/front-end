@@ -18,7 +18,6 @@ export default StyleSheet.create({
 
   emptyText: {
     fontFamily: 'Pretendard-Bold',
-    fontWeight: 700,
     fontSize: 14,
     color: colors.light.gray2,
   },
@@ -61,13 +60,12 @@ export default StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
     fontSize: 14,
     color: colors.light.gray2,
-    fontWeight: '700',
   },
 
   // 지도보기 버튼
   mapButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 50,
     alignSelf: 'center',
     zIndex: 100,
     shadowColor: colors.light.shadow,

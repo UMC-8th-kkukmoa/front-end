@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StatusBar } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
@@ -52,7 +53,12 @@ export default function SearchScreen() {
           </TouchableOpacity>
         </View>
       </View>
-
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.4 }}
+        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+        style={[styles.bottomShadow]}
+      />
       {/* 검색 결과가 들어갈 영역 */}
       <View style={styles.body} />
     </SafeAreaView>
