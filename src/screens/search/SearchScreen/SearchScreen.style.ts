@@ -54,6 +54,15 @@ export default StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     color: colors.light.gray2,
   },
+  errorContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  errorText: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
+    color: colors.light.gray2,
+  },
   flatList: {
     paddingVertical: 7,
     paddingHorizontal: 16,

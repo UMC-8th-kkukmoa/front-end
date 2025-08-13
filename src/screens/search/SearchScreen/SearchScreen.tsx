@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -12,6 +12,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import debounce from 'lodash.debounce';
+import * as Location from 'expo-location';
 import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
@@ -23,16 +24,30 @@ export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isSearchCompleted, setIsSearchCompleted] = useState(false);
+  const [location, setLocation] = useState({ latitude: 37.5117, longitude: 127.0868 });
+  const controllerRef = useRef<AbortController | null>(null);
 
   const router = useRouter();
   const { from } = useLocalSearchParams();
 
-  const latitude = 37.5117;
-  const longitude = 127.0868;
   const size = 5;
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation({
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+        });
+      }
+    })();
+  }, []);
 
   const handleBack = () => {
     if (from === 'stores') {
@@ -52,9 +67,20 @@ export default function SearchScreen() {
 
     if (loading) return;
 
+    controllerRef.current?.abort();
+    controllerRef.current = new AbortController();
+
     try {
       setLoading(true);
-      const data = await searchStores(newQuery, latitude, longitude, pageNum, size);
+      setError(null);
+      const data = await searchStores(
+        newQuery,
+        location.latitude,
+        location.longitude,
+        pageNum,
+        size,
+        controllerRef.current.signal,
+      );
       if (pageNum === 0) {
         setStores(data.stores);
       } else {
@@ -65,6 +91,7 @@ export default function SearchScreen() {
     } catch (e) {
       /* eslint-disable no-console */
       console.warn('검색 실패:', e);
+      setError('검색 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setLoading(false);
     }
@@ -74,7 +101,7 @@ export default function SearchScreen() {
     debounce((q) => {
       fetchStores(q, 0);
     }, 500),
-    [],
+    [location],
   );
 
   useEffect(() => {
@@ -102,13 +129,15 @@ export default function SearchScreen() {
       <View style={styles.searchListItemContainer}>
         <SearchIcon width={18} height={18} style={styles.searchIconMargin} />
         <Text style={styles.searchListItemText}>
-          {parts.map((part) =>
+          {parts.map((part, index) =>
             part.toLowerCase() === lowerQuery ? (
-              <Text key={`${item.storeId}-${part}`} style={styles.highlightText}>
+              // eslint-disable-next-line react/no-array-index-key
+              <Text key={`${item.storeId}-${index}`} style={styles.highlightText}>
                 {part}
               </Text>
             ) : (
-              <Text key={`${item.storeId}-${part}`}>{part}</Text>
+              // eslint-disable-next-line react/no-array-index-key
+              <Text key={`${item.storeId}-${index}`}>{part}</Text>
             ),
           )}
         </Text>
@@ -133,7 +162,7 @@ export default function SearchScreen() {
             bookmarkCount: item.bookmarkCount ?? 0,
           }}
           isLiked={false}
-          onToggleLike={() => {}}
+          onToggleLike={() => {}} // TODO: 백엔드 좋아요 API 구현 후 연동
         />
       )
     : renderSearchListItem;
@@ -215,7 +244,14 @@ export default function SearchScreen() {
         style={styles.bottomShadow}
       />
 
-      <View style={styles.body}>{content}</View>
+      <View style={styles.body}>
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
+        {content}
+      </View>
     </SafeAreaView>
   );
 }
