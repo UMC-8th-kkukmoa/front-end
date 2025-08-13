@@ -39,3 +39,19 @@ export async function getStoreListByCategory(
     throw new Error(data.message || '카테고리별 가게 목록을 불러오지 못했습니다.');
   return data.result;
 }
+
+export async function searchStores(
+  name: string,
+  latitude: number,
+  longitude: number,
+  page = 0,
+  size = 5,
+  signal?: AborSignal,
+): Promise<StoreListPage> {
+  const { data } = await apiClient.get<BaseResponse<StoreListPage>>('/v1/stores/search', {
+    params: { name, latitude, longitude, page, size },
+    signal,
+  });
+  if (!data.isSuccess) throw new Error(data.message || '가게 검색에 실패했습니다.');
+  return data.result;
+}
