@@ -29,7 +29,7 @@ export default StyleSheet.create({
   daysLeft: {
     fontSize: 14,
     color: colors.light.gray2,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
   },
   statusBadge: {
     paddingHorizontal: 11,
@@ -51,13 +51,13 @@ export default StyleSheet.create({
   },
   statusTextCompleted: {
     color: colors.light.white,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
     fontSize: 12,
     lineHeight: 16,
   },
   statusTextExpired: {
     color: colors.light.white,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
     fontSize: 12,
     lineHeight: 16,
   },
@@ -74,6 +74,7 @@ export default StyleSheet.create({
   },
   tabText: {
     fontSize: 15,
+    fontFamily: 'Pretendard-SemiBold',
     color: colors.light.gray2,
   },
   activeTab: {
@@ -82,17 +83,17 @@ export default StyleSheet.create({
   },
   activeTabText: {
     color: colors.light.black,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
   },
   statusTextUnused: {
     color: colors.light.gray2,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
     fontSize: 12,
     lineHeight: 16,
   },
   statusTextUsed: {
     color: colors.light.white,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-SemiBold',
     fontSize: 12,
     lineHeight: 16,
   },

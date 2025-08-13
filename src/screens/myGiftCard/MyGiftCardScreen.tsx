@@ -7,7 +7,7 @@ import Header from '../../design/component/Header';
 import styles from './MyGiftCardScreen.style';
 import { getMyGiftCards } from '../../api/voucherApi';
 import { MyGiftcard } from '../../types/voucher';
-import { getGiftcardStatus } from './giftcardStatus';
+import getGiftcardStatus from './giftcardStatus';
 
 const giftcard1 = require('../../assets/images/giftcard1.png');
 const giftcard3 = require('../../assets/images/giftcard3.png');
