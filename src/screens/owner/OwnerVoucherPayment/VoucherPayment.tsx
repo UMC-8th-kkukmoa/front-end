@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Animated, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -56,10 +56,17 @@ export default function VoucherPaymentScreen() {
   const [isFocused, setIsFocused] = useState(false);
 
   const slideAnim = useRef(new Animated.Value(0)).current;
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showBottomSheet = (message: string) => {
     setSheetMessage(message);
     setBottomVisible(true);
+
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    slideAnim.stopAnimation();
 
     // 올라오기 애니메이션
     Animated.timing(slideAnim, {
@@ -70,7 +77,7 @@ export default function VoucherPaymentScreen() {
     }).start();
 
     // 내려가기 애니메이션
-    setTimeout(() => {
+    hideTimerRef.current = setTimeout(() => {
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 300,
@@ -78,9 +85,20 @@ export default function VoucherPaymentScreen() {
         useNativeDriver: true,
       }).start(() => {
         setBottomVisible(false);
+        hideTimerRef.current = null;
       });
     }, 3000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+      slideAnim.stopAnimation();
+    };
+  }, [slideAnim]);
 
   const handlePayment = () => {
     if (amount === null) {
@@ -92,7 +110,7 @@ export default function VoucherPaymentScreen() {
       return;
     }
 
-    router.push('/owner/VoucherPaymentSuccess', { amount });
+    router.push('/owner/VoucherPaymentSuccess');
   };
 
   const bottomTranslate = slideAnim.interpolate({
