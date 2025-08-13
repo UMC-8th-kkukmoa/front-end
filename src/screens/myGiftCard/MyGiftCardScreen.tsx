@@ -7,6 +7,7 @@ import Header from '../../design/component/Header';
 import styles from './MyGiftCardScreen.style';
 import { getMyGiftCards } from '../../api/voucherApi';
 import { MyGiftcard } from '../../types/voucher';
+import { getGiftcardStatus } from './giftcardStatus';
 
 const giftcard1 = require('../../assets/images/giftcard1.png');
 const giftcard3 = require('../../assets/images/giftcard3.png');
@@ -47,33 +48,23 @@ export default function MyGiftCardScreen() {
 
         {/* 탭 바 */}
         <View style={styles.tabContainer}>
-          <TouchableOpacity
-            style={[styles.tabButton, tab === 'available' && styles.activeTab]}
-            onPress={() => setTab('available')}
-          >
-            <Text style={[styles.tabText, tab === 'available' && styles.activeTabText]}>
-              사용 가능
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tabButton, tab === 'completed' && styles.activeTab]}
-            onPress={() => setTab('completed')}
-          >
-            <Text style={[styles.tabText, tab === 'completed' && styles.activeTabText]}>
-              사용 완료
-            </Text>
-          </TouchableOpacity>
+          {['available', 'completed'].map((t) => (
+            <TouchableOpacity
+              key={t}
+              style={[styles.tabButton, tab === t && styles.activeTab]}
+              onPress={() => setTab(t as 'available' | 'completed')}
+            >
+              <Text style={[styles.tabText, tab === t && styles.activeTabText]}>
+                {t === 'available' ? '사용 가능' : '사용 완료'}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         <View style={styles.cardContainer}>
           {isLoading && (
             <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: '50%',
-              }}
+              style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: '50%' }}
             >
               <ActivityIndicator size="large" color="#aaa" />
             </View>
@@ -85,56 +76,31 @@ export default function MyGiftCardScreen() {
               </Text>
             </View>
           )}
+
           {!isLoading && !isError && (
             <FlatList
               data={filteredGiftCards ?? []}
               keyExtractor={(item) => item.qrCodeUuid}
               renderItem={({ item }) => {
                 const imageSource = getGiftcardImage(item.amount);
-
-                let statusText = '';
-                let statusStyle = {};
-                let statusTextStyle = {};
-
-                if (tab === 'available') {
-                  if (item.status === '미사용') {
-                    statusText = '사용 전';
-                    statusStyle = styles.unused;
-                    statusTextStyle = styles.statusTextUnused;
-                  } else if (item.status === '사용중') {
-                    statusText = '사용 중';
-                    statusStyle = styles.used;
-                    statusTextStyle = styles.statusTextUsed;
-                  }
-                } else if (item.status === '사용됨') {
-                  statusText = '사용 완료';
-                  statusStyle = styles.completed;
-                  statusTextStyle = styles.statusTextCompleted;
-                } else if (item.daysLeft < 0) {
-                  statusText = '기간 만료';
-                  statusStyle = styles.expired;
-                  statusTextStyle = styles.statusTextExpired;
-                }
+                const {
+                  text: statusText,
+                  style: statusStyle,
+                  textStyle: statusTextStyle,
+                } = getGiftcardStatus(tab, item);
 
                 return (
                   <TouchableOpacity
-                    style={[styles.card, tab === 'completed' ? { opacity: 0.6 } : {}]}
+                    style={[styles.card, tab === 'completed' && { opacity: 0.6 }]}
                     onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
                   >
                     <View style={styles.header}>
                       {tab === 'available' && (
-                        <>
-                          <Text style={styles.daysLeft}>D - {item.daysLeft}</Text>
-                          <View style={[styles.statusBadge, statusStyle]}>
-                            <Text style={statusTextStyle}>{statusText}</Text>
-                          </View>
-                        </>
+                        <Text style={styles.daysLeft}>D - {item.daysLeft}</Text>
                       )}
-                      {tab === 'completed' && (
-                        <View style={[styles.statusBadge, statusStyle]}>
-                          <Text style={statusTextStyle}>{statusText}</Text>
-                        </View>
-                      )}
+                      <View style={[styles.statusBadge, statusStyle]}>
+                        <Text style={statusTextStyle}>{statusText}</Text>
+                      </View>
                     </View>
 
                     <Image source={imageSource} style={styles.image} />
