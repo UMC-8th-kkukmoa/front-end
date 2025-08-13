@@ -127,7 +127,7 @@ export default function MyGiftCardScreen() {
 
                   return (
                     <TouchableOpacity
-                      style={styles.card}
+                      style={[styles.card, tab === 'completed' ? { opacity: 0.6 } : {}]}
                       onPress={() => router.push(`/myGiftCard/${item.qrCodeUuid}`)}
                     >
                       <View style={styles.header}>
