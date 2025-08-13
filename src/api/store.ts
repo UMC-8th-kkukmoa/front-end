@@ -45,10 +45,12 @@ export async function searchStores(
   latitude: number,
   longitude: number,
   page = 0,
-  size = 10,
+  size = 5,
+  signal?: AborSignal,
 ): Promise<StoreListPage> {
   const { data } = await apiClient.get<BaseResponse<StoreListPage>>('/v1/stores/search', {
     params: { name, latitude, longitude, page, size },
+    signal,
   });
   if (!data.isSuccess) throw new Error(data.message || '가게 검색에 실패했습니다.');
   return data.result;
