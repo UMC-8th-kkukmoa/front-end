@@ -11,7 +11,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
