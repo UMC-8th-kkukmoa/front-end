@@ -17,7 +17,7 @@ import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
 import styles from './SearchScreen.style';
 import { searchStores } from '../../../api/store';
-import StoreCard from '../StoreCard/StoreCard';
+import StoreCard from '../../Store/StoreCard/StoreCard';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
