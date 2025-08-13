@@ -7,7 +7,6 @@ import { KkButton } from '../../../design/component/KkButton';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.light.white,
-    justifyContent: 'space-between',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
