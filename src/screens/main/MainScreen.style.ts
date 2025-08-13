@@ -22,7 +22,7 @@ export default StyleSheet.create({
     margin: 7,
   },
   location: {
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: 'Pretendard-Bold',
     color: colors.light.white,
   },
