@@ -32,7 +32,7 @@ interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
 const styles = StyleSheet.create({
   label: {
     marginBottom: 6,
-    fontWeight: '500',
+    fontFamily: 'Pretendard-Medium',
     color: colors.light.black,
   },
   inputWrapper: {
@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: 'Pretendard-Medium',
     paddingVertical: 0,
     marginRight: 8,
   },
   message: {
-    fontWeight: '400',
+    fontFamily: 'Pretendard-Regular',
     lineHeight: 16,
     letterSpacing: 0.4,
     marginTop: 6,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 12,
   },
 });
