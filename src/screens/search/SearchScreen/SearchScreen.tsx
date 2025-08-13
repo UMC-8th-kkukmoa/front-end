@@ -12,7 +12,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import debounce from 'lodash.debounce';
-import * as Location from 'expo-location';
+import { getCurrentCoords } from '../../../utils/location';
 import KkTextbox from '../../../design/component/KkTextbox';
 import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
@@ -38,13 +38,12 @@ export default function SearchScreen() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation({
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-        });
+      try {
+        const { lat, lng } = await getCurrentCoords();
+        setLocation({ latitude: lat, longitude: lng });
+      } catch (err) {
+        console.warn('위치 가져오기 실패:', err);
+        setLocation({ latitude: 37.5117, longitude: 127.0868 });
       }
     })();
   }, []);
