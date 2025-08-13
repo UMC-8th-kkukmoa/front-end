@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   location: {
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: 'Pretendard-Bold',
     color: colors.light.white,
   },
   rightIcons: {
@@ -78,6 +78,7 @@ export default StyleSheet.create({
     flex: 1,
     color: colors.light.gray2,
     fontSize: 14,
+    fontFamily: 'Pretendard-Medium',
   },
   banner: {
     justifyContent: 'center',
