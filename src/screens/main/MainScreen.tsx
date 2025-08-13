@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -59,20 +59,23 @@ function MainScreen() {
     isLast: true,
   };
 
-  const {
-    data: storeList = emptyStoreListPage,
-    isLoading,
-    isError,
-  } = useQuery<StoreListPage>({
-    queryKey: ['storeList', coords?.lat, coords?.lng],
-    enabled: !!coords,
-    queryFn: () =>
-      coords ? getStoreList(coords.lat, coords.lng, 0, 10) : Promise.resolve(emptyStoreListPage),
-  });
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<StoreListPage, Error>({
+      queryKey: ['storeList', coords?.lat, coords?.lng],
+      enabled: !!coords,
+      initialPageParam: 0,
+      queryFn: ({ pageParam }) => {
+        const page = pageParam as number;
+        if (!coords) return Promise.resolve(emptyStoreListPage);
+        return getStoreList(coords.lat, coords.lng, page, 10);
+      },
+      getNextPageParam: (lastPage) => (lastPage.isLast ? undefined : lastPage.page + 1),
+    });
 
-  const transformedStoreList = React.useMemo(
-    () =>
-      storeList.stores.map((store) => {
+  const transformedStoreList = React.useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page) =>
+      page.stores.map((store) => {
         const km = Number(store.distance);
         return {
           storeId: store.storeId.toString(),
@@ -85,8 +88,8 @@ function MainScreen() {
           bookmarkCount: 0,
         };
       }),
-    [storeList.stores],
-  );
+    );
+  }, [data]);
 
   const toggleLike = useCallback((id: string) => {
     setLikedMap((prev) => ({
@@ -94,6 +97,10 @@ function MainScreen() {
       [id]: !prev[id],
     }));
   }, []);
+
+  const loadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  };
 
   return (
     <View style={styles.container}>
@@ -154,6 +161,8 @@ function MainScreen() {
             />
           )}
           contentContainerStyle={styles.cardContainer}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
         />
       </View>
     </View>
