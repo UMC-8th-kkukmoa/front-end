@@ -72,16 +72,19 @@ function MainScreen() {
 
   const transformedStoreList = React.useMemo(
     () =>
-      storeList.stores.map((store) => ({
-        storeId: store.storeId.toString(),
-        name: store.name,
-        imageUrl: store.storeImage,
-        categoryName: store.categoryName,
-        distance: `${store.distance.toFixed(2)} km`,
-        time: `${store.openingHours} ~ ${store.closingHours}`,
-        reviewCount: store.reviewCount,
-        bookmarkCount: 0,
-      })),
+      storeList.stores.map((store) => {
+        const km = Number(store.distance);
+        return {
+          storeId: store.storeId.toString(),
+          name: store.name,
+          imageUrl: store.storeImage,
+          categoryName: store.categoryName,
+          distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
+          time: `${store.openingHours} ~ ${store.closingHours}`,
+          reviewCount: store.reviewCount,
+          bookmarkCount: 0,
+        };
+      }),
     [storeList.stores],
   );
 
