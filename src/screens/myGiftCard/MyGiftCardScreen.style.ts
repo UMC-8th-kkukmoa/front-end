@@ -7,10 +7,7 @@ export default StyleSheet.create({
     backgroundColor: colors.light.white,
     overflow: 'hidden',
   },
-  scroll: {
-    marginTop: 10,
-    backgroundColor: colors.light.white,
-  },
+
   cardContainer: {
     flex: 1,
     paddingHorizontal: 30,
