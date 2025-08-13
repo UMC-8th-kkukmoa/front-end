@@ -57,11 +57,11 @@ export default function VoucherPaymentSuccessScreen() {
 
       <KkButton
         style={styles.button}
-        label="대쉬보드로 돌아가기"
+        label="대시보드로 돌아가기"
         type="primary"
         size="large"
         onPress={() => {
-          router.push('owner/Dashboard');
+          router.push('/owner/Dashboard');
         }}
         shadow
       />
