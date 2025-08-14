@@ -40,16 +40,17 @@ const banners = [{ id: 'banner1', component: BannerImage1 }];
 
 function MainBanner() {
   const [index, setIndex] = useState(0);
+  const hasMultiple = banners.length > 1;
 
   return (
     <View style={styles.container}>
       <Swiper
-        autoplay
+        autoplay={hasMultiple}
         autoplayTimeout={4}
-        loop
+        loop={hasMultiple}
         showsPagination={false}
         onIndexChanged={setIndex}
-        scrollEnabled
+        scrollEnabled={hasMultiple}
       >
         {banners.map(({ id, component: BannerComponent }) => (
           <BannerComponent key={id} width="100%" height={121} />
