@@ -124,8 +124,18 @@ export default function SearchScreen() {
     const regex = new RegExp(`(${query})`, 'gi');
     const parts = name.split(regex);
 
+    const handlePress = () => {
+      Keyboard.dismiss();
+      const id = String(item.storeId);
+      router.push({ pathname: '/store/[id]', params: { id, from: 'search' } });
+    };
+
     return (
-      <View style={styles.searchListItemContainer}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={styles.searchListItemContainer}
+        onPress={handlePress}
+      >
         <SearchIcon width={18} height={18} style={styles.searchIconMargin} />
         <Text style={styles.searchListItemText}>
           {parts.map((part, index) =>
@@ -140,7 +150,7 @@ export default function SearchScreen() {
             ),
           )}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -157,11 +167,11 @@ export default function SearchScreen() {
               item.openingHours && item.closingHours
                 ? `${item.openingHours} ~ ${item.closingHours}`
                 : '',
-            reviewCount: item.reviewCount ?? 0,
             bookmarkCount: item.bookmarkCount ?? 0,
           }}
           isLiked={false}
           onToggleLike={() => {}} // TODO: 백엔드 좋아요 API 구현 후 연동
+          onPress={(id) => router.push({ pathname: '/store/[id]', params: { id, from: 'search' } })}
         />
       )
     : renderSearchListItem;
@@ -184,6 +194,7 @@ export default function SearchScreen() {
         renderItem={renderItem}
         onEndReached={isSearchCompleted ? onEndReached : undefined}
         onEndReachedThreshold={0.5}
+        keyboardShouldPersistTaps="handled"
       />
     );
   }
