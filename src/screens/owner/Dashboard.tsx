@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+    overflow: 'hidden',
   },
   content: {
     flex: 1,
@@ -64,26 +65,28 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* eslint-disable-next-line react/style-prop-object */}
-      <StatusBar style="dark" />
-      <Header title="대시보드" onBackPress={() => router.back()} shadow />
+      <View style={styles.container}>
+        {/* eslint-disable-next-line react/style-prop-object */}
+        <StatusBar style="dark" />
+        <Header title="대시보드" onBackPress={() => router.back()} shadow />
 
-      <View style={styles.content}>
-        <View style={styles.grid}>
-          {menuItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.card}
-                activeOpacity={0.8}
-                onPress={() => router.push(item.route)}
-              >
-                <IconComponent width={40} height={40} />
-                <Text style={styles.cardText}>{item.title}</Text>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.content}>
+          <View style={styles.grid}>
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.card}
+                  activeOpacity={0.8}
+                  onPress={() => router.push(item.route)}
+                >
+                  <IconComponent width={40} height={40} />
+                  <Text style={styles.cardText}>{item.title}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
       </View>
     </SafeAreaView>
