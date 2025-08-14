@@ -27,11 +27,10 @@
 <br/>
 
 # 기술 스택 + 선정 이유
-## 1. TypeScript
+**TypeScript**
     - 강력한 타입 체크
-<br/>
 
-## 2. React-Native
+**React-Native**
     - 모바일 앱
     - Expo: 빠른 개발 환경
 
