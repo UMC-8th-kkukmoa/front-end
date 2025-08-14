@@ -1,9 +1,11 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { ErrorBoundaryProps, Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { Try } from 'expo-router/build/views/Try';
 import useAuth from '../src/hooks/useAuth';
+import colors from '../src/design/colors';
 
 const queryClient = new QueryClient();
 
@@ -41,12 +43,29 @@ function AppLayout() {
   );
 }
 
+function ErrorScreen({ retry }: ErrorBoundaryProps) {
+  return (
+    <View
+      style={{
+        backgroundColor: colors.light.main,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <TouchableOpacity onPress={retry}>{/* TODO: retry button */}</TouchableOpacity>
+    </View>
+  );
+}
+
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <AppLayout />
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+    <Try catch={ErrorScreen}>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppLayout />
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </Try>
   );
 }
