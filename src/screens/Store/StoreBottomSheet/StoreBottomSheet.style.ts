@@ -6,9 +6,8 @@ export default StyleSheet.create({
   listContentContainer: {
     paddingHorizontal: 16,
     paddingTop: 7,
-    paddingBottom: 150,
+    paddingBottom: 200,
   },
-
   // 리스트 없을때
   emptyWrapper: {
     flex: 1,

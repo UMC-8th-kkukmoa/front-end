@@ -84,7 +84,6 @@ function MainScreen() {
           categoryName: store.categoryName,
           distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
           time: `${store.openingHours} ~ ${store.closingHours}`,
-          reviewCount: store.reviewCount,
           bookmarkCount: 0,
         };
       }),
@@ -158,6 +157,9 @@ function MainScreen() {
               item={item}
               isLiked={likedMap[item.storeId] === true}
               onToggleLike={() => toggleLike(item.storeId)}
+              onPress={(id) =>
+                router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
+              }
             />
           )}
           contentContainerStyle={styles.cardContainer}
