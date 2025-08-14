@@ -1,14 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -21,6 +14,18 @@ import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
+
+function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
+  return (
+    <>
+      <View style={styles.banner}>
+        <BannerImage width="100%" height={130} />
+      </View>
+      {isLoading && <ActivityIndicator style={styles.loading} />}
+      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+    </>
+  );
+}
 
 function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -54,27 +59,36 @@ function MainScreen() {
     isLast: true,
   };
 
-  const {
-    data: storeList = emptyStoreListPage,
-    isLoading,
-    isError,
-  } = useQuery<StoreListPage>({
-    queryKey: ['storeList', coords?.lat, coords?.lng],
-    enabled: !!coords,
-    queryFn: () =>
-      coords ? getStoreList(coords.lat, coords.lng, 0, 10) : Promise.resolve(emptyStoreListPage),
-  });
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<StoreListPage, Error>({
+      queryKey: ['storeList', coords?.lat, coords?.lng],
+      enabled: !!coords,
+      initialPageParam: 0,
+      queryFn: ({ pageParam }) => {
+        const page = pageParam as number;
+        if (!coords) return Promise.resolve(emptyStoreListPage);
+        return getStoreList(coords.lat, coords.lng, page, 10);
+      },
+      getNextPageParam: (lastPage) => (lastPage.isLast ? undefined : lastPage.page + 1),
+    });
 
-  const transformedStoreList = storeList.stores.map((store) => ({
-    storeId: store.storeId.toString(),
-    name: store.name,
-    imageUrl: store.storeImage,
-    categoryName: store.categoryName,
-    distance: `${store.distance.toFixed(2)} km`,
-    time: `${store.openingHours} ~ ${store.closingHours}`,
-    reviewCount: store.reviewCount,
-    bookmarkCount: 0,
-  }));
+  const transformedStoreList = React.useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page) =>
+      page.stores.map((store) => {
+        const km = Number(store.distance);
+        return {
+          storeId: store.storeId.toString(),
+          name: store.name,
+          imageUrl: store.storeImage,
+          categoryName: store.categoryName,
+          distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
+          time: `${store.openingHours} ~ ${store.closingHours}`,
+          bookmarkCount: 0,
+        };
+      }),
+    );
+  }, [data]);
 
   const toggleLike = useCallback((id: string) => {
     setLikedMap((prev) => ({
@@ -82,6 +96,10 @@ function MainScreen() {
       [id]: !prev[id],
     }));
   }, []);
+
+  const loadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  };
 
   return (
     <View style={styles.container}>
@@ -130,31 +148,24 @@ function MainScreen() {
           </View>
         </View>
 
-        <ScrollView>
-          <View style={styles.banner}>
-            <BannerImage width="100%" height={130} />
-          </View>
-
-          {isLoading && (
-            <ActivityIndicator style={{ alignItems: 'center', paddingBottom: '50%' }} />
-          )}
-          {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
-
-          {/* 가게 카드 리스트 */}
-          <View style={styles.cardContainer}>
-            <FlatList
-              data={transformedStoreList}
-              keyExtractor={(item) => item.storeId}
-              renderItem={({ item }) => (
-                <StoreCard
-                  item={item}
-                  isLiked={likedMap[item.storeId] === true}
-                  onToggleLike={() => toggleLike(item.storeId)}
-                />
-              )}
+        <FlatList
+          data={transformedStoreList}
+          keyExtractor={(item) => item.storeId}
+          ListHeaderComponent={<StoreListHeader isLoading={isLoading} isError={isError} />}
+          renderItem={({ item }) => (
+            <StoreCard
+              item={item}
+              isLiked={likedMap[item.storeId] === true}
+              onToggleLike={() => toggleLike(item.storeId)}
+              onPress={(id) =>
+                router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
+              }
             />
-          </View>
-        </ScrollView>
+          )}
+          contentContainerStyle={styles.cardContainer}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+        />
       </View>
     </View>
   );

@@ -1,7 +1,7 @@
 import { StyleSheet, Platform, StatusBar } from 'react-native';
 import colors from '../../design/colors';
 
-const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 44;
+const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
 
 export default StyleSheet.create({
   container: {
@@ -22,8 +22,8 @@ export default StyleSheet.create({
     margin: 7,
   },
   location: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 17,
+    fontFamily: 'Pretendard-Bold',
     color: colors.light.white,
   },
   rightIcons: {
@@ -78,15 +78,20 @@ export default StyleSheet.create({
     flex: 1,
     color: colors.light.gray2,
     fontSize: 14,
+    fontFamily: 'Pretendard-Medium',
   },
   banner: {
-    borderRadius: 12,
+    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   cardContainer: {
-    paddingTop: 16,
     paddingHorizontal: 16,
+  },
+  loading: {
+    alignItems: 'center',
+    paddingBottom: '50%',
+    color: colors.light.main,
   },
 });

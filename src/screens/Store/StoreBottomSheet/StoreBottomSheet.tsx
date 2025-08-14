@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getStoreList, getStoreListByCategory } from '../../../api/store';
@@ -50,6 +51,7 @@ type Props = {
 function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   const sheetRef = useRef<BottomSheet>(null);
   const { height: screenHeight } = Dimensions.get('window');
+  const router = useRouter();
 
   const snapPoints = useMemo(() => {
     const topSnap = screenHeight * 0.65;
@@ -162,7 +164,12 @@ function StoreBottomSheet({ selectedCategory, address, location }: Props) {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const renderItem = ({ item }: { item: any }) => (
-    <StoreCard item={item} isLiked={likedMap[item.storeId] === true} onToggleLike={toggleLike} />
+    <StoreCard
+      item={item}
+      isLiked={likedMap[item.storeId] === true}
+      onToggleLike={toggleLike}
+      onPress={(id) => router.push({ pathname: '/store/[id]', params: { id, from: 'stores' } })}
+    />
   );
 
   return (
