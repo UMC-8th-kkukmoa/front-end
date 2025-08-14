@@ -38,9 +38,7 @@ function MainScreen() {
     queryFn: async () => {
       const cached = qc.getQueryData<{ lat: number; lng: number }>(['coords']);
       if (cached) return cached;
-      const fresh = await getCurrentCoords();
-      qc.setQueryData(['coords'], fresh);
-      return fresh;
+      return getCurrentCoords();
     },
     staleTime: Infinity,
     refetchOnMount: false,

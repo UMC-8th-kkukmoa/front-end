@@ -15,7 +15,11 @@ type Coords = { lat: number; lng: number };
 
 export default function PickLocationScreen() {
   const { lat, lng } = useLocalSearchParams<{ lat?: string; lng?: string }>();
-  const initCenter = lat && lng ? { lat: Number(lat), lng: Number(lng) } : null;
+  const initCenter = (() => {
+    const latNum = Number(lat);
+    const lngNum = Number(lng);
+    return Number.isFinite(latNum) && Number.isFinite(lngNum) ? { lat: latNum, lng: lngNum } : null;
+  })();
   const router = useRouter();
   const qc = useQueryClient();
   const mapRef = useRef<WebView>(null);
@@ -34,8 +38,9 @@ export default function PickLocationScreen() {
     }
   }, []);
 
-  const confirm = () => {
+  const confirm = async () => {
     if (currentCenter) {
+      await qc.cancelQueries({ queryKey: ['coords'], exact: true });
       qc.setQueryData(['coords'], currentCenter);
       router.back();
     } else {
