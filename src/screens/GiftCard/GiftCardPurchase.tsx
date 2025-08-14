@@ -238,7 +238,7 @@ function GiftCardPurchase() {
       <KkCompleteModal
         visible={showModal}
         onClose={() => setShowModal(false)}
-        navigationPath="/giftCard/GiftCardList"
+        navigationPath="/myGiftCard/MyGiftCardScreen"
         message="결제가 완료되었습니다."
       />
     </SafeAreaView>
