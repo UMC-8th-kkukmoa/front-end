@@ -92,7 +92,6 @@ export default StyleSheet.create({
   loading: {
     alignItems: 'center',
     paddingBottom: '50%',
-    color: colors.light.main,
   },
   emptyWrapper: {
     alignItems: 'center',
