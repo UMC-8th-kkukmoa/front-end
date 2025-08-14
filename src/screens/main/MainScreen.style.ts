@@ -94,4 +94,15 @@ export default StyleSheet.create({
     paddingBottom: '50%',
     color: colors.light.main,
   },
+  emptyWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 91,
+  },
+
+  emptyText: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 14,
+    color: colors.light.gray2,
+  },
 });

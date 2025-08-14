@@ -20,12 +20,16 @@ function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: 
     <>
       <MainBanner />
       {isLoading && <ActivityIndicator style={styles.loading} />}
-      {isError && (
-        <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>
-          아직 준비된 가게가 없습니다.
-        </Text>
-      )}
+      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>오류</Text>}
     </>
+  );
+}
+
+function EmptyStoreList() {
+  return (
+    <View style={styles.emptyWrapper}>
+      <Text style={styles.emptyText}>아직 준비된 가게가 없습니다.</Text>
+    </View>
   );
 }
 
@@ -167,6 +171,7 @@ function MainScreen() {
           contentContainerStyle={styles.cardContainer}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
+          ListEmptyComponent={EmptyStoreList}
         />
       </View>
     </View>
