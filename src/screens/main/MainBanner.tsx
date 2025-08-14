@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: 121,
     marginBottom: 27,
+    overflow: 'hidden',
   },
   pagination: {
     position: 'absolute',
