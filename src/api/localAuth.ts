@@ -25,13 +25,11 @@ export const localLogin = async (email: string, password: string): Promise<Login
       password,
     });
 
-    console.log('로그인 성공:', data);
-
     // 토큰 저장
     if (data.accessToken && data.refreshToken) {
       await saveTokens(data.accessToken, data.refreshToken);
     } else {
-      console.warn('로그인 응답에 토큰이 없습니다:', data);
+      console.warn('로그인 응답에 토큰이 없습니다');
     }
 
     return data;
@@ -44,7 +42,6 @@ export const localLogin = async (email: string, password: string): Promise<Login
 export const emailReq = async (email: string) => {
   try {
     const { data } = await apiClient.post('/v1/users/verification/request', { email });
-    console.log('이메일 전송 성공:', data);
     return data;
   } catch (error) {
     logApiError(error, '이메일 전송');
@@ -58,7 +55,6 @@ export const checkEmail = async (email: string, code: string) => {
       '/v1/users/verification/confirm',
       { email, code },
     );
-    console.log('이메일 확인 성공:', data);
     return data;
   } catch (error) {
     logApiError(error, '이메일 확인');
@@ -71,8 +67,6 @@ export const checkNicknameExists = async (nickname: string): Promise<boolean> =>
     const { data } = await apiClient.get<NickCheckResponse>('/v1/users/nickname/exists', {
       params: { nickname },
     });
-
-    console.log('닉네임 중복 확인 결과:', data);
     return data.result;
   } catch (error: any) {
     logApiError(error, '닉네임 중복 확인');
@@ -83,7 +77,6 @@ export const checkNicknameExists = async (nickname: string): Promise<boolean> =>
 export const signUp = async (data: SignUpRequest): Promise<SignUpResponse> => {
   try {
     const { data: result } = await apiClient.post<SignUpResponse>('/v1/users/signup', data);
-    console.log('회원가입 성공:', result);
     return result;
   } catch (error) {
     logApiError(error, '회원가입');
