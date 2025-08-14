@@ -8,11 +8,13 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useMutation } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import styles from './OwnerJoinShopScreen.style';
+import { registerOwner } from '../../api/owner';
 
 function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void }) {
   return (
@@ -32,6 +34,17 @@ export default function OwnerJoinShopScreen() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
+
+  const registerMutation = useMutation({
+    mutationFn: registerOwner,
+    onSuccess: () => {
+      // TODO: Handle success
+    },
+    onError: (error) => {
+      // TODO: Handle error
+      console.error('Failed to register owner', error);
+    },
+  });
 
   const allAgreed = agreeTerms && agreePrivacy;
 
@@ -127,7 +140,16 @@ export default function OwnerJoinShopScreen() {
 
             <KkButton
               label="다음"
-              onPress={() => {}}
+              onPress={() => {
+                if (!isNextDisabled) {
+                  registerMutation.mutate({
+                    email: userId,
+                    password,
+                    agreeTerms,
+                    agreePrivacy,
+                  });
+                }
+              }}
               type={isNextDisabled ? 'disabled' : 'primary'}
               size="large"
               style={styles.button}

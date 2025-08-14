@@ -13,7 +13,17 @@ interface ApplyForStoreParams {
   category: string;
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const applyForStore = (data: ApplyForStoreParams) => {
   return apiClient.post('/v1/owners/applications', data);
+};
+
+interface RegisterOwnerParams {
+  email: string;
+  password: string;
+  agreeTerms: boolean;
+  agreePrivacy: boolean;
+}
+
+export const registerOwner = (data: RegisterOwnerParams) => {
+  return apiClient.post('/v1/owners/register', data);
 };
