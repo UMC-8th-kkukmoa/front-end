@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 import BannerImage1 from '../../assets/images/banner.svg';
-import BannerImage2 from '../../assets/images/bell-icon.svg';
 import colors from '../../design/colors';
 
 const styles = StyleSheet.create({
@@ -36,10 +35,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const banners = [
-  { id: 'banner1', component: BannerImage1 },
-  { id: 'banner2', component: BannerImage2 },
-];
+const banners = [{ id: 'banner1', component: BannerImage1 }];
 
 function MainBanner() {
   const [index, setIndex] = useState(0);
