@@ -31,13 +31,12 @@ function AppLayout() {
         <Stack.Screen name="store/search" />
         <Stack.Screen name="store/[id]/reviews" />
         <Stack.Screen name="store/pickLocation" />
-        <Stack.Screen name="owner/PickLocation" />
-        <Stack.Screen name="owner/OwnerJoinShopFormScreen" />
       </Stack.Protected>
 
       <Stack.Protected guard={!isAuthenticated}>
         <Stack.Screen name="auth/LoginChoiceScreen" />
         <Stack.Screen name="oauth" />
+        <Stack.Screen name="owner/auth" />
       </Stack.Protected>
     </Stack>
   );

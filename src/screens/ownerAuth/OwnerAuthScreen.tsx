@@ -25,6 +25,7 @@ export default function OwnerAuthScreen() {
       await saveTokens(accessToken, refreshToken);
       setAccessToken(accessToken);
       if (roles) {
+        // TODO: ROLE_PENDING_OWNER 이라면 입점 신청이나 현황을 보여줘야 함
         setRoles(roles);
       }
       router.replace('/owner/Dashboard');
