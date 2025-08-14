@@ -95,11 +95,10 @@ export default StyleSheet.create({
     color: colors.light.main,
   },
   emptyWrapper: {
-    flex: 1,
     alignItems: 'center',
-    paddingVertical: 91,
+    justifyContent: 'center',
+    paddingVertical: 40,
   },
-
   emptyText: {
     fontFamily: 'Pretendard-Bold',
     fontSize: 14,
