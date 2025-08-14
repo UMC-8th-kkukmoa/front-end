@@ -157,6 +157,9 @@ function MainScreen() {
               item={item}
               isLiked={likedMap[item.storeId] === true}
               onToggleLike={() => toggleLike(item.storeId)}
+              onPress={(id) =>
+                router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
+              }
             />
           )}
           contentContainerStyle={styles.cardContainer}

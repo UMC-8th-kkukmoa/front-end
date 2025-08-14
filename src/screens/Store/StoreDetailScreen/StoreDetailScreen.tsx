@@ -101,7 +101,7 @@ function StoreDetailScreen() {
     typeof reviewCount === 'number' ? reviewCount : (store.reviewCount ?? 0);
 
   const handleBack = () => {
-    if (from === 'stores') router.replace('/(tabs)/stores');
+    if (from === 'stores') router.replace(`/(tabs)/${from}`);
     else router.back();
   };
 

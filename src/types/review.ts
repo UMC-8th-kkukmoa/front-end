@@ -6,31 +6,31 @@ export interface ReviewPreviewItem {
   createdAt: string;
 }
 
-// ✅ 서버 응답과 1:1 매칭 (imageUrls)
+// 서버 응답 매칭
 export interface ReviewListItem {
   reviewId: number;
   writerNickname: string | null;
   content: string;
-  imageUrls: string[]; // ← 여기 images? → imageUrls 로 확정
+  imageUrls: string[];
   rating?: number;
   createdAt: string;
 }
 
-// ✅ 서버 페이지 컨테이너 (result.page)
+// 서버 페이지 컨테이너
 export interface ReviewCursorPageDto {
   content: ReviewListItem[];
   nextCursor: string | null;
   hasNext: boolean;
 }
 
-// ✅ 서버 헤더 (result.header)  *주의: StoreId 대문자*
+// 서버 헤더
 export interface ReviewHeaderDto {
   StoreId: number;
   storeName: string;
   storeImageUrl: string;
 }
 
-// ✅ 서버 전체 봉투 (result)
+// 서버 전체
 export interface ReviewCursorEnvelopeDto {
   header: ReviewHeaderDto;
   page: ReviewCursorPageDto;

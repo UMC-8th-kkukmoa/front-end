@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { getReviewCount } from '../../../api/review';
 import styles from './StoreCard.style';
@@ -35,10 +34,10 @@ type Props = {
   };
   isLiked: boolean;
   onToggleLike: (storeId: string) => void;
+  onPress?: (storeId: string) => void;
 };
 
-function StoreCard({ item, isLiked, onToggleLike }: Props) {
-  const router = useRouter();
+function StoreCard({ item, isLiked, onToggleLike, onPress }: Props) {
   const IconComponent = categoryIconMap[item.categoryName];
 
   const { data: reviewCount, isLoading } = useQuery({
@@ -50,7 +49,7 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
   });
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.storeId}`)}>
+    <TouchableOpacity style={styles.card} onPress={() => onPress?.(item.storeId)}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
       {IconComponent && (
