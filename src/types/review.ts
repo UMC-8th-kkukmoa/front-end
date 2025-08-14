@@ -25,7 +25,7 @@ export interface ReviewCursorPageDto {
 
 // 서버 헤더
 export interface ReviewHeaderDto {
-  StoreId: number;
+  storeId: number;
   storeName: string;
   storeImageUrl: string;
 }

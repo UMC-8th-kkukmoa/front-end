@@ -39,6 +39,7 @@ const ReviewsHeader = React.memo(({ count, imageUrl }: { count: number; imageUrl
     )}
 
     <LinearGradient
+      pointerEvents="none"
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 0.4 }}
       colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
@@ -230,7 +231,7 @@ export default function ReviewsScreen() {
           onEndReachedThreshold={0.2}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
           ListHeaderComponent={
-            <ReviewsHeader count={reviewCount ?? list.length} imageUrl={headerDto?.storeImageUrl} />
+            <ReviewsHeader count={reviewCount ?? list.count} imageUrl={headerDto?.storeImageUrl} />
           }
           ListFooterComponent={hasNextPage ? <ReviewsFooterLoading /> : <ReviewsFooterSpace />}
           showsVerticalScrollIndicator={false}
