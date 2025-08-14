@@ -1,9 +1,10 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TokenResponse } from '../types/kakao';
-import { saveTokens, saveRoles } from '../utils/tokenStorage';
 import useAuthStore from '../store/useAuthStore';
+import { saveTokens } from '../utils/tokenStorage';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
 if (!KAKAO_LOGIN_URL) throw new Error('[KakaoLogin] EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
@@ -46,9 +47,9 @@ const handleKakaoLogin = async (): Promise<(TokenResponse & { roles: string[] })
     await saveTokens(tokenResponseDto.accessToken, tokenResponseDto.refreshToken);
 
     // roles 저장
-    await saveRoles(roles ?? []);
-
-    useAuthStore.getState().setRoles(roles ?? []);
+    const rolesFromBackend = roles ?? [];
+    await AsyncStorage.removeItem('roles'); // 기존 값 삭제
+    useAuthStore.getState().setRoles(rolesFromBackend);
 
     return {
       id: id ?? 0,
