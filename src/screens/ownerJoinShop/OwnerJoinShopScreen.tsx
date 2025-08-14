@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useMutation } from '@tanstack/react-query';
@@ -32,6 +32,15 @@ export default function OwnerJoinShopScreen() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
   const [userIdError, setUserIdError] = useState<string | undefined>();
+  const [passwordConfirmError, setPasswordConfirmError] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (passwordConfirm && password !== passwordConfirm) {
+      setPasswordConfirmError('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordConfirmError(undefined);
+    }
+  }, [password, passwordConfirm]);
 
   const registerMutation = useMutation({
     mutationFn: registerOwner,
@@ -110,7 +119,8 @@ export default function OwnerJoinShopScreen() {
                 variant="secondary"
                 type="password"
                 enabled
-                error={false}
+                error={!!passwordConfirmError}
+                message={passwordConfirmError}
                 required
               />
 
