@@ -40,3 +40,17 @@ export async function ownerLogin({ email, password }: OwnerLoginParams) {
   });
   return response.data;
 }
+
+export async function checkPublicRegistrationStatus({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const response = await apiClient.post('/v1/public/registrations/check-pending', {
+    email,
+    password,
+  });
+  return response.data;
+}

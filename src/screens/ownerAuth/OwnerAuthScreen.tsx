@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Image, View } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import { KkButton } from '../../design/component/KkButton';
 import KkTextbox from '../../design/component/KkTextbox';
 import styles from './OwnerAuthScreen.style';
-import { ownerLogin } from '../../api/owner';
+import { checkPublicRegistrationStatus, ownerLogin } from '../../api/owner';
 import { saveTokens } from '../../utils/tokenStorage';
 import useAuthStore from '../../store/useAuthStore';
 
@@ -25,17 +25,30 @@ export default function OwnerAuthScreen() {
       if (roles) {
         // TODO: ROLE_PENDING_OWNER 이라면 입점 신청이나 현황을 보여줘야 함
         setRoles(roles);
-      }
 
-      if (roles.contains('ROLE_OWNER')) {
-        router.replace('/owner/Dashboard');
-      } else if (roles.contains('ROLE_PENDING_OWNER')) {
-        router.replace('/owner/join');
+        if (roles.contains('ROLE_OWNER')) {
+          router.replace('/owner/Dashboard');
+        } else if (roles.contains('ROLE_PENDING_OWNER')) {
+          router.replace('/owner/join');
+        }
       }
     },
     onError: (error) => {
       // TODO
       console.error('Failed to login', error);
+    },
+  });
+
+  const checkStatusMutation = useMutation({
+    mutationFn: checkPublicRegistrationStatus,
+    onSuccess: (data) => {
+      // TODO
+      console.log('Registration status:', JSON.stringify(data));
+      Alert.alert('신청 상태', data.result.pending ? '신청 중' : '등록된 신청 없음');
+    },
+    onError: (error) => {
+      console.error('Failed to check registration status', error);
+      Alert.alert('오류', '신청 상태 확인에 실패했습니다.');
     },
   });
 
@@ -101,10 +114,12 @@ export default function OwnerAuthScreen() {
 
           <KkButton
             label="입점 신청현황 조회"
-            type="secondary"
+            type={isLoginDisabled ? 'disabled' : 'secondary'}
             size="large"
             onPress={() => {
-              // TODO: 입점 신청현황 조회
+              if (!isLoginDisabled) {
+                checkStatusMutation.mutate({ email, password });
+              }
             }}
             shadow
           />
