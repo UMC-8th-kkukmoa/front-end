@@ -1,6 +1,7 @@
 # <img width="30" height="30" alt="앱로고" src="https://github.com/user-attachments/assets/9b121bc4-21d5-4793-919e-6b908d2a8ee1" /> 꾹모아 소개
 <img width="450" height="300" alt="kkukmoa_poster" src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" />
 <br/>
+
 **꾹모아는 소상공인 매장에서 사용할 수 있는 모바일 금액권 및 스탬프 적립 기반 고객 리워드 플랫폼입니다.**
 - **디지털 금액권 구매 및 사용**
     - 원하는 금액의 e-금액권을 구매하여 입점 매장에서 자유롭게 사용합니다.
