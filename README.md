@@ -63,7 +63,6 @@ project/
 <br/>
 
 # 협업 규칙
-## 브랜치 전략 (Branch Strategy)
 - **GitHub 브랜치 전략**:
     - Git Flow (main, develop, feature, release, hotfix)
     - 브랜치 네이밍 규칙:
@@ -82,11 +81,12 @@ project/
 <br/>
 
 # 개발 중 겪은 어려움과 해결 과정
-## Code Rabbit 기반 코드 리뷰 자동화 도입
-* 리뷰 시간을 획기적으로 단축
-* 구체적이고 실질적인 피드백 제공
-* 개발자 생산성 및 코드 품질 향상
+
 
 <br/>
 
 # AI 활용 방식
+Code Rabbit 기반 코드 리뷰 자동화 도입
+* 리뷰 시간을 획기적으로 단축
+* 구체적이고 실질적인 피드백 제공
+* 개발자 생산성 및 코드 품질 향상
