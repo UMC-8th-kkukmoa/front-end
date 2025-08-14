@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
@@ -30,6 +31,7 @@ export default function OwnerJoinShopScreen() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [userIdError, setUserIdError] = useState<string | undefined>();
 
   const registerMutation = useMutation({
     mutationFn: registerOwner,
@@ -37,8 +39,11 @@ export default function OwnerJoinShopScreen() {
       // TODO: Handle success
     },
     onError: (error) => {
-      // TODO: Handle error
-      console.error('Failed to register owner', error);
+      if (isAxiosError(error) && error.response?.status === 409) {
+        setUserIdError('이미 사용중인 아이디입니다.');
+      } else {
+        console.error('Failed to register owner', error);
+      }
     },
   });
 
@@ -65,13 +70,19 @@ export default function OwnerJoinShopScreen() {
                 label="연락처(ID)"
                 placeholder="숫자만 입력해주세요."
                 value={userId}
-                onChangeText={setUserId}
+                onChangeText={(text) => {
+                  setUserId(text);
+                  if (userIdError) {
+                    setUserIdError(undefined);
+                  }
+                }}
                 style={styles.textbox}
                 size="large"
                 variant="secondary"
                 type="text"
                 enabled
-                error={false}
+                error={!!userIdError}
+                message={userIdError}
                 required
               />
 
