@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import handleKakaoLogin from '../../api/kakaoLogin';
@@ -57,6 +58,7 @@ const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const handleKakaoLoginPress = async () => {
     const result = await handleKakaoLogin();
@@ -74,7 +76,7 @@ export default function LoginChoiceScreen() {
 
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>이미 회원이신가요?</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => router.push('/auth/LoginScreen')}>
           <Text style={styles.loginLink}>로그인하기</Text>
         </TouchableOpacity>
       </View>
@@ -88,7 +90,13 @@ export default function LoginChoiceScreen() {
           onPress={handleKakaoLoginPress}
         />
 
-        <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
+        <KkButton
+          label="이메일 가입"
+          type="secondary"
+          size="large"
+          shadow
+          onPress={() => router.push('/auth/AgreementScreen')}
+        />
       </View>
 
       <View style={styles.signupContainer}>

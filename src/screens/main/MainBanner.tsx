@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
-import BannerImage1 from '../../assets/images/banner.svg';
+import BannerImage1 from '../../assets/images/bannerex.svg';
 import colors from '../../design/colors';
 
 const styles = StyleSheet.create({
@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: 121,
     marginBottom: 27,
+    overflow: 'hidden',
   },
   pagination: {
     position: 'absolute',
@@ -39,16 +40,17 @@ const banners = [{ id: 'banner1', component: BannerImage1 }];
 
 function MainBanner() {
   const [index, setIndex] = useState(0);
+  const hasMultiple = banners.length > 1;
 
   return (
     <View style={styles.container}>
       <Swiper
-        autoplay
+        autoplay={hasMultiple}
         autoplayTimeout={4}
-        loop
+        loop={hasMultiple}
         showsPagination={false}
         onIndexChanged={setIndex}
-        scrollEnabled
+        scrollEnabled={hasMultiple}
       >
         {banners.map(({ id, component: BannerComponent }) => (
           <BannerComponent key={id} width="100%" height={121} />
