@@ -8,21 +8,23 @@ import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
 import BellIcon from '../../assets/images/bell.svg';
-import BannerImage from '../../assets/images/banner.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
+import MainBanner from './MainBanner';
 
 function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
   return (
     <>
-      <View style={styles.banner}>
-        <BannerImage width="100%" height={130} />
-      </View>
+      <MainBanner />
       {isLoading && <ActivityIndicator style={styles.loading} />}
-      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+      {isError && (
+        <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>
+          아직 준비된 가게가 없습니다.
+        </Text>
+      )}
     </>
   );
 }
