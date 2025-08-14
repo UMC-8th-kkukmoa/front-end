@@ -3,6 +3,7 @@ import colors from '../../design/colors';
 
 export default StyleSheet.create({
   screen: {
+    backgroundColor: colors.light.white,
     flex: 1,
   },
   scrollContent: {

@@ -82,14 +82,13 @@ export default function StoreLocationSelectScreen() {
           size="large"
           onPress={() => {
             if (!center) return;
-
-            if (router.canGoBack()) {
-              router.back();
-            }
-            router.setParams({
-              latitude: center.lat.toString(),
-              longitude: center.lng.toString(),
-              address: regionName ?? '',
+            router.replace({
+              pathname: '/owner/OwnerJoinShopFormScreen',
+              params: {
+                latitude: center.lat.toString(),
+                longitude: center.lng.toString(),
+                address: regionName ?? '',
+              },
             });
           }}
           shadow
