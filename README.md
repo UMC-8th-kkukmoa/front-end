@@ -15,7 +15,7 @@
 <br/>
 <br/>
 
-# FrontEnd Developer
+## FrontEnd Developer
 | 김은하 | 이채영 | 정윤철 | 정주연 |
 |:------:|:------:|:------:|:------:|
 | <img src="https://avatars.githubusercontent.com/u/152863626?v=4" alt="김은하" width="150"> | <img src="https://avatars.githubusercontent.com/u/133013991?v=4" alt="이채영" width="150"> | <img src="https://avatars.githubusercontent.com/u/3233503?v=4" alt="정윤철" width="150"> | <img src="https://avatars.githubusercontent.com/u/118319081?v=4" alt="정주연" width="150"> |
@@ -26,7 +26,15 @@
 <br/>
 <br/>
 
-# 기술 스택 + 선정 이유
+## 프로젝트 구조
+```plaintext
+
+```
+
+<br/>
+<br/>
+
+## 기술 스택 + 선정 이유
 **TypeScript**
     - 강력한 타입 체크
 
@@ -36,19 +44,11 @@
 
 <br/>
 
-## 3. 협업
+## 협업
 * Git
 * Notion
 * Discord
 
-<br/>
-
-# 프로젝트 구조
-```plaintext
-
-```
-
-<br/>
 <br/>
 
 # 협업 규칙
