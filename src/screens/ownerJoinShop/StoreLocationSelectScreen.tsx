@@ -8,10 +8,12 @@ import KakaoMap from '../Store/KakaoMap/KakaoMap';
 import MapPinIcon from '../../assets/images/map-pin.svg';
 import styles from './StoreLocationSelectScreen.style';
 import { getAddressFromCoords } from '../../utils/location';
+import { useOwnerJoinStore } from '../../store/useOwnerJoinStore';
 
 export default function StoreLocationSelectScreen() {
   const router = useRouter();
   const debounceRef = React.useRef<NodeJS.Timeout | null>(null);
+  const { setLatitude, setLongitude, setAddress } = useOwnerJoinStore();
 
   const [center, setCenter] = React.useState<{ lat: number; lng: number } | null>(null);
   const [regionName, setRegionName] = React.useState<string | null>(null);
@@ -82,14 +84,10 @@ export default function StoreLocationSelectScreen() {
           size="large"
           onPress={() => {
             if (!center) return;
-            router.replace({
-              pathname: '/owner/OwnerJoinShopFormScreen',
-              params: {
-                latitude: center.lat.toString(),
-                longitude: center.lng.toString(),
-                address: regionName ?? '',
-              },
-            });
+            setLatitude(center.lat);
+            setLongitude(center.lng);
+            setAddress(regionName ?? '');
+            router.back();
           }}
           shadow
         />

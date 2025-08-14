@@ -10,6 +10,7 @@ import { KkButton } from '../../design/component/KkButton';
 import styles from './OwnerJoinShopFormScreen.style';
 import { uploadImage } from '../../api/images';
 import { applyForStore } from '../../api/owner';
+import { useOwnerJoinStore } from '../../store/useOwnerJoinStore';
 
 export default function OwnerJoinShopFormScreen() {
   const router = useRouter();
@@ -19,18 +20,33 @@ export default function OwnerJoinShopFormScreen() {
     address: string;
   }>();
 
-  const [storeName, setStoreName] = useState('');
-  const [address, setAddress] = useState('');
-  const [addressDetail, setAddressDetail] = useState('');
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [openingHours, setOpeningHours] = useState('');
-  const [closingHours, setClosingHours] = useState('');
-  const [contact, setContact] = useState('');
-  const [category, setCategory] = useState('');
-  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const {
+    storeName,
+    address,
+    addressDetail,
+    latitude,
+    longitude,
+    openingHours,
+    closingHours,
+    contact,
+    category,
+    selectedImageUri,
+    uploadedImageUrl,
+    setStoreName,
+    setAddress,
+    setAddressDetail,
+    setLatitude,
+    setLongitude,
+    setOpeningHours,
+    setClosingHours,
+    setContact,
+    setCategory,
+    setSelectedImageUri,
+    setUploadedImageUrl,
+    reset,
+  } = useOwnerJoinStore();
+
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState(false);
 
   useEffect(() => {
@@ -41,7 +57,7 @@ export default function OwnerJoinShopFormScreen() {
     if (params.address) {
       setAddress(params.address);
     }
-  }, [params]);
+  }, [params, setLatitude, setLongitude, setAddress]);
 
   const formatAndCoerceTime = (text: string): string => {
     const digitsOnly = text.replace(/\D/g, '');
@@ -89,6 +105,7 @@ export default function OwnerJoinShopFormScreen() {
   const applyMutation = useMutation({
     mutationFn: applyForStore,
     onSuccess: () => {
+      reset();
       // TODO: Handle success (e.g., navigate to next screen)
     },
     onError: (error) => {
