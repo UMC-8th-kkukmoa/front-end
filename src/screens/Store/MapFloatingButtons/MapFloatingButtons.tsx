@@ -7,18 +7,19 @@ import TargetIcon from '../../../assets/images/target.svg';
 
 interface Props {
   onPressTarget?: () => void;
+  onPressLocate?: () => void;
 }
 
-function MapFloatingButtons({ onPressTarget }: Props) {
+function MapFloatingButtons({ onPressTarget, onPressLocate }: Props) {
   return (
     <View style={styles.floatingButtonGroup}>
-      <TouchableOpacity activeOpacity={0.9} style={styles.floatingButton}>
+      <TouchableOpacity activeOpacity={0.6} style={styles.floatingButton}>
         <HeartIcon />
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.9} style={styles.floatingButton}>
+      <TouchableOpacity activeOpacity={0.6} style={styles.floatingButton} onPress={onPressTarget}>
         <TargetIcon />
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.9} style={styles.floatingButton} onPress={onPressTarget}>
+      <TouchableOpacity activeOpacity={0.6} style={styles.floatingButton} onPress={onPressLocate}>
         <PinIcon />
       </TouchableOpacity>
     </View>

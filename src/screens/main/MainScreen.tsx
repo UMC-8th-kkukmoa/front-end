@@ -38,10 +38,19 @@ function MainScreen() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
-  const { data: location } = useQuery({
-    queryKey: ['currentCoords'],
+  const { data: appCoords } = useQuery({
+    queryKey: ['coords'],
     queryFn: getCurrentCoords,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 0,
   });
+
+  useEffect(() => {
+    if (appCoords) setCoords(appCoords);
+  }, [appCoords]);
 
   const { data: address, isPending: isAddrLoading } = useQuery({
     queryKey: ['address', coords?.lat, coords?.lng],
@@ -49,12 +58,6 @@ function MainScreen() {
     enabled: !!coords,
     staleTime: 60_000,
   });
-
-  useEffect(() => {
-    if (location) {
-      setCoords(location);
-    }
-  }, [location]);
 
   const emptyStoreListPage: StoreListPage = {
     stores: [],
