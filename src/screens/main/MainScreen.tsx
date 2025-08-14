@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -31,15 +31,10 @@ function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
-  const qc = useQueryClient();
 
   const { data: appCoords } = useQuery({
     queryKey: ['coords'],
-    queryFn: async () => {
-      const cached = qc.getQueryData<{ lat: number; lng: number }>(['coords']);
-      if (cached) return cached;
-      return getCurrentCoords();
-    },
+    queryFn: getCurrentCoords,
     staleTime: Infinity,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
