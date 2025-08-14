@@ -4,9 +4,9 @@ import { ActivityIndicator, View } from 'react-native';
 import useOwnerAuth from '../../src/hooks/useOwnerAuth';
 
 export default function OwnerLayout() {
-  const { isOwner } = useOwnerAuth();
+  const { isOwner, isPendingOwner } = useOwnerAuth();
 
-  if (isOwner === null) {
+  if (isOwner === null || isPendingOwner === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
@@ -20,11 +20,14 @@ export default function OwnerLayout() {
         <Stack.Screen name="Dashboard" />
         <Stack.Screen name="VoucherPayment" />
         <Stack.Screen name="VoucherPaymentSuccess" />
-        <Stack.Screen name="PickLocation" />
-        <Stack.Screen name="OwnerJoinShopFormScreen" />
       </Stack.Protected>
 
-      <Stack.Protected guard={!isOwner}>
+      <Stack.Protected guard={isPendingOwner}>
+        <Stack.Screen name="OwnerJoinShopFormScreen" />
+        <Stack.Screen name="PickLocation" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isOwner && !isPendingOwner}>
         <Stack.Screen name="auth" />
         <Stack.Screen name="join" />
       </Stack.Protected>

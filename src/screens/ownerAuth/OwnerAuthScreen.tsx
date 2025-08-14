@@ -7,7 +7,6 @@ import KkTextbox from '../../design/component/KkTextbox';
 import styles from './OwnerAuthScreen.style';
 import { ownerLogin } from '../../api/owner';
 import { saveTokens } from '../../utils/tokenStorage';
-import setAccessToken from '../../api/client';
 import useAuthStore from '../../store/useAuthStore';
 
 const logoImage = require('../../assets/images/logo/LogoText2.png');
@@ -23,12 +22,16 @@ export default function OwnerAuthScreen() {
     onSuccess: async (data) => {
       const { accessToken, refreshToken, roles } = data.result;
       await saveTokens(accessToken, refreshToken);
-      setAccessToken(accessToken);
       if (roles) {
         // TODO: ROLE_PENDING_OWNER 이라면 입점 신청이나 현황을 보여줘야 함
         setRoles(roles);
       }
-      router.replace('/owner/Dashboard');
+
+      if (roles.contains('ROLE_OWNER')) {
+        router.replace('/owner/Dashboard');
+      } else if (roles.contains('ROLE_PENDING_OWNER')) {
+        router.replace('/owner/join');
+      }
     },
     onError: (error) => {
       // TODO
