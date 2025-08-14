@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
+    gap: 4,
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    gap: 4,
     backgroundColor: colors.light.white,
     opacity: 0.5,
   },
@@ -56,7 +56,7 @@ function MainBanner() {
       </Swiper>
 
       {/* 커스텀 dot */}
-      <View style={styles.pagination}>
+      <View style={styles.pagination} pointerEvents="none">
         {banners.map(({ id }, idx) => (
           <View key={id} style={[styles.dot, idx === index ? styles.activeDot : null]} />
         ))}
