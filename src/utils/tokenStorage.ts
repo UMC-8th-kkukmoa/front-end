@@ -8,6 +8,7 @@ export const saveTokens = async (accessToken: string, refreshToken: string) => {
     await Keychain.setGenericPassword('refreshToken', refreshToken, {
       service: 'com.kkukmoa.refreshToken',
     });
+    console.log('토큰 저장 완료');
   } catch (error) {
     console.error('Failed to save tokens:', error);
     throw error;

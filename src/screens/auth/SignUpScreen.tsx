@@ -1,117 +1,137 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import Header from '../../design/component/Header';
-import colors from '../../design/colors';
-
-const styles = StyleSheet.create({
-  progressBarContainer: {
-    alignItems: 'center',
-    padding: 23,
-    marginBottom: 20,
-  },
-  progressBarBackground: {
-    width: '100%',
-    height: 15.8,
-    borderRadius: 15,
-    backgroundColor: colors.light.main,
-    overflow: 'hidden',
-    marginBottom: 10,
-  },
-  progressText: {
-    fontSize: 12.64,
-    fontWeight: '600',
-    color: colors.light.main,
-  },
-  headerContainer: {
-    flex: 1,
-    backgroundColor: colors.light.white,
-  },
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: colors.light.white,
-    paddingHorizontal: 16,
-  },
-  smallbox: {
-    flex: 1,
-    marginRight: 16,
-    position: 'relative',
-  },
-  form: {
-    paddingHorizontal: 16,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 36,
-  },
-  message: {
-    position: 'absolute',
-    left: 0,
-    bottom: -18,
-    fontWeight: '400',
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    marginTop: 6,
-    marginLeft: 18,
-    color: colors.light.main,
-    fontSize: 12,
-  },
-  messageSuccess: {
-    position: 'absolute',
-    left: 0,
-    bottom: -18,
-    fontWeight: '400',
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    marginTop: 6,
-    marginLeft: 18,
-    color: colors.light.gray2,
-    fontSize: 12,
-  },
-  button: {
-    marginHorizontal: 16,
-    marginTop: 24,
-    marginBottom: 70,
-  },
-});
+import styles from './SignUpScreen.style';
+import {
+  useCheckNicknameMutation,
+  useEmailRequestMutation,
+  useCheckEmailMutation,
+  useSignUpMutation,
+} from '../../hooks/signUpMutations';
+import { SignUpRequest } from '../../types/auth';
 
 export default function SignUpScreen() {
   const [nickname, setNickname] = useState('');
-  const [isNicknameError, setIsNicknameError] = useState(false);
   const [date, setDate] = useState('');
   const [email, setEmail] = useState('');
-  const [isEmailError, setIsEmailError] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [isVerificationError, setIsVerificationError] = useState(false);
+  const [signupToken, setSignupToken] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const [isNicknameUsed, setIsNicknameUsed] = useState(false);
+  const [isEmailError, setIsEmailError] = useState(false);
+  const [isVerificationError, setIsVerificationError] = useState(false);
+  const [isVerificationChecked, setIsVerificationChecked] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
   const router = useRouter();
 
-  const handleBack = () => {
-    router.back();
-  };
+  const checkNicknameMutation = useCheckNicknameMutation();
+  const emailRequestMutation = useEmailRequestMutation();
+  const checkEmailMutation = useCheckEmailMutation();
+  const signUpMutation = useSignUpMutation();
 
-  // 유효성 검사 (api 연동 전 임시)
+  const handleBack = () => router.back();
+
+  // 유효성 검사
   useEffect(() => {
     setIsEmailError(email !== '' && !/\S+@\S+\.\S+/.test(email));
   }, [email]);
 
   useEffect(() => {
-    setIsNicknameError(nickname !== '' && nickname.length < 2);
+    setIsNicknameUsed(false);
   }, [nickname]);
-
-  useEffect(() => {
-    setIsVerificationError(verificationCode !== '' && verificationCode.length < 6);
-  }, [verificationCode]);
 
   useEffect(() => {
     setIsPasswordError(passwordConfirm !== '' && password !== passwordConfirm);
   }, [password, passwordConfirm]);
+
+  // 닉네임 중복 확인
+  const handleCheckNickname = async (): Promise<void> => {
+    try {
+      const exists = await checkNicknameMutation.mutateAsync(nickname);
+      if (exists) {
+        setIsNicknameUsed(true);
+      } else {
+        setIsNicknameUsed(false);
+        Alert.alert('사용 가능', '사용 가능한 닉네임입니다.');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 이메일 인증 요청
+  const handleEmailRequest = async (): Promise<void> => {
+    if (!email) {
+      Alert.alert('이메일을 입력해주세요.');
+      return;
+    }
+    try {
+      await emailRequestMutation.mutateAsync(email);
+      Alert.alert('인증메일 전송', '이메일로 인증번호가 전송되었습니다.');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '이메일 전송 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 인증번호 입력 시 에러 초기화
+  const handleVerificationChange = (text: string) => {
+    setVerificationCode(text);
+    setIsVerificationError(false);
+    setIsVerificationChecked(false);
+  };
+
+  // 이메일 인증 확인
+  const handleEmailVerify = async (): Promise<void> => {
+    if (!email || !verificationCode) return;
+    try {
+      const res = await checkEmailMutation.mutateAsync({ email, code: verificationCode });
+      if (res.signupToken) {
+        setSignupToken(res.signupToken);
+        Alert.alert('인증 성공', '이메일 인증이 완료되었습니다.');
+        setIsVerificationError(false);
+        setIsVerificationChecked(true);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsVerificationError(true);
+      setIsVerificationChecked(false);
+    }
+  };
+
+  // 회원가입
+  const handleSignUp = async (): Promise<void> => {
+    if (!signupToken) {
+      Alert.alert('이메일 인증을 먼저 완료해주세요.');
+      return;
+    }
+    if (!nickname || !date || !email || !password || !passwordConfirm) return;
+    if (isNicknameUsed || isEmailError || isVerificationError || isPasswordError) return;
+
+    const signupData: SignUpRequest = {
+      signupToken,
+      email,
+      password,
+      nickname,
+      role: 'USER',
+    };
+
+    try {
+      await signUpMutation.mutateAsync(signupData);
+      Alert.alert('회원가입 완료', '회원가입이 완료되었습니다.');
+      router.push('/auth/SignupCompleteScreen');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '회원가입 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.headerContainer}>
@@ -134,17 +154,17 @@ export default function SignUpScreen() {
               type="text"
               variant={nickname ? 'secondary' : 'primary'}
               enabled={!!nickname}
-              error={isNicknameError}
+              error={isNicknameUsed}
               required
             />
-            {isNicknameError && <Text style={styles.message}>이미 사용중인 닉네임입니다.</Text>}
+            {isNicknameUsed && <Text style={styles.message}>이미 사용중인 닉네임입니다.</Text>}
           </View>
           <View style={{ marginTop: 26.3 }}>
             <KkButton
               label="중복 확인"
-              type={nickname && !isNicknameError ? 'primary' : 'disabled'}
+              type={nickname && !isNicknameUsed ? 'primary' : 'disabled'}
               size="large"
-              onPress={() => {}}
+              onPress={handleCheckNickname}
             />
           </View>
         </View>
@@ -187,7 +207,7 @@ export default function SignUpScreen() {
               label="인증받기"
               type={email ? 'primary' : 'disabled'}
               size="large"
-              onPress={() => {}}
+              onPress={handleEmailRequest}
             />
           </View>
         </View>
@@ -199,15 +219,15 @@ export default function SignUpScreen() {
               label="인증번호"
               size="small"
               value={verificationCode}
-              onChangeText={setVerificationCode}
+              onChangeText={handleVerificationChange}
               placeholder="인증번호를 입력해주세요."
               type="text"
               variant={verificationCode ? 'secondary' : 'primary'}
               enabled={!!verificationCode}
-              error={isVerificationError}
+              error={isVerificationError && isVerificationChecked}
               required
             />
-            {isVerificationError && (
+            {isVerificationError && !isVerificationChecked && (
               <Text style={styles.message}>올바르지 않은 인증번호입니다.</Text>
             )}
           </View>
@@ -216,7 +236,7 @@ export default function SignUpScreen() {
               label="인증하기"
               type={verificationCode && !isVerificationError ? 'primary' : 'disabled'}
               size="large"
-              onPress={() => {}}
+              onPress={handleEmailVerify}
             />
           </View>
         </View>
@@ -270,7 +290,7 @@ export default function SignUpScreen() {
             email &&
             password &&
             passwordConfirm &&
-            !isNicknameError &&
+            !isNicknameUsed &&
             !isEmailError &&
             !isVerificationError &&
             !isPasswordError
@@ -278,7 +298,7 @@ export default function SignUpScreen() {
               : 'disabled'
           }
           size="large"
-          onPress={() => {}}
+          onPress={handleSignUp}
           shadow
         />
       </ScrollView>
