@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import Header from '../../design/component/Header';
@@ -26,6 +28,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 1,
+    backgroundColor: colors.light.white,
   },
   container: {
     flex: 1,
@@ -87,6 +90,11 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isPasswordError, setIsPasswordError] = useState(false);
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
 
   // 유효성 검사 (api 연동 전 임시)
   useEffect(() => {
@@ -106,9 +114,8 @@ export default function SignUpScreen() {
   }, [password, passwordConfirm]);
 
   return (
-    <View style={styles.headerContainer}>
-      <Header title="회원가입" onBackPress={() => {}} shadow={false} />
-
+    <SafeAreaView style={styles.headerContainer}>
+      <Header title="회원가입" onBackPress={handleBack} shadow={false} />
       <ScrollView style={styles.container}>
         <View style={styles.progressBarContainer}>
           <View style={styles.progressBarBackground} />
@@ -275,6 +282,6 @@ export default function SignUpScreen() {
           shadow
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
