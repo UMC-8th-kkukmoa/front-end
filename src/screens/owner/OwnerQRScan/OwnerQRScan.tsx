@@ -8,6 +8,7 @@ import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
 import colors from '../../../design/colors';
 import QRHeader from '../../../design/component/QRHeader';
+import OwnerUseCouponModal from '../OwnerUseCoupon/OwnerUseCouponModal';
 
 const scanAreaSize = 208;
 
@@ -77,6 +78,8 @@ export default function QrScannerScreen() {
   const router = useRouter();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
+  const [couponModalVisible, setCouponModalVisible] = useState(false);
+  const [currentQrUuid, setCurrentQrUuid] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -129,6 +132,9 @@ export default function QrScannerScreen() {
             qrUuid,
           },
         });
+      } else if (type === 'COUPON') {
+        setCurrentQrUuid(qrUuid);
+        setCouponModalVisible(true);
       } else {
         Alert.alert('쿠폰', '쿠폰 사용 처리');
       }
@@ -195,6 +201,15 @@ export default function QrScannerScreen() {
           </View>
         </View>
       </View>
+
+      {currentQrUuid && (
+        <OwnerUseCouponModal
+          visible={couponModalVisible}
+          message="쿠폰을 사용하시겠습니까?"
+          qrUuid={currentQrUuid}
+          onClose={() => setCouponModalVisible(false)}
+        />
+      )}
     </SafeAreaView>
   );
 }
