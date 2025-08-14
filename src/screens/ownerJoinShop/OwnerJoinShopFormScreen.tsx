@@ -167,7 +167,7 @@ export default function OwnerJoinShopFormScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Header title="입점 신청하기" onBackPress={() => {}} shadow={false} />
+      <Header title="입점 신청하기" onBackPress={router.back} shadow={false} />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.content}>

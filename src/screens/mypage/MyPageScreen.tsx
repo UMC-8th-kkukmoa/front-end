@@ -91,7 +91,7 @@ export default function MyPageScreen() {
 
   return (
     <View>
-      <Header title="마이페이지" onBackPress={() => {}} />
+      <Header title="마이페이지" onBackPress={router.back} />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Section title="이용 내역">
