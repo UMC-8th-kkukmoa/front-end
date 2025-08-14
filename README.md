@@ -3,9 +3,17 @@
 <img width="450" height="300" alt="kkukmoa_poster" src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" />
 
 
-# 프로젝트 소개
-- 프로젝트 이름: 꾹모아
-- 프로젝트 설명: 
+
+# <img width="10" height="10" alt="앱로고" src="https://github.com/user-attachments/assets/9b121bc4-21d5-4793-919e-6b908d2a8ee1" /> 꾹모아 소개
+**꾹모아는 소상공인 매장에서 사용할 수 있는 모바일 금액권 및 스탬프 적립 기반 고객 리워드 플랫폼입니다.**
+- **디지털 금액권 구매 및 사용**
+    - 원하는 금액의 e-금액권을 구매하여 입점 매장에서 자유롭게 사용합니다.
+- **자동 스탬프 적립 시스템**
+    - 결제 내역과 연동되어 스탬프가 자동으로 적립됩니다.
+- **맞춤형 서비스 쿠폰**
+    - 스탬프 10개 누적 시 자동 발급되며, 매장별 사장님이 직접 혜택을 설정합니다.
+- **QR 코드 기반 적립 및 선물**
+    - 카드 결제 시에도 QR 인식으로 스탬프 적립이 가능하며, 금액권을 선물할 수 있습니다.
 
 <br/>
 <br/>
@@ -23,11 +31,12 @@
 
 # 기술 스택 + 선정 이유
 ## 1. TypeScript
-
+    - 강력한 타입 체크
 <br/>
 
 ## 2. React-Native
-
+    - 모바일 앱
+    - Expo: 빠른 개발 환경
 
 <br/>
 
@@ -40,23 +49,7 @@
 
 # 프로젝트 구조
 ```plaintext
-project/
-├── public/
-│   ├── index.html           # HTML 템플릿 파일
-│   └── favicon.ico          # 아이콘 파일
-├── src/
-│   ├── assets/              # 이미지, 폰트 등 정적 파일
-│   ├── components/          # 재사용 가능한 UI 컴포넌트
-│   ├── hooks/               # 커스텀 훅 모음
-│   ├── pages/               # 각 페이지별 컴포넌트
-│   ├── App.js               # 메인 애플리케이션 컴포넌트
-│   ├── index.js             # 엔트리 포인트 파일
-│   ├── index.css            # 전역 css 파일
-│   ├── firebaseConfig.js    # firebase 인스턴스 초기화 파일
-│   package-lock.json    # 정확한 종속성 버전이 기록된 파일로, 일관된 빌드를 보장
-│   package.json         # 프로젝트 종속성 및 스크립트 정의
-├── .gitignore               # Git 무시 파일 목록
-└── README.md                # 프로젝트 개요 및 사용법
+
 ```
 
 <br/>
@@ -76,6 +69,8 @@ project/
     - 작업 내용 및 스크린샷 공유
 - **코드 스타일 및 린트 규칙**:
     - ESLint, Prettier (Airbnb 스타일)
+- **GitHub Projects 태스크 관리**:
+    - 진행 상황 한눈에 파악, 효율적인 협업 지원
 
 <br/>
 <br/>
@@ -86,7 +81,7 @@ project/
 <br/>
 
 # AI 활용 방식
-Code Rabbit 기반 코드 리뷰 자동화 도입
-* 리뷰 시간을 획기적으로 단축
-* 구체적이고 실질적인 피드백 제공
-* 개발자 생산성 및 코드 품질 향상
+- **Code Rabbit 기반 코드 리뷰 자동화 도입**
+    - 리뷰 시간을 획기적으로 단축
+    - 구체적이고 실질적인 피드백 제공
+    - 개발자 생산성 및 코드 품질 향상
