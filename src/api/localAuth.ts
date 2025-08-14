@@ -70,7 +70,8 @@ export const checkNicknameExists = async (nickname: string): Promise<boolean> =>
     return data.result;
   } catch (error: any) {
     logApiError(error, '닉네임 중복 확인');
-    throw new Error('닉네임 중복 확인 실패');
+    const message = (error?.response?.data?.message as string) ?? '닉네임 중복 확인 실패';
+    throw new Error(message);
   }
 };
 
