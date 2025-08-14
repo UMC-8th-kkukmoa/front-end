@@ -11,7 +11,7 @@ export const useCheckNicknameMutation = () => {
 
 // 이메일 전송
 export const useEmailRequestMutation = () => {
-  return useMutation<any, Error, string>({
+  return useMutation<void, Error, string>({
     mutationFn: emailReq,
   });
 };
