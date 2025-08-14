@@ -11,6 +11,7 @@ import colors from '../../design/colors';
 import CouponCard from './MyCouponCard';
 import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
 import useQRCodeWebSocket from '../../hooks/useQRCodeWebSocket';
+import client from '../../api/client';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: colors.white,
+    backgroundColor: colors.light.white,
     width: '100%',
     paddingVertical: 20,
     alignItems: 'center',
@@ -98,17 +99,9 @@ export default function MyCouponListScreen() {
         return;
       }
 
-      const token = credentials.password;
+      const url = storeType ? `/v1/stamps/coupons?store-type=${storeType}` : `/v1/stamps/coupons`;
 
-      const baseUrl = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
-      const url = storeType
-        ? `${baseUrl}/v1/stamps/coupons?store-type=${storeType}`
-        : `${baseUrl}/v1/stamps/coupons`;
-
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await client.get(url, {
         signal,
       });
 
