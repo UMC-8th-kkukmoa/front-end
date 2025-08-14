@@ -39,6 +39,7 @@ const ReviewsHeader = React.memo(({ count, imageUrl }: { count: number; imageUrl
     )}
 
     <LinearGradient
+      pointerEvents="none"
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 0.4 }}
       colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
