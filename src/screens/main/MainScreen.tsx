@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -31,11 +31,27 @@ function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
+  const qc = useQueryClient();
 
-  const { data: location } = useQuery({
-    queryKey: ['currentCoords'],
-    queryFn: getCurrentCoords,
+  const { data: appCoords } = useQuery({
+    queryKey: ['coords'],
+    queryFn: async () => {
+      const cached = qc.getQueryData<{ lat: number; lng: number }>(['coords']);
+      if (cached) return cached;
+      const fresh = await getCurrentCoords();
+      qc.setQueryData(['coords'], fresh);
+      return fresh;
+    },
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 0,
   });
+
+  useEffect(() => {
+    if (appCoords) setCoords(appCoords);
+  }, [appCoords]);
 
   const { data: address, isPending: isAddrLoading } = useQuery({
     queryKey: ['address', coords?.lat, coords?.lng],
@@ -43,12 +59,6 @@ function MainScreen() {
     enabled: !!coords,
     staleTime: 60_000,
   });
-
-  useEffect(() => {
-    if (location) {
-      setCoords(location);
-    }
-  }, [location]);
 
   const emptyStoreListPage: StoreListPage = {
     stores: [],
