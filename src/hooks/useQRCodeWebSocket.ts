@@ -27,10 +27,9 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
         });
         const token = credentials ? credentials.password : null;
 
-        // React Native WebSocket API는 커스텀 헤더를 지원하지 않아 토큰을 받아야 하면 URL 쿼리에 노출하는 수밖에 없음
-        const wsUrl = `${baseUrl.replace(/^https?/, 'ws')}/ws${token ? `?token=${token}` : ''}`;
+        const wsUrl = `${baseUrl.replace(/^https?/, 'wss')}/ws`;
 
-        ws.current = new WebSocket(wsUrl);
+        ws.current = new WebSocket(wsUrl, token ? [token] : undefined);
 
         ws.current.onopen = () => {
           if (!isMounted.current) return;
