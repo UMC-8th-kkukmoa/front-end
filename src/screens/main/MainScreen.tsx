@@ -174,7 +174,7 @@ function MainScreen() {
           contentContainerStyle={styles.cardContainer}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
-          ListEmptyComponent={EmptyStoreList}
+          ListEmptyComponent={isLoading || isError ? null : EmptyStoreList}
         />
       </View>
     </View>
