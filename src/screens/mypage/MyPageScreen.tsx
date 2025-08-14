@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
@@ -8,6 +8,9 @@ import ChevronRightIcon from '../../assets/images/chevron-right.svg';
 import logout from '../../api/logout';
 
 const styles = StyleSheet.create({
+  root: {
+    backgroundColor: colors.light.white,
+  },
   container: {
     marginVertical: 14,
     marginHorizontal: 15,
@@ -90,7 +93,7 @@ export default function MyPageScreen() {
     <View>
       <Header title="마이페이지" onBackPress={() => {}} />
 
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Section title="이용 내역">
           <SectionLabel label="내 스탬프" onClick={() => router.push('/stamp/StampList')} />
           <SectionLabel label="내 쿠폰" onClick={() => router.push('/myCoupon/MyCouponList')} />
@@ -107,7 +110,7 @@ export default function MyPageScreen() {
           <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
-      </View>
+      </ScrollView>
     </View>
   );
 }
