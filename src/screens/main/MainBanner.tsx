@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginHorizontal: 4,
+    gap: 4,
     backgroundColor: colors.light.white,
     opacity: 0.5,
   },
