@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import styles from './AgreementScreen.style';
@@ -42,7 +43,7 @@ export default function AgreementScreen() {
   };
 
   return (
-    <View style={styles.contain}>
+    <SafeAreaView style={styles.safeArea}>
       <Header title="회원가입" onBackPress={handleBack} shadow={false} />
       <View style={styles.container}>
         <View style={styles.progressBarContainer}>
@@ -104,11 +105,11 @@ export default function AgreementScreen() {
             label="다음"
             type={isAllRequiredChecked ? 'primary' : 'disabled'}
             size="large"
-            onPress={() => {}}
+            onPress={() => router.push('/auth/SignUpScreen')}
             shadow
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

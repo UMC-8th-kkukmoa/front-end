@@ -92,14 +92,12 @@ export default StyleSheet.create({
   loading: {
     alignItems: 'center',
     paddingBottom: '50%',
-    color: colors.light.main,
   },
   emptyWrapper: {
-    flex: 1,
     alignItems: 'center',
-    paddingVertical: 91,
+    justifyContent: 'center',
+    paddingVertical: 40,
   },
-
   emptyText: {
     fontFamily: 'Pretendard-Bold',
     fontSize: 14,

@@ -19,7 +19,7 @@ function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: 
   return (
     <>
       <MainBanner />
-      {isLoading && <ActivityIndicator style={styles.loading} />}
+      {isLoading && <ActivityIndicator style={styles.loading} color="#FF8246" />}
       {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>오류</Text>}
     </>
   );
@@ -174,7 +174,7 @@ function MainScreen() {
           contentContainerStyle={styles.cardContainer}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
-          ListEmptyComponent={EmptyStoreList}
+          ListEmptyComponent={isLoading || isError ? null : EmptyStoreList}
         />
       </View>
     </View>
