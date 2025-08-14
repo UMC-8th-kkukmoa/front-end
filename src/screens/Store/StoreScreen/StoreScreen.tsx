@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ import { getCurrentCoords, getAddressFromCoords } from '../../../utils/location'
 
 function Store() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const qc = useQueryClient();
   const mapRef = useRef<WebView<unknown>>(null);
   const router = useRouter();
@@ -33,6 +34,38 @@ function Store() {
     enabled: !!coords,
     staleTime: 60_000,
   });
+
+  // 목록 → 마커로 내려보내기
+  const handleStoresLoaded = useCallback(
+    (
+      stores: Array<{
+        storeId: string;
+        name: string;
+        categoryName: string;
+        lat: number;
+        lng: number;
+      }>,
+    ) => {
+      mapRef.current?.postMessage(JSON.stringify({ type: 'SET_MARKERS', payload: stores }));
+    },
+    [],
+  );
+
+  // 맵 메시지 수신 (마커 클릭 → 상세 이동 등)
+  const onMapMessage = useCallback((e: any) => {
+    try {
+      const data = JSON.parse(e?.nativeEvent?.data || '{}');
+      if (data.type === 'MARKER_CLICK' && data.payload?.id) {
+        const id = String(data.payload.id);
+        setSelectedId((prev) => (prev === id ? null : id));
+      }
+      if (data.type === 'MAP_BACKGROUND_CLICK') {
+        setSelectedId(null);
+      }
+    } catch (err) {
+      console.error('onMapMessage parse error', err);
+    }
+  }, []);
 
   // 현재 위치로 이동 버튼
   const handleMoveToCurrentLocation = () => {
@@ -59,10 +92,22 @@ function Store() {
     }
   }
 
+  // 앱 → 지도: 선택 변화 시 하이라이트/해제 알림
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (selectedId) {
+      mapRef.current.postMessage(
+        JSON.stringify({ type: 'HIGHLIGHT_MARKER', payload: { id: selectedId } }),
+      );
+    } else {
+      mapRef.current.postMessage(JSON.stringify({ type: 'CLEAR_SELECTION' }));
+    }
+  }, [selectedId]);
+
   return (
     <View style={styles.container}>
       <View style={styles.mapArea}>
-        <KakaoMap center={coords ?? null} zoom={2} mapRef={mapRef} />
+        <KakaoMap center={coords ?? null} zoom={2} mapRef={mapRef} onMessage={onMapMessage} />
         <MapFloatingButtons
           onPressTarget={handlePickLocation}
           onPressLocate={handleMoveToCurrentLocation}
@@ -71,13 +116,22 @@ function Store() {
 
       <View style={styles.headerArea}>
         <SearchBar />
-        <CategoryTabs selected={selectedCategory} onSelect={setSelectedCategory} />
+        <CategoryTabs
+          selected={selectedCategory}
+          onSelect={(cat) => {
+            setSelectedCategory(cat);
+            setSelectedId(null);
+          }}
+        />
       </View>
 
       <StoreBottomSheet
         selectedCategory={selectedCategory}
         address={addressText}
         location={coords ?? null}
+        onStoresLoaded={handleStoresLoaded}
+        selectedId={selectedId}
+        onClearSelected={() => setSelectedId(null)}
       />
     </View>
   );
