@@ -28,7 +28,7 @@ export default StyleSheet.create({
   floatingButton: {
     width: 50,
     height: 50,
-    borderRadius: 24,
+    borderRadius: 25,
     backgroundColor: colors.light.main,
     alignItems: 'center',
     justifyContent: 'center',
