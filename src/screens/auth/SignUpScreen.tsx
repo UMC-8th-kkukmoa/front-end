@@ -205,7 +205,7 @@ export default function SignUpScreen() {
           <View style={{ marginTop: 26.3 }}>
             <KkButton
               label="인증받기"
-              type={email ? 'primary' : 'disabled'}
+              type={email && !isEmailError ? 'primary' : 'disabled'}
               size="large"
               onPress={handleEmailRequest}
             />
