@@ -99,10 +99,7 @@ export default function MyPageScreen() {
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel
-            label="사장님 로그인 (회원가입)"
-            onClick={() => router.push('/owner/Dashboard')}
-          />
+          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </View>
