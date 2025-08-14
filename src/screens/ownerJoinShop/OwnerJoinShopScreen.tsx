@@ -167,7 +167,7 @@ export default function OwnerJoinShopScreen() {
                   });
                 }
               }}
-              type={isNextDisabled ? 'disabled' : 'primary'}
+              type={!registerMutation.isPending && isNextDisabled ? 'disabled' : 'primary'}
               size="large"
               style={styles.button}
               shadow={false}
