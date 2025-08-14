@@ -1,97 +1,112 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## FrontEnd Developer
 
-# Getting Started
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+# 프로젝트 소개
+- 프로젝트 이름: 꾹모아
+- 프로젝트 설명: 
 
-## Step 1: Start Metro
+<br/>
+<br/>
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+FrontEnd Developer
+| 김은하 | 이채영 | 정윤철 | 정주연 |
+|:------:|:------:|:------:|:------:|
+| <img src="https://avatars.githubusercontent.com/u/152863626?v=4" alt="김은하" width="150">
+ | <img src="https://avatars.githubusercontent.com/u/133013991?v=4" alt="이채영" width="150"> | <img src="https://avatars.githubusercontent.com/u/3233503?v=4" alt="정윤철" width="150"> | <img src="https://avatars.githubusercontent.com/u/118319081?v=4" alt="정주연" width="150"> |
+| 성신여대 | 서울여대 | 광운대 | 광운대 |
+| [GitHub](https://github.com/rladmsgki) | [GitHub](https://github.com/chae1125) | [GitHub](https://github.com/onebone) | [GitHub](https://github.com/juyeonnnn) |
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+<br/>
+<br/>
 
-```sh
-# Using npm
-npm start
+# 주요 기능
+- **회원가입**:
+  - 회원가입 시 DB에 유저정보가 등록됩니다.
 
-# OR using Yarn
-yarn start
+- **로그인**:
+  - 사용자 인증 정보를 통해 로그인합니다.
+
+<br/>
+<br/>
+
+# 5. 기술 스택 + 선정 이유
+## 5.1 Language
+|  |  |
+|-----------------|-----------------|
+| HTML5    |<img src="https://github.com/user-attachments/assets/2e122e74-a28b-4ce7-aff6-382959216d31" alt="HTML5" width="100">| 
+| CSS3    |   <img src="https://github.com/user-attachments/assets/c531b03d-55a3-40bf-9195-9ff8c4688f13" alt="CSS3" width="100">|
+| Javascript    |  <img src="https://github.com/user-attachments/assets/4a7d7074-8c71-48b4-8652-7431477669d1" alt="Javascript" width="100"> | 
+
+<br/>
+
+## 5.2 Frotend
+|  |  |  |
+|-----------------|-----------------|-----------------|
+| React    |  <img src="https://github.com/user-attachments/assets/e3b49dbb-981b-4804-acf9-012c854a2fd2" alt="React" width="100"> | 18.3.1    |
+| StyledComponents    |  <img src="https://github.com/user-attachments/assets/c9b26078-5d79-40cc-b120-69d9b3882786" alt="StyledComponents" width="100">| 6.1.12   |
+| MaterialUI    |  <img src="https://github.com/user-attachments/assets/75a46fa7-ebc0-4a9d-b648-c589f87c4b55" alt="MUI" width="100">    | 5.0.0  |
+| DayJs    |  <img src="https://github.com/user-attachments/assets/3632d7d6-8d43-4dd5-ba7a-501a2bc3a3e4" alt="DayJs" width="100">    | 1.11.12    |
+
+<br/>
+
+## 협업
+|  |  
+|-----------------|-----------------|
+| Git    |  <img src="https://github.com/user-attachments/assets/483abc38-ed4d-487c-b43a-3963b33430e6" alt="git" width="100">    |
+| Notion    |  <img src="https://github.com/user-attachments/assets/34141eb9-deca-416a-a83f-ff9543cc2f9a" alt="Notion" width="100">    |
+
+<br/>
+
+# 프로젝트 구조
+```plaintext
+project/
+├── public/
+│   ├── index.html           # HTML 템플릿 파일
+│   └── favicon.ico          # 아이콘 파일
+├── src/
+│   ├── assets/              # 이미지, 폰트 등 정적 파일
+│   ├── components/          # 재사용 가능한 UI 컴포넌트
+│   ├── hooks/               # 커스텀 훅 모음
+│   ├── pages/               # 각 페이지별 컴포넌트
+│   ├── App.js               # 메인 애플리케이션 컴포넌트
+│   ├── index.js             # 엔트리 포인트 파일
+│   ├── index.css            # 전역 css 파일
+│   ├── firebaseConfig.js    # firebase 인스턴스 초기화 파일
+│   package-lock.json    # 정확한 종속성 버전이 기록된 파일로, 일관된 빌드를 보장
+│   package.json         # 프로젝트 종속성 및 스크립트 정의
+├── .gitignore               # Git 무시 파일 목록
+└── README.md                # 프로젝트 개요 및 사용법
 ```
 
-## Step 2: Build and run your app
+<br/>
+<br/>
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+# 7. Development Workflow (개발 워크플로우)
+## 브랜치 전략 (Branch Strategy)
+우리의 브랜치 전략은 Git Flow를 기반으로 하며, 다음과 같은 브랜치를 사용합니다.
 
-### Android
+- Main Branch
+  - 배포 가능한 상태의 코드를 유지합니다.
+  - 모든 배포는 이 브랜치에서 이루어집니다.
+  
+- {name} Branch
+  - 팀원 각자의 개발 브랜치입니다.
+  - 모든 기능 개발은 이 브랜치에서 이루어집니다.
 
-```sh
-# Using npm
-npm run android
+<br/>
+<br/>
 
-# OR using Yarn
-yarn android
+## type 종류
+```
+feat : 새로운 기능 추가
+fix : 버그 수정
+docs : 문서 수정
+style : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+refactor : 코드 리펙토링
+test : 테스트 코드, 리펙토링 테스트 코드 추가
+chore : 빌드 업무 수정, 패키지 매니저 수정
 ```
 
-### iOS
+<br/>
+<img width="100%" alt="깃플로우" src="https://github.com/user-attachments/assets/2a4d1332-acc2-4292-9815-d122f5aea77c">
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
