@@ -8,23 +8,39 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import { useMutation } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import styles from './OwnerJoinShopFormScreen.style';
 import { uploadImage } from '../../api/images';
+import { applyForStore } from '../../api/owner';
 
 export default function OwnerJoinShopFormScreen() {
   const [storeName, setStoreName] = useState('');
   const [address, setAddress] = useState('');
   const [addressDetail, setAddressDetail] = useState('');
-  const [locationSet, setLocationSet] = useState(false);
-  const [businessHours, setBusinessHours] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [openingHours, setOpeningHours] = useState('');
+  const [closingHours, setClosingHours] = useState('');
   const [contact, setContact] = useState('');
+  const [category, setCategory] = useState('');
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState(false);
+
+  const applyMutation = useMutation({
+    mutationFn: applyForStore,
+    onSuccess: () => {
+      // TODO: Handle success (e.g., navigate to next screen)
+    },
+    onError: (error) => {
+      // TODO: Handle error
+      console.error('Failed to apply for store', error);
+    },
+  });
 
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -54,9 +70,27 @@ export default function OwnerJoinShopFormScreen() {
 
   const isNextDisabled = useMemo(() => {
     return (
-      !storeName || !address || !businessHours || !locationSet || !uploadedImageUrl || uploadError
+      !storeName ||
+      !address ||
+      !openingHours ||
+      !closingHours ||
+      !latitude ||
+      !longitude ||
+      !uploadedImageUrl ||
+      !category ||
+      uploadError
     );
-  }, [storeName, address, businessHours, locationSet, uploadedImageUrl, uploadError]);
+  }, [
+    storeName,
+    address,
+    openingHours,
+    closingHours,
+    latitude,
+    longitude,
+    uploadedImageUrl,
+    category,
+    uploadError,
+  ]);
 
   const getDisplayNameFromUri = (uri: string) => {
     try {
@@ -129,10 +163,14 @@ export default function OwnerJoinShopFormScreen() {
                   매장 위치 설정<Text style={styles.required}> *</Text>
                 </Text>
                 <KkButton
-                  label={locationSet ? '설정 완료' : '지도에서 설정하기'}
-                  type={locationSet ? 'secondary' : 'secondary'}
+                  label={latitude && longitude ? '설정 완료' : '지도에서 설정하기'}
+                  type={latitude && longitude ? 'secondary' : 'secondary'}
                   size="large"
-                  onPress={() => setLocationSet(true)}
+                  onPress={() => {
+                    // TODO: Navigate to map screen to select location
+                    setLatitude(37.4979);
+                    setLongitude(127.0276);
+                  }}
                   shadow
                   style={styles.mapButton}
                 />
@@ -140,9 +178,21 @@ export default function OwnerJoinShopFormScreen() {
 
               <KkTextbox
                 label="영업시간"
-                placeholder="예: 09:00 - 18:00"
-                value={businessHours}
-                onChangeText={setBusinessHours}
+                placeholder="여는 시간 (예: 09:00)"
+                value={openingHours}
+                onChangeText={setOpeningHours}
+                size="large"
+                variant="secondary"
+                type="text"
+                enabled
+                error={false}
+                required
+              />
+              <KkTextbox
+                label=""
+                placeholder="닫는 시간 (예: 22:00)"
+                value={closingHours}
+                onChangeText={setClosingHours}
                 size="large"
                 variant="secondary"
                 type="text"
@@ -161,6 +211,19 @@ export default function OwnerJoinShopFormScreen() {
                 type="text"
                 enabled
                 error={false}
+              />
+
+              <KkTextbox
+                label="카테고리"
+                placeholder="예: CAFE"
+                value={category}
+                onChangeText={setCategory}
+                size="large"
+                variant="secondary"
+                type="text"
+                enabled
+                error={false}
+                required
               />
 
               <View>
@@ -187,7 +250,31 @@ export default function OwnerJoinShopFormScreen() {
             label="다음"
             type={isNextDisabled ? 'disabled' : 'primary'}
             size="large"
-            onPress={() => {}}
+            onPress={() => {
+              if (
+                storeName &&
+                address &&
+                openingHours &&
+                closingHours &&
+                latitude &&
+                longitude &&
+                uploadedImageUrl &&
+                category
+              ) {
+                applyMutation.mutate({
+                  storeName,
+                  storeAddress: address,
+                  storeAddressDetail: addressDetail,
+                  latitude,
+                  longitude,
+                  openingHours,
+                  closingHours,
+                  storePhoneNumber: contact,
+                  storeImageUrl: uploadedImageUrl,
+                  category,
+                });
+              }
+            }}
             shadow
             style={styles.button}
           />

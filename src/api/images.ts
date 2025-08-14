@@ -74,7 +74,7 @@ export async function uploadImage(
   } as any);
 
   const response = await apiClient.post<string>(
-    `/api/images/upload/${encodeURIComponent(directory)}`,
+    `/v1/images/upload/${encodeURIComponent(directory)}`,
     formData,
     {
       headers: {
