@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking';
 import axios from 'axios';
 import { TokenResponse } from '../types/kakao';
 import { saveTokens, saveRoles } from '../utils/tokenStorage';
+import useAuthStore from '../store/useAuthStore';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
 if (!KAKAO_LOGIN_URL) throw new Error('[KakaoLogin] EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
@@ -46,6 +47,8 @@ const handleKakaoLogin = async (): Promise<(TokenResponse & { roles: string[] })
 
     // roles 저장
     await saveRoles(roles ?? []);
+
+    useAuthStore.getState().setRoles(roles ?? []);
 
     return {
       id: id ?? 0,

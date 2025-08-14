@@ -6,6 +6,7 @@ import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
 import logout from '../../api/logout';
+import useAuthStore from '../../store/useAuthStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -70,11 +71,16 @@ export default function MyPageScreen() {
   const queryClient = useQueryClient();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // 전역 roles 읽기
+  const roles = useAuthStore((state) => state.roles);
+  const clearRoles = useAuthStore((state) => state.clearRoles);
+
   const handleLogout = async () => {
     if (isLoggingOut) return;
     setIsLoggingOut(true);
     try {
       await logout();
+      clearRoles();
       await queryClient.invalidateQueries({ queryKey: ['auth'] });
       router.replace('/auth/LoginChoiceScreen');
     } catch (error) {
@@ -99,7 +105,13 @@ export default function MyPageScreen() {
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
+          {/* ROLE_OWNER인 경우에만 노출 */}
+          {roles.includes('ROLE_OWNER') && (
+            <SectionLabel
+              label="사장님 계정 전환"
+              onClick={() => router.push('/owner/Dashboard')}
+            />
+          )}
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </View>
