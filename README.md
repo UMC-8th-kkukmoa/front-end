@@ -1,6 +1,6 @@
 ## FrontEnd Developer
 
-<img width="4500" height="3000" alt="kkukmoa_poster" src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" />
+<img width="2250" height="1500" alt="kkukmoa_poster" src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" />
 
 
 # 프로젝트 소개
