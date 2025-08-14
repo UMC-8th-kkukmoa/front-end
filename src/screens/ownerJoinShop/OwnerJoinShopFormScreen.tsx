@@ -187,7 +187,7 @@ export default function OwnerJoinShopFormScreen() {
                 required
               />
 
-              <View style={styles.storeAddressFormContainer}>
+              <View style={styles.consecutiveFormContainer}>
                 <KkTextbox
                   label="매장주소"
                   placeholder="주소를 입력해주세요."
@@ -229,30 +229,32 @@ export default function OwnerJoinShopFormScreen() {
                 />
               </View>
 
-              <KkTextbox
-                label="영업시간"
-                placeholder="여는 시간 (예: 09:00:00)"
-                value={openingHours}
-                onChangeText={(text) => setOpeningHours(formatAndCoerceTime(text))}
-                size="large"
-                variant="secondary"
-                type="text"
-                enabled
-                error={false}
-                required
-              />
-              <KkTextbox
-                label=""
-                placeholder="닫는 시간 (예: 22:00:00)"
-                value={closingHours}
-                onChangeText={(text) => setClosingHours(formatAndCoerceTime(text))}
-                size="large"
-                variant="secondary"
-                type="text"
-                enabled
-                error={false}
-                required
-              />
+              <View style={styles.consecutiveFormContainer}>
+                <KkTextbox
+                  label="영업시간"
+                  placeholder="여는 시간 (예: 09:00:00)"
+                  value={openingHours}
+                  onChangeText={(text) => setOpeningHours(formatAndCoerceTime(text))}
+                  size="large"
+                  variant="secondary"
+                  type="text"
+                  enabled
+                  error={false}
+                  required
+                />
+                <KkTextbox
+                  label=""
+                  placeholder="닫는 시간 (예: 22:00:00)"
+                  value={closingHours}
+                  onChangeText={(text) => setClosingHours(formatAndCoerceTime(text))}
+                  size="large"
+                  variant="secondary"
+                  type="text"
+                  enabled
+                  error={false}
+                  required
+                />
+              </View>
 
               <KkTextbox
                 label="매장 연락처 (선택)"

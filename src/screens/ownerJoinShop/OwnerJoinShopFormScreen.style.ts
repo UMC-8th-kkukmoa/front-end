@@ -24,7 +24,7 @@ export default StyleSheet.create({
     gap: 32,
     marginBottom: 54,
   },
-  storeAddressFormContainer: {
+  consecutiveFormContainer: {
     gap: 4,
   },
   bottomContainer: {
