@@ -74,7 +74,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       await localLogin(email, password);
-      queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
       router.replace('/');
     } catch (err: any) {
       console.error('로그인 실패:', err);
