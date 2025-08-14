@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
-import BannerImage1 from '../../assets/images/banner.svg';
+import BannerImage1 from '../../assets/images/bannerex.svg';
 import colors from '../../design/colors';
 
 const styles = StyleSheet.create({
