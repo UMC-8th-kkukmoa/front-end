@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
+import logout from '../../api/logout';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +44,7 @@ function SectionHeader({ title }: { title: string }) {
   return <Text style={styles.header}>{title}</Text>;
 }
 
-function SectionLabel({ label, onClick }: { label: string; onClick: () => void }) {
+function SectionLabel({ label, onClick }: { label: string; onClick: () => void | Promise<void> }) {
   return (
     <TouchableOpacity onPress={onClick}>
       <View style={styles.label}>
@@ -65,6 +67,24 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function MyPageScreen() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+      router.replace('/auth/LoginChoiceScreen');
+    } catch (error) {
+      console.error('로그아웃 중 에러:', error);
+    } finally {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+      router.replace('/auth/LoginChoiceScreen');
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <View>
@@ -79,8 +99,8 @@ export default function MyPageScreen() {
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel label="사장님 로그인 (회원가입)" onClick={() => {}} />
-          <SectionLabel label="로그아웃" onClick={() => {}} />
+          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
+          <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </View>
     </View>

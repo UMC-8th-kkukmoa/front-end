@@ -4,23 +4,41 @@ import colors from '../../../design/colors';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.light.white,
   },
 
-  // 스토어 사진
-  storeImageArea: {
-    height: 221,
-    backgroundColor: colors.light.gray1_35,
+  header: {
+    paddingHorizontal: 28,
+    backgroundColor: colors.light.white,
+    paddingVertical: 16,
   },
 
   backButton: {
-    position: 'absolute',
-    padding: 8,
-    left: 16,
-    zIndex: 10,
+    width: 24, // 상단 헤더 전체가 눌리기에 하드코딩으로 제어
+    justifyContent: 'center',
+  },
+  // 스토어 사진
+  storeImageArea: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 170,
+    backgroundColor: colors.light.gray1_35,
+  },
+  storeImage: {
+    width: '100%',
+    height: '100%',
   },
 
   infoArea: {
     flex: 1,
+  },
+
+  // 그림자
+  bottomShadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 20,
   },
 
   // 스토어 정보
@@ -30,7 +48,7 @@ export default StyleSheet.create({
     borderBottomColor: colors.light.gray1,
   },
   titleSection: {
-    marginBottom: 45,
+    marginBottom: 43,
   },
   headerRow: {
     flexDirection: 'row',
@@ -40,7 +58,6 @@ export default StyleSheet.create({
   },
   storeName: {
     fontSize: 22,
-    fontWeight: '700',
     fontFamily: 'Pretendard-Bold',
     minWidth: 260,
   },
@@ -67,7 +84,6 @@ export default StyleSheet.create({
   },
   detailText: {
     color: colors.light.black,
-    fontWeight: '400',
     fontFamily: 'Pretendard-Regular',
     fontSize: 13,
   },
@@ -81,14 +97,13 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 26,
   },
   reviewTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
     fontFamily: 'Pretendard-Bold',
   },
-  buttonWapper: {
+  buttonWrapper: {
     alignItems: 'center',
     paddingHorizontal: 11,
     paddingVertical: 3,
@@ -98,6 +113,6 @@ export default StyleSheet.create({
   seeAllButton: {
     fontSize: 9,
     color: colors.light.white,
-    fontWeight: '500',
+    fontFamily: 'Pretendard-Regular',
   },
 });

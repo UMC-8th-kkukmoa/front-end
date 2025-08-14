@@ -1,43 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StatusBar,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query';
+import { LinearGradient } from 'expo-linear-gradient';
+import { getStoreDetail } from '../../../api/store';
+import { getReviewPreviews, getReviewCount } from '../../../api/review';
+import type { StoreDetail } from '../../../types/store';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
 import BackArrow from '../../../assets/images/arrow_back.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
 import colors from '../../../design/colors';
-
-// 가게 정보 더미데이터
-const mockStores = [
-  {
-    id: '8',
-    name: '스토리팩토리건대점',
-    imageUrl: 'https://picsum.photos/200/140?1',
-    category: '교육',
-    time: '오전 10시 ~ 오후 9시',
-    reviewCount: 27,
-    isLiked: false,
-  },
-];
-
-// 리뷰 더미데이터
-const mockReviews = [
-  {
-    id: '1',
-    name: '미딩',
-    content: '정말 맛있습니다! 또 올 것 같아요.',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
-  },
-  { id: '2', name: '미딩', content: '매장이 깔끔하고 친절했어요.' },
-  {
-    id: '3',
-    name: '미딩',
-    content: '음료도 맛있고 분위기도 굿!',
-    image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-  },
-];
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
@@ -48,43 +31,115 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ItemSeparator() {
-  return <View style={{ width: 25 }} />;
-}
+const ItemSeparator = React.memo(() => <View style={{ width: 25 }} />);
 
 function StoreDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { id } = useLocalSearchParams();
+  const [headerH, setHeaderH] = React.useState(0);
+  const [HeaderS, setHeaderS] = React.useState(0);
 
-  const store = mockStores.find((s) => s.id === id);
+  const { id, from: rawFrom } = useLocalSearchParams<{ id?: string; from?: string | string[] }>();
+  const from = Array.isArray(rawFrom) ? rawFrom[0] : rawFrom;
+  const storeId = id;
+  const [isLiked, setIsLiked] = useState(false); // 찜 상태 API 연동 시 교체
 
-  const [isLiked, setIsLiked] = useState(store?.isLiked || false);
+  // 상세 데이터 패칭
+  const {
+    data: store,
+    isPending,
+    isError,
+  } = useQuery<StoreDetail>({
+    queryKey: ['storeDetail', storeId],
+    queryFn: () => getStoreDetail(storeId as string),
+    enabled: !!storeId,
+    retry: 0,
+    staleTime: 60_000,
+  });
 
-  // 가게 정보 없을때 임시 화면
-  if (!store) {
-    return <Text>가게 정보를 불러올 수 없습니다.</Text>;
+  // 리뷰 데이터 패칭
+  const { data: previewCards } = useQuery({
+    queryKey: ['reviewPreviews', storeId, 4],
+    queryFn: () => getReviewPreviews(storeId!, 4),
+    enabled: Boolean(storeId),
+    staleTime: 30_000,
+    select: (list: any[]) =>
+      list.map((r) => ({
+        id: String(r.reviewId),
+        name: r.writerNickname ?? '익명',
+        content: r.contentSnippet,
+        image: r.thumbnailUrl ?? undefined,
+      })),
+  });
+
+  // 리뷰 개수 데이터 패칭
+  const { data: reviewCount, isLoading: isCountLoading } = useQuery({
+    queryKey: ['storeReviewCount', storeId],
+    queryFn: () => getReviewCount(storeId!),
+    enabled: Boolean(storeId),
+    staleTime: 60_000,
+  });
+
+  if (isPending) {
+    return (
+      <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.light.main} />
+        <Text style={{ marginTop: 8, color: colors.light.gray2 }}>가게 정보를 불러오는 중...</Text>
+      </SafeAreaView>
+    );
   }
 
+  if (isError || !store) {
+    return (
+      <SafeAreaView style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <Text style={{ color: colors.light.gray2 }}>가게 정보를 불러올 수 없습니다.</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const reviewCountToShow =
+    typeof reviewCount === 'number' ? reviewCount : (store.reviewCount ?? 0);
+
+  const handleBack = () => {
+    if (from === 'stores') router.replace(`/(tabs)/${from}`);
+    else router.back();
+  };
+
   const details = [
-    { label: '카테고리', value: store.category },
-    { label: '매장번호', value: '3203430500' },
-    { label: '가게위치', value: '경기도 용인시 기흥구 신갈로 149' },
-    { label: '운영시간', value: store.time },
+    { label: '카테고리', value: store.categoryName },
+    { label: '매장번호', value: store.merchantNumber || '-' },
+    { label: '가게위치', value: `${store.address} ${store.detailAddress ?? ''}`.trim() },
+    { label: '운영시간', value: `${store.openingHours} ~ ${store.closingHours}` },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <TouchableOpacity
-        style={[styles.backButton, { top: insets.top + 12 }]}
-        onPress={() => router.replace('/(tabs)/stores')}
-      >
-        <BackArrow width={24} height={24} color={colors.light.black} />
-      </TouchableOpacity>
-
-      <View style={styles.storeImageArea} />
+      <View style={[styles.header]} onLayout={(e) => setHeaderH(e.nativeEvent.layout.height)}>
+        <TouchableOpacity style={[styles.backButton]} onPress={handleBack}>
+          <BackArrow width={24} height={24} />
+        </TouchableOpacity>
+      </View>
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.4 }}
+        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+        style={[styles.bottomShadow, { top: headerH + insets.top }]}
+      />
+      <View style={styles.storeImageArea} onLayout={(e) => setHeaderS(e.nativeEvent.layout.height)}>
+        {store.storeImage ? (
+          <Image source={{ uri: store.storeImage }} style={styles.storeImage} resizeMode="cover" />
+        ) : (
+          <Text style={{ color: colors.light.gray2 }}>이미지가 없습니다.</Text>
+        )}
+      </View>
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.4 }}
+        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+        style={[styles.bottomShadow, { top: headerH + HeaderS + insets.top }]}
+      />
 
       <View style={styles.storeInfo}>
         <View style={styles.titleSection}>
@@ -101,7 +156,9 @@ function StoreDetailScreen() {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.reviewCount}>(리뷰 {store.reviewCount}개)</Text>
+          <Text style={styles.reviewCount}>
+            (리뷰 {isCountLoading ? '...' : reviewCountToShow}개)
+          </Text>
         </View>
         <View style={styles.detailSection}>
           {details.map((item) => (
@@ -114,20 +171,29 @@ function StoreDetailScreen() {
       <View style={styles.reviewSection}>
         <View style={styles.reviewHeader}>
           <Text style={styles.reviewTitle}>리뷰</Text>
-          <TouchableOpacity style={styles.buttonWapper}>
+          <TouchableOpacity
+            style={styles.buttonWrapper}
+            onPress={() => router.push(`/store/${store.storeId}/reviews`)}
+          >
             <Text style={styles.seeAllButton}>전체보기</Text>
           </TouchableOpacity>
         </View>
 
-        <FlatList
-          data={mockReviews}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <ReviewCard review={item} />}
-          contentContainerStyle={{ paddingHorizontal: 30 }}
-          ItemSeparatorComponent={ItemSeparator}
-        />
+        {!previewCards?.length ? (
+          <View style={{ alignItems: 'center', paddingVertical: 50 }}>
+            <Text style={{ color: colors.light.gray2 }}>아직 리뷰가 없어요.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={previewCards}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <ReviewCard review={item} />}
+            contentContainerStyle={{ paddingHorizontal: 30 }}
+            ItemSeparatorComponent={ItemSeparator}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

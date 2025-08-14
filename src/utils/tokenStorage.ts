@@ -1,6 +1,6 @@
 import * as Keychain from 'react-native-keychain';
 
-const saveTokens = async (accessToken: string, refreshToken: string) => {
+export const saveTokens = async (accessToken: string, refreshToken: string) => {
   try {
     await Keychain.setGenericPassword('accessToken', accessToken, {
       service: 'com.kkukmoa.accessToken',
@@ -14,4 +14,22 @@ const saveTokens = async (accessToken: string, refreshToken: string) => {
   }
 };
 
-export default saveTokens;
+export const getAccessToken = async (): Promise<string | null> => {
+  try {
+    const creds = await Keychain.getGenericPassword({ service: 'com.kkukmoa.accessToken' });
+    return creds ? creds.password : null;
+  } catch (error) {
+    console.error('Failed to get access token:', error);
+    return null;
+  }
+};
+
+export const getRefreshToken = async (): Promise<string | null> => {
+  try {
+    const creds = await Keychain.getGenericPassword({ service: 'com.kkukmoa.refreshToken' });
+    return creds ? creds.password : null;
+  } catch (error) {
+    console.error('Failed to get refresh token:', error);
+    return null;
+  }
+};

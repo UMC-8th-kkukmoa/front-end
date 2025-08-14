@@ -1,20 +1,21 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TokenResponse } from '../types/kakao';
-import saveTokens from '../utils/tokenStorage';
+import useAuthStore from '../store/useAuthStore';
+import { saveTokens } from '../utils/tokenStorage';
 
 const KAKAO_LOGIN_URL = process.env.EXPO_PUBLIC_KAKAO_LOGIN_URL;
-if (!KAKAO_LOGIN_URL) throw new Error('EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
+if (!KAKAO_LOGIN_URL) throw new Error('[KakaoLogin] EXPO_PUBLIC_KAKAO_LOGIN_URL is not defined.');
 
 function timeout(ms: number): Promise<never> {
   return new Promise((_, reject) => {
-    setTimeout(() => {
-      reject(new Error('TIMEOUT'));
-    }, ms);
+    setTimeout(() => reject(new Error('TIMEOUT')), ms);
   });
 }
 
-const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
+const handleKakaoLogin = async (): Promise<(TokenResponse & { roles: string[] }) | null> => {
   try {
     const redirectUrl = Linking.createURL('oauth');
     const loginUrl = `${KAKAO_LOGIN_URL}?redirect_uri=${encodeURIComponent(redirectUrl)}&mobile=true`;
@@ -29,54 +30,33 @@ const handleKakaoLogin = async (): Promise<TokenResponse | null> => {
     if (result.type !== 'success' || !result.url) return null;
 
     const url = new URL(result.url);
-    const encodedToken = url.searchParams.get('token');
-    const error = url.searchParams.get('error');
-    if (error || !encodedToken) return null;
+    const exchangeCode = url.searchParams.get('code');
+    if (!exchangeCode) return null;
 
-    let tokenData;
-    // 토큰 디코딩
-    try {
-      // JWT인 경우
-      if (encodedToken.includes('.')) {
-        const payload = encodedToken.split('.')[1];
-        const decodedPayload = Buffer.from(
-          payload.replace(/-/g, '+').replace(/_/g, '/'),
-          'base64',
-        ).toString();
-        const jwtData = JSON.parse(decodedPayload);
-        tokenData = {
-          accessToken: encodedToken,
-          refreshToken: encodedToken,
-          userId: jwtData.sub || jwtData.user_id,
-          email: jwtData.email || jwtData.sub,
-          newUser: false,
-        };
-      } else {
-        // Base64로 인코딩된 JSON인 경우
-        const decodedString = Buffer.from(encodedToken, 'base64').toString();
-        tokenData = JSON.parse(decodedString);
-      }
-    } catch {
-      // 디코딩 실패 시 원본 토큰 사용
-      tokenData = {
-        accessToken: encodedToken,
-        refreshToken: encodedToken,
-        userId: null,
-        email: null,
-        newUser: false,
-      };
-    }
+    const response = await axios.post(
+      `${process.env.EXPO_PUBLIC_BASE_URL}/v1/users/exchange?code=${encodeURIComponent(exchangeCode)}`,
+      null,
+      { headers: { 'Content-Type': 'application/json' } },
+    );
 
-    const { accessToken, refreshToken, userId, email, newUser } = tokenData;
-    if (!accessToken) return null;
+    const { id, email, newUser, roles, tokenResponseDto } = response.data.result ?? {};
 
-    await saveTokens(accessToken, refreshToken || accessToken);
+    if (!tokenResponseDto?.accessToken || !tokenResponseDto?.refreshToken) return null;
+
+    // 토큰 저장
+    await saveTokens(tokenResponseDto.accessToken, tokenResponseDto.refreshToken);
+
+    // roles 저장
+    const rolesFromBackend = roles ?? [];
+    await AsyncStorage.removeItem('roles'); // 기존 값 삭제
+    useAuthStore.getState().setRoles(rolesFromBackend);
 
     return {
-      id: userId ? parseInt(userId, 10) : 0,
-      tokenResponseDto: { accessToken, refreshToken: refreshToken || accessToken },
-      email: email || '',
-      newUser: Boolean(newUser),
+      id: id ?? 0,
+      tokenResponseDto,
+      email: email ?? '',
+      newUser: newUser ?? false,
+      roles: roles ?? [],
     };
   } catch (error) {
     if (error instanceof Error) {

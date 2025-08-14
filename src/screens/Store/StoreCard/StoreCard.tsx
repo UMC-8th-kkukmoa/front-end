@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { getReviewCount } from '../../../api/review';
 import styles from './StoreCard.style';
 import Arrow from '../../../assets/images/arrow.svg';
 import Like from '../../../assets/images/like.svg';
@@ -18,36 +19,43 @@ const categoryIconMap: Record<string, React.FC<any>> = {
   음식점: FoodIcon,
   '운동/건강': ExerciseIcon,
   교육: EducationIcon,
-  미용: SalonIcon,
+  미용실: SalonIcon,
 };
 
 type Props = {
   item: {
-    id: string;
+    storeId: string;
     name: string;
     imageUrl: string;
-    category: string;
+    categoryName: string;
     distance: string;
     time: string;
-    reviewCount: number;
     bookmarkCount: number;
   };
   isLiked: boolean;
-  onToggleLike: (id: string) => void;
+  onToggleLike: (storeId: string) => void;
+  onPress?: (storeId: string) => void;
 };
 
-function StoreCard({ item, isLiked, onToggleLike }: Props) {
-  const router = useRouter();
-  const CategoryIcon = categoryIconMap[item.category];
+function StoreCard({ item, isLiked, onToggleLike, onPress }: Props) {
+  const IconComponent = categoryIconMap[item.categoryName];
+
+  const { data: reviewCount, isLoading } = useQuery({
+    queryKey: ['reviewCount', item.storeId],
+    queryFn: () => getReviewCount(item.storeId),
+    enabled: !!item.storeId,
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => router.push(`/store/${item.id}`)}>
+    <TouchableOpacity style={styles.card} onPress={() => onPress?.(item.storeId)}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
-      {CategoryIcon && (
+      {IconComponent && (
         <View style={styles.categoryBadge}>
-          <CategoryIcon width={12} height={12} color={colors.light.sub} />
-          <Text style={styles.categoryLabel}>{item.category}</Text>
+          <IconComponent width={12} height={12} color={colors.light.sub} />
+          <Text style={styles.categoryLabel}>{item.categoryName}</Text>
         </View>
       )}
 
@@ -60,10 +68,10 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
 
           <View style={styles.footer}>
             <View style={styles.tag}>
-              <Text style={styles.tagText}>리뷰 {item.reviewCount}</Text>
+              <Text style={styles.tagText}>리뷰 {isLoading ? '0' : (reviewCount ?? 0)}</Text>
             </View>
             <View style={styles.tag}>
-              <Text style={styles.tagText}>찜 {item.bookmarkCount}</Text>
+              <Text style={styles.tagText}>찜 {item.bookmarkCount ?? 0}</Text>
             </View>
             <Arrow style={{ marginLeft: 6 }} />
           </View>
@@ -73,7 +81,7 @@ function StoreCard({ item, isLiked, onToggleLike }: Props) {
           style={styles.heart}
           onPress={(e) => {
             e.stopPropagation?.();
-            onToggleLike(item.id);
+            onToggleLike(item.storeId);
           }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >

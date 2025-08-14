@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import handleKakaoLogin from '../../api/kakaoLogin';
-// import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +60,7 @@ export default function LoginChoiceScreen() {
 
   const handleKakaoLoginPress = async () => {
     const result = await handleKakaoLogin();
+    console.log('💡 로그인 직후 result:', result);
     if (result !== null) {
       // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
       // noinspection ES6MissingAwait

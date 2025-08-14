@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   buttonTextStyles: {
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: 'Pretendard-Bold',
   },
   variantPrimary: {
     backgroundColor: colors.light.main,

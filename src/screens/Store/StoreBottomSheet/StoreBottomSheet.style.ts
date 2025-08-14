@@ -6,9 +6,8 @@ export default StyleSheet.create({
   listContentContainer: {
     paddingHorizontal: 16,
     paddingTop: 7,
-    paddingBottom: 150,
+    paddingBottom: 200,
   },
-
   // 리스트 없을때
   emptyWrapper: {
     flex: 1,
@@ -18,7 +17,6 @@ export default StyleSheet.create({
 
   emptyText: {
     fontFamily: 'Pretendard-Bold',
-    fontWeight: 700,
     fontSize: 14,
     color: colors.light.gray2,
   },
@@ -61,13 +59,12 @@ export default StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
     fontSize: 14,
     color: colors.light.gray2,
-    fontWeight: '700',
   },
 
   // 지도보기 버튼
   mapButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 50,
     alignSelf: 'center',
     zIndex: 100,
     shadowColor: colors.light.shadow,
