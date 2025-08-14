@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -91,18 +91,6 @@ function Store() {
       addressText = address ?? '주소 미확인';
     }
   }
-
-  // 앱 → 지도: 선택 변화 시 하이라이트/해제 알림
-  useEffect(() => {
-    if (!mapRef.current) return;
-    if (selectedId) {
-      mapRef.current.postMessage(
-        JSON.stringify({ type: 'HIGHLIGHT_MARKER', payload: { id: selectedId } }),
-      );
-    } else {
-      mapRef.current.postMessage(JSON.stringify({ type: 'CLEAR_SELECTION' }));
-    }
-  }, [selectedId]);
 
   return (
     <View style={styles.container}>
