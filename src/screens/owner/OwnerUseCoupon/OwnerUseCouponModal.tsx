@@ -65,7 +65,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function OwnerUseCouponModal() {
+interface OwnerUseCouponModalProps {
+  visible: boolean;
+  message: string;
+  qrUuid: string;
+  onClose: () => void;
+  navigationPath?: string;
+}
+
+export default function OwnerUseCouponModal({
+  visible,
+  message,
+  qrUuid,
+  onClose,
+  navigationPath,
+}: OwnerUseCouponModalProps) {
   const router = useRouter();
 
   const handleConfirm = async () => {
@@ -76,18 +90,15 @@ export default function OwnerUseCouponModal() {
 
       if (!credentials) {
         Alert.alert('알림', '로그인이 필요합니다.');
-        setScanned(false);
         return;
       }
 
       const token = credentials.password;
-
       const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
 
-      // PATCH 요청
       const response = await axios.patch(
         `${API_BASE_URL}/v1/owners/use/coupons/${qrUuid}`,
-        {}, // PATCH body가 필요 없으면 빈 객체
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -101,7 +112,7 @@ export default function OwnerUseCouponModal() {
         if (navigationPath) {
           router.push(navigationPath);
         }
-        if (onClose) onClose();
+        onClose();
       } else {
         Alert.alert('실패', response.data.message || '쿠폰 사용에 실패했습니다.');
       }
