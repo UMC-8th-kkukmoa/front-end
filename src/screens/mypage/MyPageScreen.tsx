@@ -94,12 +94,17 @@ export default function MyPageScreen() {
         <Section title="이용 내역">
           <SectionLabel label="내 스탬프" onClick={() => router.push('/stamp/StampList')} />
           <SectionLabel label="내 쿠폰" onClick={() => router.push('/myCoupon/MyCouponList')} />
-          <SectionLabel label="내 금액권" onClick={() => {}} />
+          <SectionLabel
+            label="내 금액권"
+            onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
+          />
+          <SectionLabel label="결제 내역" onClick={() => {}} />
+          <SectionLabel label="받은 선물함" onClick={() => {}} />
         </Section>
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel label="사장님 로그인 (회원가입)" onClick={() => {}} />
+          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </View>

@@ -38,7 +38,6 @@ export type StoreListItem = {
   openingHours: string;
   closingHours: string;
   categoryName: string;
-  reviewCount: number;
 };
 
 export type StoreListPage = {

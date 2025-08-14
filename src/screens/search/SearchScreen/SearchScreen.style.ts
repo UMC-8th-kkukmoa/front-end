@@ -16,7 +16,7 @@ export default StyleSheet.create({
     zIndex: 1,
   },
   backButton: {
-    paddingLeft: 20,
+    paddingLeft: 16,
     paddingRight: 16.5,
   },
   searchWrapper: {
@@ -42,8 +42,48 @@ export default StyleSheet.create({
   body: {
     flex: 1,
   },
-
   bottomShadow: {
     height: 20,
+  },
+  emptyResultContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  emptyResultText: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
+    color: colors.light.gray2,
+  },
+  errorContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  errorText: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
+    color: colors.light.gray2,
+  },
+  flatList: {
+    paddingVertical: 7,
+    paddingHorizontal: 16,
+  },
+  searchListItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    gap: 9,
+  },
+  searchListItemText: {
+    fontSize: 16,
+  },
+  highlightText: {
+    color: '#E17B43',
+  },
+  searchIconMargin: {
+    marginRight: 8,
+  },
+  iconButtonMargin: {
+    margin: 5,
   },
 });

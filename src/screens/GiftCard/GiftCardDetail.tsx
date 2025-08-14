@@ -72,43 +72,44 @@ export default function GiftCardDetailScreen() {
       <SafeAreaView style={styles.container} edges={['top']}>
         {/* eslint-disable-next-line react/style-prop-object */}
         <StatusBar style="dark" />
-        <View style={styles.headerContainer}>
-          <Header title="금액권 구매" onBackPress={() => router.back()} shadow={false} />
+        <View style={styles.container}>
+          <Header title="금액권 구매" onBackPress={() => router.back()} />
+
+          <ScrollView
+            style={styles.content}
+            contentContainerStyle={[styles.contentContainer, { paddingBottom: 120 }]}
+          >
+            <Image source={image} style={{ width: 234, height: 140, resizeMode: 'contain' }} />
+
+            <View style={styles.cardRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.price}>{price}</Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.shareIcon}
+                accessibilityRole="button"
+                accessibilityLabel="공유하기"
+              >
+                <ShareIcon />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.detailBox}>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailTitle}>유효기간</Text>
+                <Text style={styles.detailText}>구매일로부터 1년</Text>
+              </View>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailTitle}>사용조건</Text>
+                <Text style={styles.detailText}>꾹모아 가맹점에서 상품 결제 시 사용</Text>
+              </View>
+            </View>
+          </ScrollView>
         </View>
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={[styles.contentContainer, { paddingBottom: 120 }]}
-        >
-          <Image source={image} style={{ width: 234, height: 140, resizeMode: 'contain' }} />
-
-          <View style={styles.cardRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.price}>{price}</Text>
-            </View>
-
-            <TouchableOpacity
-              style={styles.shareIcon}
-              accessibilityRole="button"
-              accessibilityLabel="공유하기"
-            >
-              <ShareIcon />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.detailBox}>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailTitle}>유효기간</Text>
-              <Text style={styles.detailText}>구매일로부터 1년</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailTitle}>사용조건</Text>
-              <Text style={styles.detailText}>꾹모아 가맹점에서 상품 결제 시 사용</Text>
-            </View>
-          </View>
-        </ScrollView>
         <View style={styles.footer}>
           <TouchableOpacity style={styles.purchaseButton} onPress={toggleModal}>
             <Text style={styles.purchaseButtonText}>구매하기</Text>
