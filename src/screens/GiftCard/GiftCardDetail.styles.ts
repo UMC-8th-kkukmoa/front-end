@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
-    paddingBottom: 100,
+    overflow: 'hidden',
   },
   headerContainer: {
     backgroundColor: colors.light.white,
