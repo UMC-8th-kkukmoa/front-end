@@ -11,7 +11,7 @@
     "prepare": "npx husky install"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^5.1.6",
+    "@gorhom/bottom-sheet": "^5.1.8",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.1",
     "@tanstack/react-query": "^5.83.0",
@@ -42,6 +42,7 @@
     "react-native-keychain": "^10.0.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-modal-datetime-picker": "^18.0.0",
+    "react-native-qrcode-svg": "^6.3.15",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.11.1",
@@ -50,7 +51,8 @@
     "react-native-vector-icons": "^10.3.0",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

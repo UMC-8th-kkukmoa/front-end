@@ -41,7 +41,7 @@ export default StyleSheet.create({
   searchRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 23,
     marginTop: 10,
   },
   buttonGroup: {
