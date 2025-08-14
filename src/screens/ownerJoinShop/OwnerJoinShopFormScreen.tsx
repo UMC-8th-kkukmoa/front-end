@@ -31,6 +31,49 @@ export default function OwnerJoinShopFormScreen() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState(false);
 
+  const formatAndCoerceTime = (text: string): string => {
+    const digitsOnly = text.replace(/\D/g, '');
+    const upTo6Digits = digitsOnly.slice(0, 6);
+
+    let hoursStr = upTo6Digits.slice(0, 2);
+    let minutesStr = upTo6Digits.slice(2, 4);
+    let secondsStr = upTo6Digits.slice(4, 6);
+
+    if (hoursStr.length === 2) {
+      const hours = parseInt(hoursStr, 10);
+      if (hours > 23) {
+        hoursStr = '23';
+      }
+    }
+
+    if (minutesStr.length === 2) {
+      const minutes = parseInt(minutesStr, 10);
+      if (minutes > 59) {
+        minutesStr = '59';
+      }
+    }
+
+    if (secondsStr.length === 2) {
+      const seconds = parseInt(secondsStr, 10);
+      if (seconds > 59) {
+        secondsStr = '59';
+      }
+    }
+
+    const coercedDigits = hoursStr + minutesStr + secondsStr;
+
+    if (coercedDigits.length > 4) {
+      return `${coercedDigits.slice(0, 2)}:${coercedDigits.slice(
+        2,
+        4,
+      )}:${coercedDigits.slice(4, 6)}`;
+    }
+    if (coercedDigits.length > 2) {
+      return `${coercedDigits.slice(0, 2)}:${coercedDigits.slice(2, 4)}`;
+    }
+    return coercedDigits;
+  };
+
   const applyMutation = useMutation({
     mutationFn: applyForStore,
     onSuccess: () => {
@@ -178,9 +221,9 @@ export default function OwnerJoinShopFormScreen() {
 
               <KkTextbox
                 label="영업시간"
-                placeholder="여는 시간 (예: 09:00)"
+                placeholder="여는 시간 (예: 09:00:00)"
                 value={openingHours}
-                onChangeText={setOpeningHours}
+                onChangeText={(text) => setOpeningHours(formatAndCoerceTime(text))}
                 size="large"
                 variant="secondary"
                 type="text"
@@ -190,9 +233,9 @@ export default function OwnerJoinShopFormScreen() {
               />
               <KkTextbox
                 label=""
-                placeholder="닫는 시간 (예: 22:00)"
+                placeholder="닫는 시간 (예: 22:00:00)"
                 value={closingHours}
-                onChangeText={setClosingHours}
+                onChangeText={(text) => setClosingHours(formatAndCoerceTime(text))}
                 size="large"
                 variant="secondary"
                 type="text"

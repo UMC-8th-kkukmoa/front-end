@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
-  TextInput,
-  View,
-  Text,
-  StyleSheet,
+  KeyboardTypeOptions,
   StyleProp,
-  ViewStyle,
+  StyleSheet,
+  Text,
+  TextInput,
   TextInputProps,
   TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
@@ -15,7 +16,7 @@ import colors from '../colors';
 
 export type TextboxVariant = 'primary' | 'secondary';
 type Size = 'large' | 'small';
-type InputType = 'text' | 'email' | 'password' | 'date';
+type InputType = 'text' | 'email' | 'password' | 'date' | 'number';
 
 interface TextboxProps extends Omit<TextInputProps, 'secureTextEntry'> {
   style?: StyleProp<ViewStyle>;
@@ -189,6 +190,17 @@ export default function KkTextbox({
     return null;
   };
 
+  function getKeyboardType(): KeyboardTypeOptions {
+    switch (type) {
+      case 'email':
+        return 'email-address';
+      case 'number':
+        return 'number-pad';
+      default:
+        return 'default';
+    }
+  }
+
   return (
     <View style={style}>
       {label && (
@@ -211,7 +223,7 @@ export default function KkTextbox({
           style={[styles.input, { color: getColor('text') }]}
           editable={isInputEditable}
           secureTextEntry={isPassword && !showPassword}
-          keyboardType={type === 'email' ? 'email-address' : 'default'}
+          keyboardType={getKeyboardType()}
           value={displayValue}
           onChangeText={onChangeText}
           pointerEvents={isDate ? 'none' : 'auto'}
