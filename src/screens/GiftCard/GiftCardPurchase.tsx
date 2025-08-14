@@ -8,6 +8,7 @@ import * as Keychain from 'react-native-keychain';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import PaymentModal from '../../design/component/PaymentModal';
+import KkCompleteModal from '../../design/component/KkCompleteModal';
 
 import giftcard1 from '../../assets/images/giftcard1.png';
 import giftcard3 from '../../assets/images/giftcard3.png';
@@ -26,6 +27,7 @@ function GiftCardPurchase() {
   const [isPayMethodSelected, setIsPayMethodSelected] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const priceStr = Array.isArray(price) ? price[0] : price;
   const quantityStr = Array.isArray(quantity) ? quantity[0] : quantity;
@@ -59,7 +61,6 @@ function GiftCardPurchase() {
       }
 
       const token = credentials.password;
-      console.log('토큰:', token);
 
       const response = await fetch(`${API_BASE_URL}/v1/payments/prepare`, {
         method: 'POST',
@@ -68,7 +69,7 @@ function GiftCardPurchase() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          orderName: `${title} ${quantityNumber}개`,
+          orderName: `${title}`,
           amount: total,
           voucherUnitPrice: numericPrice,
           voucherQuantity: quantityNumber,
@@ -128,9 +129,7 @@ function GiftCardPurchase() {
       const result = await response.json();
 
       if (result.isSuccess) {
-        Alert.alert('결제 완료', '기프트카드 구매가 완료되었습니다.', [
-          { text: '확인', onPress: () => router.back() },
-        ]);
+        setShowModal(true); // 모달 표시
       } else {
         Alert.alert('오류', '결제 승인 중 오류가 발생했습니다.');
       }
@@ -235,6 +234,13 @@ function GiftCardPurchase() {
           onPaymentSuccess={confirmPayment}
         />
       )}
+
+      <KkCompleteModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        navigationPath="/giftCard/GiftCardList"
+        message="결제가 완료되었습니다."
+      />
     </SafeAreaView>
   );
 }
