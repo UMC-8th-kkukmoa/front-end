@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useMutation } from '@tanstack/react-query';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
@@ -29,6 +24,7 @@ function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void 
 }
 
 export default function OwnerJoinShopScreen() {
+  const router = useRouter();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -59,7 +55,7 @@ export default function OwnerJoinShopScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Header title="입점 신청하기" onBackPress={() => {}} shadow={false} />
+      <Header title="입점 신청하기" onBackPress={router.back} shadow={false} />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.content}>

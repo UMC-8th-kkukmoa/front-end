@@ -222,7 +222,7 @@ export default function OwnerJoinShopFormScreen() {
                   type={latitude && longitude ? 'secondary' : 'secondary'}
                   size="large"
                   onPress={() => {
-                    router.push('/owner/pickLocation');
+                    router.push('/owner/PickLocation');
                   }}
                   shadow
                   style={styles.mapButton}

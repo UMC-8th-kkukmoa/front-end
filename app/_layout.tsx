@@ -31,7 +31,7 @@ function AppLayout() {
         <Stack.Screen name="store/search" />
         <Stack.Screen name="store/[id]/reviews" />
         <Stack.Screen name="store/pickLocation" />
-        <Stack.Screen name="owner/pickLocation" />
+        <Stack.Screen name="owner/PickLocation" />
         <Stack.Screen name="owner/OwnerJoinShopFormScreen" />
       </Stack.Protected>
 
