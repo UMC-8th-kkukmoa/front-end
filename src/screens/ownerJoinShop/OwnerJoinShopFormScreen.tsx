@@ -10,7 +10,7 @@ import { KkButton } from '../../design/component/KkButton';
 import styles from './OwnerJoinShopFormScreen.style';
 import { uploadImage } from '../../api/images';
 import { applyForStore } from '../../api/owner';
-import { useOwnerJoinStore } from '../../store/useOwnerJoinStore';
+import useOwnerJoinStore from '../../store/useOwnerJoinStore';
 
 export default function OwnerJoinShopFormScreen() {
   const router = useRouter();

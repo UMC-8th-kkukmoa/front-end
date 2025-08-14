@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Image, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
 import { KkButton } from '../../design/component/KkButton';
 import KkTextbox from '../../design/component/KkTextbox';
 import styles from './OwnerAuthScreen.style';
+import { ownerLogin } from '../../api/owner';
+import { saveTokens } from '../../utils/tokenStorage';
+import setAccessToken from '../../api/client';
 
 const logoImage = require('../../assets/images/logo/LogoText2.png');
 
 export default function OwnerAuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const loginMutation = useMutation({
+    mutationFn: ownerLogin,
+    onSuccess: async (data) => {
+      const { accessToken, refreshToken } = data.result;
+      await saveTokens(accessToken, refreshToken);
+      setAccessToken(accessToken);
+      router.replace('/owner/Dashboard');
+    },
+    onError: (error) => {
+      // TODO
+      console.error('Failed to login', error);
+    },
+  });
+
+  const isLoginDisabled = useMemo(() => {
+    return !email || !password;
+  }, [email, password]);
 
   return (
     <View style={styles.container}>
@@ -46,10 +70,10 @@ export default function OwnerAuthScreen() {
       <View style={styles.buttonContainer}>
         <KkButton
           label="로그인"
-          type="disabled"
+          type={isLoginDisabled ? 'disabled' : 'primary'}
           size="large"
           onPress={() => {
-            // TODO: 로그인
+            loginMutation.mutate({ email, password });
           }}
           style={styles.loginButton}
           shadow
@@ -61,7 +85,7 @@ export default function OwnerAuthScreen() {
             type="secondary"
             size="large"
             onPress={() => {
-              // TODO: 입점 신청하기
+              router.push('/owner/join');
             }}
             shadow
           />

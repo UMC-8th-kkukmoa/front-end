@@ -8,7 +8,7 @@ import KakaoMap from '../Store/KakaoMap/KakaoMap';
 import MapPinIcon from '../../assets/images/map-pin.svg';
 import styles from './StoreLocationSelectScreen.style';
 import { getAddressFromCoords } from '../../utils/location';
-import { useOwnerJoinStore } from '../../store/useOwnerJoinStore';
+import useOwnerJoinStore from '../../store/useOwnerJoinStore';
 
 export default function StoreLocationSelectScreen() {
   const router = useRouter();

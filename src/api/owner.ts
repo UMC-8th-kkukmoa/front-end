@@ -27,3 +27,16 @@ interface RegisterOwnerParams {
 export const registerOwner = (data: RegisterOwnerParams) => {
   return apiClient.post('/v1/owners/register', data);
 };
+
+interface OwnerLoginParams {
+  email: string;
+  password?: string;
+}
+
+export async function ownerLogin({ email, password }: OwnerLoginParams) {
+  const response = await apiClient.post('/v1/owners/login', {
+    email,
+    password,
+  });
+  return response.data;
+}
