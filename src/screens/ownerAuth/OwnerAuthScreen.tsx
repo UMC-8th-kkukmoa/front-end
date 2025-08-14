@@ -8,6 +8,7 @@ import styles from './OwnerAuthScreen.style';
 import { ownerLogin } from '../../api/owner';
 import { saveTokens } from '../../utils/tokenStorage';
 import setAccessToken from '../../api/client';
+import useAuthStore from '../../store/useAuthStore';
 
 const logoImage = require('../../assets/images/logo/LogoText2.png');
 
@@ -15,13 +16,17 @@ export default function OwnerAuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const setRoles = useAuthStore((state) => state.setRoles);
 
   const loginMutation = useMutation({
     mutationFn: ownerLogin,
     onSuccess: async (data) => {
-      const { accessToken, refreshToken } = data.result;
+      const { accessToken, refreshToken, roles } = data.result;
       await saveTokens(accessToken, refreshToken);
       setAccessToken(accessToken);
+      if (roles) {
+        setRoles(roles);
+      }
       router.replace('/owner/Dashboard');
     },
     onError: (error) => {
