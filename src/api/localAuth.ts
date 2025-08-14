@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import {
   LoginResponse,
   SignUpResponse,
@@ -9,9 +10,9 @@ import apiClient from './client';
 import { saveTokens } from '../utils/tokenStorage';
 
 const logApiError = (error: any, action: string) => {
-  if (error.response) {
-    console.error(`${action} 실패 status:`, error.response.status);
-    console.error(`${action} 실패 data:`, error.response.data);
+  if (isAxiosError(error)) {
+    console.error(`${action} 실패 status:`, error.response?.status);
+    console.error(`${action} 실패 data:`, error.response?.data);
   } else {
     console.error(`${action} 실패:`, error);
   }
