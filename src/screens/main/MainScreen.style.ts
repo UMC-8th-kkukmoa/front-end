@@ -41,7 +41,7 @@ export default StyleSheet.create({
   searchRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 23,
     marginTop: 10,
   },
   buttonGroup: {
@@ -93,5 +93,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingBottom: '50%',
     color: colors.light.main,
+  },
+  emptyWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 91,
+  },
+
+  emptyText: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 14,
+    color: colors.light.gray2,
   },
 });

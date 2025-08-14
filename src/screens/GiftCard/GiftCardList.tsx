@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+    overflow: 'hidden',
   },
   headerContainer: {
     backgroundColor: colors.light.white,
@@ -77,27 +78,31 @@ export default function GiftCardListScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container}>
       {/* eslint-disable-next-line react/style-prop-object */}
       <StatusBar style="dark" />
-      <View style={styles.headerContainer}>
-        <Header title="금액권 구매" onBackPress={() => router.back()} shadow={false} />
+      <View style={styles.container}>
+        <Header title="금액권 구매" onBackPress={() => router.back()} />
+
+        <ScrollView
+          contentContainerStyle={styles.gridContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {giftCards.map((item) => (
+            <Pressable
+              key={item.id}
+              style={styles.card}
+              onPress={() => router.push(`/giftCard/GiftCardDetail/${item.id}`)}
+            >
+              <Image source={item.image} style={styles.cardImage} />
+              <View style={styles.textContainer}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Text style={styles.cardPrice}>{item.price}</Text>
+              </View>
+            </Pressable>
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView contentContainerStyle={styles.gridContainer} showsVerticalScrollIndicator={false}>
-        {giftCards.map((item) => (
-          <Pressable
-            key={item.id}
-            style={styles.card}
-            onPress={() => router.push(`/giftCard/GiftCardDetail/${item.id}`)}
-          >
-            <Image source={item.image} style={styles.cardImage} />
-            <View style={styles.textContainer}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardPrice}>{item.price}</Text>
-            </View>
-          </Pressable>
-        ))}
-      </ScrollView>
     </SafeAreaView>
   );
 }
