@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import {
   KeyboardAvoidingView,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '../../design/component/Header';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
@@ -17,6 +18,13 @@ import { uploadImage } from '../../api/images';
 import { applyForStore } from '../../api/owner';
 
 export default function OwnerJoinShopFormScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{
+    latitude: string;
+    longitude: string;
+    address: string;
+  }>();
+
   const [storeName, setStoreName] = useState('');
   const [address, setAddress] = useState('');
   const [addressDetail, setAddressDetail] = useState('');
@@ -30,6 +38,16 @@ export default function OwnerJoinShopFormScreen() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState(false);
+
+  useEffect(() => {
+    if (params.latitude && params.longitude) {
+      setLatitude(parseFloat(params.latitude));
+      setLongitude(parseFloat(params.longitude));
+    }
+    if (params.address) {
+      setAddress(params.address);
+    }
+  }, [params]);
 
   const formatAndCoerceTime = (text: string): string => {
     const digitsOnly = text.replace(/\D/g, '');
@@ -210,9 +228,7 @@ export default function OwnerJoinShopFormScreen() {
                   type={latitude && longitude ? 'secondary' : 'secondary'}
                   size="large"
                   onPress={() => {
-                    // TODO: Navigate to map screen to select location
-                    setLatitude(37.4979);
-                    setLongitude(127.0276);
+                    router.push('/owner/pickLocation');
                   }}
                   shadow
                   style={styles.mapButton}
@@ -305,15 +321,15 @@ export default function OwnerJoinShopFormScreen() {
                 category
               ) {
                 applyMutation.mutate({
-                  storeName,
-                  storeAddress: address,
-                  storeAddressDetail: addressDetail,
+                  name: storeName,
+                  address,
+                  detailAddress: addressDetail,
                   latitude,
                   longitude,
                   openingHours,
                   closingHours,
-                  storePhoneNumber: contact,
-                  storeImageUrl: uploadedImageUrl,
+                  number: contact,
+                  storeImage: uploadedImageUrl,
                   category,
                 });
               }

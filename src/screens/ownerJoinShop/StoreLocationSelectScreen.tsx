@@ -1,31 +1,58 @@
 import React from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../design/component/Header';
 import { KkButton } from '../../design/component/KkButton';
 import KakaoMap from '../Store/KakaoMap/KakaoMap';
 import MapPinIcon from '../../assets/images/map-pin.svg';
 import styles from './StoreLocationSelectScreen.style';
+import { getAddressFromCoords } from '../../utils/location';
 
 export default function StoreLocationSelectScreen() {
+  const router = useRouter();
+  const debounceRef = React.useRef<NodeJS.Timeout | null>(null);
+
   const [center, setCenter] = React.useState<{ lat: number; lng: number } | null>(null);
   const [regionName, setRegionName] = React.useState<string | null>(null);
 
-  const onCenterChangeStable = React.useCallback(
-    ({ lat, lng, regionName: rn }: { lat: number; lng: number; regionName?: string | null }) => {
-      setCenter({ lat, lng });
-      setRegionName(rn ?? null);
-    },
-    [],
-  );
-
   const mapNode = React.useMemo(
-    () => <KakaoMap center={null} zoom={1} onCenterChange={onCenterChangeStable} />,
-    [onCenterChangeStable],
+    () => (
+      <KakaoMap
+        center={null}
+        zoom={1}
+        onMessage={(e) => {
+          try {
+            const data = JSON.parse(e.nativeEvent.data);
+            if (data.type === 'CENTER_CHANGED' && data.payload) {
+              const { lat, lng } = data.payload;
+              setCenter({ lat, lng });
+
+              if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+              }
+              debounceRef.current = setTimeout(async () => {
+                try {
+                  const newRegionName = await getAddressFromCoords(lat, lng);
+                  setRegionName(newRegionName);
+                } catch (err) {
+                  console.error('Failed to get address from coords', err);
+                  setRegionName('주소를 불러올 수 없습니다.');
+                }
+              }, 300);
+            }
+          } catch (error) {
+            console.error('Failed to parse message from map', error);
+          }
+        }}
+      />
+    ),
+    [],
   );
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Header title="위치 선택" onBackPress={() => {}} />
+      <Header title="위치 선택" onBackPress={() => router.back()} />
 
       <View style={styles.mapContainer}>
         {mapNode}
@@ -54,7 +81,16 @@ export default function StoreLocationSelectScreen() {
           type={center ? 'primary' : 'disabled'}
           size="large"
           onPress={() => {
-            // TODO: navigate back with selected center/regionName
+            if (!center) return;
+
+            if (router.canGoBack()) {
+              router.back();
+            }
+            router.setParams({
+              latitude: center.lat.toString(),
+              longitude: center.lng.toString(),
+              address: regionName ?? '',
+            });
           }}
           shadow
         />
