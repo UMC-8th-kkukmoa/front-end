@@ -230,7 +230,7 @@ export default function ReviewsScreen() {
           onEndReachedThreshold={0.2}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
           ListHeaderComponent={
-            <ReviewsHeader count={reviewCount ?? list.length} imageUrl={headerDto?.storeImageUrl} />
+            <ReviewsHeader count={reviewCount ?? list.count} imageUrl={headerDto?.storeImageUrl} />
           }
           ListFooterComponent={hasNextPage ? <ReviewsFooterLoading /> : <ReviewsFooterSpace />}
           showsVerticalScrollIndicator={false}
