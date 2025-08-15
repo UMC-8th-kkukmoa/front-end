@@ -112,7 +112,6 @@ function MainScreen() {
           categoryName: store.categoryName,
           distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
           time: `${store.openingHours} ~ ${store.closingHours}`,
-          bookmarkCount: 0,
         };
       }),
     );
@@ -156,7 +155,7 @@ function MainScreen() {
             <TouchableOpacity onPress={() => router.push('/qrcode')}>
               <QRIcon width={24} height={24} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/store/likeList')}>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>
             <TouchableOpacity>

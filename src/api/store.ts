@@ -1,5 +1,5 @@
 import apiClient from './client';
-import type { BaseResponse, StoreDetail, StoreListPage } from '../types/store';
+import type { BaseResponse, StoreDetail, StoreListPage, LikedStorePage } from '../types/store';
 
 // 상세 조회
 export async function getStoreDetail(storeId: string | number): Promise<StoreDetail> {
@@ -40,13 +40,14 @@ export async function getStoreListByCategory(
   return data.result;
 }
 
+// 검색
 export async function searchStores(
   name: string,
   latitude: number,
   longitude: number,
   page = 0,
   size = 5,
-  signal?: AborSignal,
+  signal?: AbortSignal,
 ): Promise<StoreListPage> {
   const { data } = await apiClient.get<BaseResponse<StoreListPage>>('/v1/stores/search', {
     params: { name, latitude, longitude, page, size },
@@ -55,3 +56,20 @@ export async function searchStores(
   if (!data.isSuccess) throw new Error(data.message || '가게 검색에 실패했습니다.');
   return data.result;
 }
+
+// 찜한 가게 목록
+export const getMyLikedStores = async (params: {
+  latitude: number;
+  longitude: number;
+  page?: number;
+  size?: number;
+  categoryType?: string;
+}): Promise<LikedStorePage> => {
+  const { latitude, longitude, page = 0, size = 10, categoryType } = params;
+
+  const { data } = await apiClient.get('/v1/stores/like/users/me/likes', {
+    params: { latitude, longitude, page, size, categoryType },
+  });
+
+  return data.result;
+};

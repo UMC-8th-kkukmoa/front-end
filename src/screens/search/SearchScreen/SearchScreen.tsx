@@ -18,6 +18,7 @@ import SearchIcon from '../../../assets/images/search-icon.svg';
 import BackIcon from '../../../assets/images/left-arrow.svg';
 import styles from './SearchScreen.style';
 import { searchStores } from '../../../api/store';
+import useLikeStore from '../../../hooks/useLikeStore';
 import StoreCard from '../../Store/StoreCard/StoreCard';
 
 export default function SearchScreen() {
@@ -30,6 +31,8 @@ export default function SearchScreen() {
   const [isSearchCompleted, setIsSearchCompleted] = useState(false);
   const [location, setLocation] = useState({ latitude: 37.5117, longitude: 127.0868 });
   const controllerRef = useRef<AbortController | null>(null);
+
+  const { toggleLike, isFavoriteShop } = useLikeStore();
 
   const router = useRouter();
   const { from } = useLocalSearchParams();
@@ -155,25 +158,28 @@ export default function SearchScreen() {
   };
 
   const renderItem = isSearchCompleted
-    ? ({ item }) => (
-        <StoreCard
-          item={{
-            storeId: String(item.storeId),
-            name: item.name ?? '',
-            imageUrl: item.storeImage ?? '',
-            categoryName: item.categoryName ?? '',
-            distance: `${item.distance ?? ''}km`,
-            time:
-              item.openingHours && item.closingHours
-                ? `${item.openingHours} ~ ${item.closingHours}`
-                : '',
-            bookmarkCount: item.bookmarkCount ?? 0,
-          }}
-          isLiked={false}
-          onToggleLike={() => {}} // TODO: 백엔드 좋아요 API 구현 후 연동
-          onPress={(id) => router.push({ pathname: '/store/[id]', params: { id, from: 'search' } })}
-        />
-      )
+    ? ({ item }) => {
+        return (
+          <StoreCard
+            item={{
+              storeId: String(item.storeId),
+              name: item.name ?? '',
+              imageUrl: item.storeImage ?? '',
+              categoryName: item.categoryName ?? '',
+              distance: `${item.distance ?? ''}km`,
+              time:
+                item.openingHours && item.closingHours
+                  ? `${item.openingHours} ~ ${item.closingHours}`
+                  : '',
+            }}
+            isLiked={isFavoriteShop(String(item.storeId))}
+            onToggleLike={toggleLike}
+            onPress={(id) =>
+              router.push({ pathname: '/store/[id]', params: { id, from: 'search' } })
+            }
+          />
+        );
+      }
     : renderSearchListItem;
 
   let content;

@@ -51,7 +51,7 @@ function Store() {
     [],
   );
 
-  // 맵 메시지 수신 (마커 클릭 → 상세 이동 등)
+  // 맵 메시지 수신
   const onMapMessage = useCallback((e: any) => {
     try {
       const data = JSON.parse(e?.nativeEvent?.data || '{}');
@@ -66,6 +66,11 @@ function Store() {
       console.error('onMapMessage parse error', err);
     }
   }, []);
+
+  // 찜 리스트로 이동 버튼
+  const handleGoLikeList = () => {
+    router.push('/store/likeList');
+  };
 
   // 현재 위치로 이동 버튼
   const handleMoveToCurrentLocation = () => {
@@ -95,8 +100,9 @@ function Store() {
   return (
     <View style={styles.container}>
       <View style={styles.mapArea}>
-        <KakaoMap center={coords ?? null} zoom={2} mapRef={mapRef} onMessage={onMapMessage} />
+        <KakaoMap center={coords ?? null} zoom={3} mapRef={mapRef} onMessage={onMapMessage} />
         <MapFloatingButtons
+          onPressHeart={handleGoLikeList}
           onPressTarget={handlePickLocation}
           onPressLocate={handleMoveToCurrentLocation}
         />

@@ -31,7 +31,7 @@ interface KakaoMapProps {
   onMessage?: (e: WebViewMessageEvent) => void;
 }
 
-export default function KakaoMap({ center, zoom = 4, mapRef, onMessage }: KakaoMapProps) {
+export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoMapProps) {
   const fallbackCenter = { lat: 37.5665, lng: 126.978 };
   const finalCenter = center ?? fallbackCenter;
 
