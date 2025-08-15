@@ -82,7 +82,7 @@ export default function GiftCardListScreen() {
       {/* eslint-disable-next-line react/style-prop-object */}
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <Header title="금액권 구매" onBackPress={() => router.back()} />
+        <Header title="금액권 구매" onBackPress={() => router.push('/')} />
 
         <ScrollView
           contentContainerStyle={styles.gridContainer}

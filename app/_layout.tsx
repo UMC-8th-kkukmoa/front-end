@@ -3,9 +3,14 @@ import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ActivityIndicator, View } from 'react-native';
+import { PaymentWidgetProvider } from '@tosspayments/widget-sdk-react-native';
 import useAuth from '../src/hooks/useAuth';
 
 const queryClient = new QueryClient();
+
+const generateAnonymousCustomerKey = () => {
+  return `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
 
 function AppLayout() {
   const { isAuthenticated } = useAuth();
@@ -45,9 +50,14 @@ function AppLayout() {
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <AppLayout />
-      </GestureHandlerRootView>
+      <PaymentWidgetProvider
+        clientKey="test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
+        customerKey={generateAnonymousCustomerKey()}
+      >
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppLayout />
+        </GestureHandlerRootView>
+      </PaymentWidgetProvider>
     </QueryClientProvider>
   );
 }

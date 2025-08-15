@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Keychain from 'react-native-keychain';
 import { StatusBar } from 'expo-status-bar';
+import axios from 'axios';
+import PaymentModal from '../../design/component/PaymentModal';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 
@@ -17,19 +19,18 @@ import styles from './GiftCardPurchase.styles';
 
 const formatPrice = (amount: number) => `${amount.toLocaleString()}원`;
 
-function GiftCardPurchase() {
+export default function GiftCardPurchase() {
   const { title, price, quantity } = useLocalSearchParams();
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
   const [isPayMethodSelected, setIsPayMethodSelected] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
-  const priceStr = Array.isArray(price) ? price[0] : price;
-  const quantityStr = Array.isArray(quantity) ? quantity[0] : quantity;
-
-  const numericPrice = Number(priceStr?.replace(/[^0-9]/g, '') || '0');
-  const quantityNumber = Number(quantityStr) || 1;
-
-  const total = numericPrice * quantityNumber;
+  const priceNum = Number(Array.isArray(price) ? price[0] : price?.replace(/[^0-9]/g, '') || '0');
+  const qtyNum = Number(Array.isArray(quantity) ? quantity[0] : quantity || 1);
+  const total = priceNum * qtyNum;
 
   const giftImageMap: Record<number, any> = {
     10000: giftcard1,
@@ -38,80 +39,119 @@ function GiftCardPurchase() {
     100000: giftcard10,
   };
 
-  const getGiftImage = (giftPrice: number) => giftImageMap[giftPrice] || null;
+  const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
+
+  const preparePayment = async () => {
+    if (!(isAgreed && isPayMethodSelected)) return;
+
+    try {
+      const credentials = await Keychain.getGenericPassword({ service: 'com.kkukmoa.accessToken' });
+      if (!credentials) {
+        Alert.alert('로그인이 필요합니다.');
+        return;
+      }
+
+      const token = credentials.password;
+
+      await axios.get(`${API_BASE_URL}/v1/payments/toss/view`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { unitPrice: priceNum, quantity: qtyNum },
+      });
+      // 성공 시 결제 URL 열기
+      setPaymentUrl(
+        `${API_BASE_URL}/v1/payments/toss/view?unitPrice=${priceNum}&quantity=${qtyNum}`,
+      );
+      setPaymentToken(token); // 상태로 따로 저장
+      setShowPaymentModal(true);
+    } catch (err) {
+      Alert.alert('오류', '결제 준비 중 네트워크 오류 발생');
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowPaymentModal(false);
+    setPaymentUrl(null);
+  };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container}>
       {/* eslint-disable-next-line react/style-prop-object */}
       <StatusBar style="dark" />
-      <View style={styles.headerContainer}>
-        <Header title="결제하기" onBackPress={() => router.back()} shadow={false} />
-      </View>
+      <View style={styles.container}>
+        <Header title="결제하기" onBackPress={() => router.push('/')} />
 
-      <ScrollView style={styles.content}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>구매상품</Text>
-          <View style={styles.productBox}>
-            {getGiftImage(numericPrice) && (
-              <Image
-                source={getGiftImage(numericPrice)}
-                style={{ width: 164, height: 98, resizeMode: 'contain' }}
-              />
-            )}
+        <View style={styles.content}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>구매상품</Text>
+            <View style={styles.productBox}>
+              {giftImageMap[priceNum] && (
+                <Image source={giftImageMap[priceNum]} style={{ width: 164, height: 98 }} />
+              )}
+              <View style={styles.productDetails}>
+                <Text style={styles.productTitle}>{title}</Text>
+                <Text style={styles.productPrice}>{formatPrice(total)}</Text>
+                <Text style={styles.productQty}>{qtyNum}개</Text>
+              </View>
+            </View>
+          </View>
 
-            <View style={styles.productDetails}>
-              <Text style={styles.productTitle}>{title}</Text>
-              <Text style={styles.productPrice}>{formatPrice(total)}</Text>
-              <Text style={styles.productQty}>{quantityNumber}개</Text>
+          <View style={styles.paySectionOuter}>
+            <View style={styles.paySection}>
+              <Text style={styles.payMethodTitle}>결제수단</Text>
+              <TouchableOpacity
+                style={[
+                  styles.tosspayButton,
+                  isPayMethodSelected && { borderColor: colors.light.black, borderWidth: 1 },
+                ]}
+                onPress={() => setIsPayMethodSelected((prev) => !prev)}
+              >
+                <Tosspay width={82} height={20} />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        <View style={styles.paySectionOuter}>
-          <View style={styles.paySection}>
-            <Text style={styles.payMethodTitle}>결제수단</Text>
-            <TouchableOpacity
-              style={[
-                styles.tosspayButton,
-                isPayMethodSelected && { borderColor: colors.light.black, borderWidth: 1 },
-              ]}
-              onPress={() => setIsPayMethodSelected((prev) => !prev)}
-              activeOpacity={0.7}
-            >
-              <Tosspay width={82} height={20} />
+        <View style={styles.footer}>
+          <View style={styles.agreementRow}>
+            <TouchableOpacity onPress={() => setIsAgreed((prev) => !prev)}>
+              <Icon
+                name={isAgreed ? 'checkmark-circle' : 'checkmark-circle-outline'}
+                size={30}
+                color={isAgreed ? colors.light.main : colors.light.gray2}
+                style={{ marginRight: 8 }}
+              />
             </TouchableOpacity>
+            <View>
+              <Text style={styles.agreementText}>
+                <Text style={{ color: colors.light.main }}>(필수) </Text>결제 서비스 이용 약관,
+                개인정보 처리 동의
+              </Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
 
-      <View style={styles.footer}>
-        <View style={styles.agreementRow}>
-          <TouchableOpacity onPress={() => setIsAgreed((prev) => !prev)} activeOpacity={0.8}>
-            <Icon
-              name={isAgreed ? 'checkmark-circle' : 'checkmark-circle-outline'}
-              size={30}
-              color={isAgreed ? colors.light.main : colors.light.gray2}
-              style={{ marginRight: 8 }}
-            />
+          <TouchableOpacity
+            style={[
+              styles.buyButton,
+              !(isAgreed && isPayMethodSelected) && { backgroundColor: colors.light.gray1 },
+            ]}
+            disabled={!(isAgreed && isPayMethodSelected)}
+            onPress={preparePayment}
+          >
+            <Text style={styles.buyButtonText}>결제하기</Text>
           </TouchableOpacity>
-          <Text style={styles.agreementText}>
-            <Text style={{ color: colors.light.main }}>(필수) </Text>
-            결제 서비스 이용 약관, 개인정보 처리 동의
-          </Text>
-          <Icon name="add" size={18} color={colors.light.gray1} style={{ marginLeft: 'auto' }} />
         </View>
-        <TouchableOpacity
-          style={[
-            styles.buyButton,
-            !(isAgreed && isPayMethodSelected) && { backgroundColor: colors.light.gray1 },
-          ]}
-          disabled={!(isAgreed && isPayMethodSelected)}
-        >
-          <Text style={styles.buyButtonText}>결제하기</Text>
-        </TouchableOpacity>
+
+        {/* 웹뷰 결제 모달 */}
+        {paymentUrl && paymentToken && (
+          <PaymentModal
+            visible={showPaymentModal}
+            onClose={() => setShowPaymentModal(false)}
+            paymentUrl={paymentUrl}
+            paymentToken={paymentToken}
+            onPaymentSuccess={handlePaymentSuccess}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
 }
-
-export default GiftCardPurchase;

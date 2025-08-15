@@ -5,6 +5,7 @@ const useOwnerAuth = () => {
   const { roles = [], loginType, loadAuth } = useAuthStore();
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     loadAuth().catch(console.error);
   }, [roles, loadAuth]);
 

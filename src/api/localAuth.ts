@@ -11,9 +11,12 @@ import { saveTokens } from '../utils/tokenStorage';
 
 const logApiError = (error: any, action: string) => {
   if (isAxiosError(error)) {
+    // eslint-disable-next-line no-console
     console.error(`${action} 실패 status:`, error.response?.status);
+    // eslint-disable-next-line no-console
     console.error(`${action} 실패 data:`, error.response?.data);
   } else {
+    // eslint-disable-next-line no-console
     console.error(`${action} 실패:`, error);
   }
 };
@@ -29,6 +32,7 @@ export const localLogin = async (email: string, password: string): Promise<Login
     if (data.accessToken && data.refreshToken) {
       await saveTokens(data.accessToken, data.refreshToken);
     } else {
+      // eslint-disable-next-line no-console
       console.warn('로그인 응답에 토큰이 없습니다');
     }
 
