@@ -12,7 +12,7 @@ import {
   useEmailRequestMutation,
   useSignUpMutation,
 } from '../../hooks/signUpMutations';
-import { SignUpRequest } from '../../types/auth.ts';
+import { SignUpRequest } from '../../types/auth';
 
 export default function SignUpScreen() {
   const router = useRouter();

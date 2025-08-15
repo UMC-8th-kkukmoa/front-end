@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -11,6 +18,7 @@ import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import styles from './OwnerJoinShopScreen.style';
 import { registerOwner } from '../../api/owner';
+import KkCompleteModal from '../../design/component/KkCompleteModal';
 
 function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void }) {
   return (
@@ -33,6 +41,7 @@ export default function OwnerJoinShopScreen() {
   const [agreePrivacy, setAgreePrivacy] = useState(false);
   const [userIdError, setUserIdError] = useState<string | undefined>();
   const [passwordConfirmError, setPasswordConfirmError] = useState<string | undefined>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (passwordConfirm && password !== passwordConfirm) {
@@ -45,13 +54,14 @@ export default function OwnerJoinShopScreen() {
   const registerMutation = useMutation({
     mutationFn: registerOwner,
     onSuccess: () => {
-      // TODO: Handle success
+      setIsModalVisible(true);
     },
     onError: (error) => {
       if (isAxiosError(error) && error.response?.status === 409) {
         setUserIdError('이미 사용중인 아이디입니다.');
       } else {
-        console.error('Failed to register owner', error);
+        Alert.alert('계정 생성 실패', error.message || '알 수 없는 오류가 발생했습니다.');
+        console.error('Owner registration failed:', error);
       }
     },
   });
@@ -175,6 +185,15 @@ export default function OwnerJoinShopScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <KkCompleteModal
+        visible={isModalVisible}
+        onClose={() => {
+          setIsModalVisible(false);
+          router.replace('/owner/auth');
+        }}
+        message="계정 생성이 완료되었습니다."
+      />
     </SafeAreaView>
   );
 }
