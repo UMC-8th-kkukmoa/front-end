@@ -140,7 +140,10 @@ function MainScreen() {
             <TouchableOpacity style={styles.iconButton}>
               <QRIcon width={26} height={26} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => router.push('/stamp/StampList')}
+            >
               <StampIcon width={26} height={26} />
             </TouchableOpacity>
           </View>
