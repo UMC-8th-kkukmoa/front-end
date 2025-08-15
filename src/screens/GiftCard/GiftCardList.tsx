@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     marginTop: 8,
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   cardTitle: {
     fontFamily: 'Pretendard-Bold',

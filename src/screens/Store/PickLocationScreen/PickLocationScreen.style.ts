@@ -84,14 +84,4 @@ export default StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
     color: colors.light.white,
   },
-
-  // coordsBadge: {
-  //   position: 'absolute',
-  //   left: 50,
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 6,
-  //   borderRadius: 8,
-  //   backgroundColor: 'rgba(0,0,0,0.45)',
-  // },
-  // coordsText: { color: colors.light.black, fontSize: 12 },
 });

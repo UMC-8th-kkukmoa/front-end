@@ -1,25 +1,27 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
+import useLikeStore from '../../hooks/useLikeStore';
 import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
-import BellIcon from '../../assets/images/bell.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
 import MainBanner from './MainBanner';
+import { requestStamp } from '../../api/stamp';
 
 function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
   return (
     <>
       <MainBanner />
-      {isLoading && <ActivityIndicator style={styles.loading} />}
+      {isLoading && <ActivityIndicator style={styles.loading} color="#FF8246" />}
       {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>오류</Text>}
     </>
   );
@@ -35,8 +37,24 @@ function EmptyStoreList() {
 
 function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
+  const { qrCodeData } = useLocalSearchParams();
+
+  const stampMutation = useMutation({
+    mutationFn: (qrCode: string) => requestStamp(qrCode),
+    onSuccess: () => {
+      Alert.alert('스탬프 적립 성공', '스탬프가 성공적으로 적립되었습니다.');
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        Alert.alert('스탬프 적립 실패', error.response?.data?.message || '다시 시도해주세요.');
+      } else {
+        Alert.alert('스탬프 적립 실패', error.message || '다시 시도해주세요.');
+      }
+    },
+  });
+
+  const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
 
   const { data: appCoords } = useQuery({
     queryKey: ['coords'],
@@ -93,22 +111,33 @@ function MainScreen() {
           categoryName: store.categoryName,
           distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
           time: `${store.openingHours} ~ ${store.closingHours}`,
-          bookmarkCount: 0,
         };
       }),
     );
   }, [data]);
 
-  const toggleLike = useCallback((id: string) => {
-    setLikedMap((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  }, []);
+  useEffect(() => {
+    if (data?.pages) {
+      const allStores = data.pages.flatMap((page) => page.stores);
+      allStores.forEach((store) => {
+        const storeIdStr = store.storeId.toString();
+        if (store.liked && !isFavoriteShop(storeIdStr)) {
+          addFavoriteShop(storeIdStr);
+        }
+      });
+    }
+  }, [data, addFavoriteShop, isFavoriteShop]);
 
   const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   };
+
+  useEffect(() => {
+    if (qrCodeData && typeof qrCodeData === 'string') {
+      stampMutation.mutate(qrCodeData);
+      router.setParams({ qrCodeData: undefined });
+    }
+  }, [qrCodeData, router]);
 
   return (
     <View style={styles.container}>
@@ -122,11 +151,11 @@ function MainScreen() {
             </Text>
           </View>
           <View style={styles.rightIcons}>
-            <TouchableOpacity>
-              <HeartIcon width={24} height={24} />
+            <TouchableOpacity onPress={() => router.push('/qrcode')}>
+              <QRIcon width={24} height={24} />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <BellIcon width={24} height={24} />
+            <TouchableOpacity onPress={() => router.push('/store/likeList')}>
+              <HeartIcon width={24} height={24} />
             </TouchableOpacity>
           </View>
         </View>
@@ -137,10 +166,13 @@ function MainScreen() {
         <View style={styles.searchRow}>
           {/* 버튼 */}
           <View style={styles.buttonGroup}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/qrcode')}>
               <QRIcon width={26} height={26} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => router.push('/stamp/StampList')}
+            >
               <StampIcon width={26} height={26} />
             </TouchableOpacity>
           </View>
@@ -164,8 +196,8 @@ function MainScreen() {
           renderItem={({ item }) => (
             <StoreCard
               item={item}
-              isLiked={likedMap[item.storeId] === true}
-              onToggleLike={() => toggleLike(item.storeId)}
+              isLiked={isFavoriteShop(item.storeId)}
+              onToggleLike={toggleLike}
               onPress={(id) =>
                 router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
               }
@@ -174,7 +206,7 @@ function MainScreen() {
           contentContainerStyle={styles.cardContainer}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
-          ListEmptyComponent={EmptyStoreList}
+          ListEmptyComponent={isLoading || isError ? null : EmptyStoreList}
         />
       </View>
     </View>

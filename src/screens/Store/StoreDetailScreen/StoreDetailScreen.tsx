@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-  View,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StatusBar,
   Text,
   TouchableOpacity,
-  FlatList,
-  StatusBar,
-  ActivityIndicator,
-  Image,
+  View,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getStoreDetail } from '../../../api/store';
-import { getReviewPreviews, getReviewCount } from '../../../api/review';
+import { getReviewCount, getReviewPreviews } from '../../../api/review';
+import { getIsLiked } from '../../../api/like';
+import useLikeStore from '../../../hooks/useLikeStore';
 import type { StoreDetail } from '../../../types/store';
 import styles from './StoreDetailScreen.style';
 import ReviewCard from '../ReviewCard/ReviewCard';
@@ -42,7 +44,9 @@ function StoreDetailScreen() {
   const { id, from: rawFrom } = useLocalSearchParams<{ id?: string; from?: string | string[] }>();
   const from = Array.isArray(rawFrom) ? rawFrom[0] : rawFrom;
   const storeId = id;
-  const [isLiked, setIsLiked] = useState(false); // 찜 상태 API 연동 시 교체
+  const { toggleLike, isFavoriteShop, addFavoriteShop, removeFavoriteShop } = useLikeStore();
+
+  const isLiked = storeId ? isFavoriteShop(storeId) : false;
 
   // 상세 데이터 패칭
   const {
@@ -56,6 +60,25 @@ function StoreDetailScreen() {
     retry: 0,
     staleTime: 60_000,
   });
+
+  const { data: isLikedData } = useQuery({
+    queryKey: ['isLiked', storeId],
+    queryFn: () => getIsLiked(storeId!),
+    enabled: !!storeId,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  });
+
+  useEffect(() => {
+    if (isLikedData !== undefined && storeId) {
+      if (isLikedData) {
+        addFavoriteShop(storeId);
+      } else {
+        removeFavoriteShop(storeId);
+      }
+    }
+  }, [isLikedData, storeId, addFavoriteShop, removeFavoriteShop]);
 
   // 리뷰 데이터 패칭
   const { data: previewCards } = useQuery({
@@ -148,7 +171,7 @@ function StoreDetailScreen() {
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation?.();
-                setIsLiked((prev) => !prev);
+                if (storeId) toggleLike(storeId);
               }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >

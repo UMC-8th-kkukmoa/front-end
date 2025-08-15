@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import handleKakaoLogin from '../../api/kakaoLogin';
+import useAuthStore from '../../store/useAuthStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -57,11 +59,13 @@ const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const handleKakaoLoginPress = async () => {
     const result = await handleKakaoLogin();
     console.log('💡 로그인 직후 result:', result);
     if (result !== null) {
+      useAuthStore.getState().setLoginType('kakao');
       // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
       // noinspection ES6MissingAwait
       queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
@@ -74,7 +78,7 @@ export default function LoginChoiceScreen() {
 
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>이미 회원이신가요?</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => router.push('/auth/LoginScreen')}>
           <Text style={styles.loginLink}>로그인하기</Text>
         </TouchableOpacity>
       </View>
@@ -88,7 +92,13 @@ export default function LoginChoiceScreen() {
           onPress={handleKakaoLoginPress}
         />
 
-        <KkButton label="이메일 가입" type="secondary" size="large" shadow onPress={() => {}} />
+        <KkButton
+          label="이메일 가입"
+          type="secondary"
+          size="large"
+          shadow
+          onPress={() => router.push('/auth/AgreementScreen')}
+        />
       </View>
 
       <View style={styles.signupContainer}>

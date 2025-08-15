@@ -2,9 +2,12 @@ import { StyleSheet } from 'react-native';
 import colors from '../../design/colors';
 
 export default StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.light.white,
+  },
   contain: {
     flex: 1,
-    paddingTop: 25,
     backgroundColor: colors.light.white,
   },
   container: {

@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from '../../design/colors';
 import { KkButton } from '../../design/component/KkButton';
 
 const styles = StyleSheet.create({
-  container: {
+  safe: {
+    flex: 1,
     backgroundColor: colors.light.white,
+  },
+  container: {
     justifyContent: 'space-between',
     marginTop: 210,
     paddingHorizontal: 24,
@@ -42,22 +47,26 @@ const styles = StyleSheet.create({
 const checkImage = require('../../assets/images/agree.png');
 
 export default function SignupCompleteScreen() {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.iconWrapper}>
-        <Image source={checkImage} style={styles.checkCircle} />
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <View style={styles.iconWrapper}>
+          <Image source={checkImage} style={styles.checkCircle} />
 
-        <Text style={styles.message}>회원가입이 완료되었습니다!</Text>
+          <Text style={styles.message}>회원가입이 완료되었습니다!</Text>
+        </View>
+
+        <KkButton
+          style={styles.button}
+          label="로그인 하러 가기"
+          type="primary"
+          size="large"
+          onPress={() => router.push('/auth/LoginScreen')}
+          shadow
+        />
       </View>
-
-      <KkButton
-        style={styles.button}
-        label="로그인 하러 가기"
-        type="primary"
-        size="large"
-        onPress={() => {}}
-        shadow
-      />
-    </View>
+    </SafeAreaView>
   );
 }

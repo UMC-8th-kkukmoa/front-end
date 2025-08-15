@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
+import { localLogin } from '../../api/localAuth';
+import useAuthStore from '../../store/useAuthStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +54,8 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const validateEmail = (inputEmail: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,9 +72,16 @@ export default function LoginScreen() {
 
   const isValid = email && password;
 
-  const handleLogin = () => {
-    // 로그인 처리 로직
-    console.log('로그인 버튼 클릭!');
+  const handleLogin = async () => {
+    try {
+      await localLogin(email, password);
+      useAuthStore.getState().setLoginType('local');
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
+      router.replace('/');
+    } catch (err: any) {
+      console.error('로그인 실패:', err);
+      Alert.alert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
@@ -114,8 +127,7 @@ export default function LoginScreen() {
 
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>아직 꾹모아의 회원이 아니신가요? </Text>
-        <TouchableOpacity onPress={() => {}}>
-          {/* expo 네비게이션 사용 */}
+        <TouchableOpacity onPress={() => router.push('/auth/LoginChoiceScreen')}>
           <Text style={styles.signupLink}>회원가입</Text>
         </TouchableOpacity>
       </View>

@@ -1,6 +1,8 @@
 import * as Keychain from 'react-native-keychain';
 import apiClient from './client';
 import { getAccessToken, getRefreshToken } from '../utils/tokenStorage';
+import useAuthStore from '../store/useAuthStore';
+import useOwnerJoinStore from '../store/useOwnerJoinStore';
 
 const logout = async () => {
   try {
@@ -8,6 +10,7 @@ const logout = async () => {
     const refreshToken = await getRefreshToken();
 
     if (!accessToken || !refreshToken) {
+      // eslint-disable-next-line no-console
       console.warn('토큰이 없습니다.');
       return;
     }
@@ -18,19 +21,25 @@ const logout = async () => {
         'refresh-token': refreshToken,
       },
     });
-
+    // eslint-disable-next-line no-console
     console.log('로그아웃 성공:', response.data);
   } catch (error: any) {
     if (error.response) {
+      // eslint-disable-next-line no-console
       console.error('로그아웃 실패 status:', error.response.status);
+      // eslint-disable-next-line no-console
       console.error('로그아웃 실패 data:', error.response.data);
     } else {
+      // eslint-disable-next-line no-console
       console.error('로그아웃 실패:', error);
     }
   } finally {
     // 토큰 삭제
     await Keychain.resetGenericPassword({ service: 'com.kkukmoa.accessToken' });
     await Keychain.resetGenericPassword({ service: 'com.kkukmoa.refreshToken' });
+
+    useAuthStore.getState().clearAuth();
+    useOwnerJoinStore.getState().reset();
   }
 };
 
