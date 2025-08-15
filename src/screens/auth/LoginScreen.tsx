@@ -6,6 +6,7 @@ import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
 import { localLogin } from '../../api/localAuth';
+import useAuthStore from '../../store/useAuthStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,6 +75,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       await localLogin(email, password);
+      useAuthStore.getState().setLoginType('local');
       await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
       router.replace('/');
     } catch (err: any) {

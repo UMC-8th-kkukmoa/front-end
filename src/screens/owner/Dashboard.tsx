@@ -15,7 +15,7 @@ import GuideIcon from '../../assets/images/guide-icon.svg';
 
 const menuItems = [
   { id: 1, title: 'QR 스캔', icon: QrIcon, route: '/owner/VoucherPayment' },
-  { id: 2, title: '스탬프 QR코드', icon: StampIcon, route: '/stamp-qr' },
+  { id: 2, title: '스탬프 QR코드', icon: StampIcon, route: '/owner/OwnerStampQR' },
   { id: 3, title: '매장관리', icon: StoreIcon, route: '/store' },
   { id: 4, title: '가게매출', icon: DollarIcon, route: '/sales' },
   { id: 5, title: '알림설정', icon: BellIcon, route: '/alarm-settings' },
