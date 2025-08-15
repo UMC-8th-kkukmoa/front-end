@@ -63,4 +63,5 @@ export type StoreCardItem = {
   distanceKm: number;
   lat: number;
   lng: number;
+  liked: boolean;
 };

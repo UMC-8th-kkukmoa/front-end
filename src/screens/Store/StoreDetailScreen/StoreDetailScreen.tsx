@@ -88,17 +88,20 @@ function StoreDetailScreen() {
     queryKey: ['isLiked', storeId],
     queryFn: () => getIsLiked(storeId!),
     enabled: !!storeId,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   useEffect(() => {
-    if (isLikedData && storeId) {
+    if (isLikedData !== undefined && storeId) {
       if (isLikedData) {
         addFavoriteShop(storeId);
       } else {
         removeFavoriteShop(storeId);
       }
     }
-  }, [isLikedData]);
+  }, [isLikedData, storeId, addFavoriteShop, removeFavoriteShop]);
 
   // 리뷰 데이터 패칭
   const { data: previewCards } = useQuery({
