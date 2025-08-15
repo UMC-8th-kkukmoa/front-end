@@ -20,7 +20,7 @@ import styles from './GiftCardPurchase.styles';
 
 const formatPrice = (amount: number) => `${amount.toLocaleString()}원`;
 
-function GiftCardPurchase() {
+export default function GiftCardPurchase() {
   const { title, price, quantity } = useLocalSearchParams();
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
@@ -165,5 +165,3 @@ function GiftCardPurchase() {
     </SafeAreaView>
   );
 }
-
-export default GiftCardPurchase;
