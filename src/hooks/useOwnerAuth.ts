@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import useAuthStore from '../store/useAuthStore';
 
 const useOwnerAuth = () => {
-  const { roles, loadRoles } = useAuthStore();
+  const { roles, loadAuth } = useAuthStore();
   const [isOwner, setIsOwner] = useState<boolean | null>(null);
   const [isPendingOwner, setIsPendingOwner] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkRole = async () => {
-      await loadRoles();
+      await loadAuth();
       setIsOwner(roles.includes('ROLE_OWNER'));
       setIsPendingOwner(roles.includes('ROLE_PENDING_OWNER'));
     };
 
     checkRole();
-  }, [roles, loadRoles]);
+  }, [roles, loadAuth]);
 
   return { isOwner, isPendingOwner };
 };
