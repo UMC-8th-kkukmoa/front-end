@@ -1,95 +1,217 @@
-# <img width="30" height="30" alt="앱로고" src="https://github.com/user-attachments/assets/9b121bc4-21d5-4793-919e-6b908d2a8ee1" /> 꾹모아 소개
-<img width="450" height="300" alt="kkukmoa_poster" src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" />
-<br/>
+# 꾹모아 (KkukMoa) — 소상공인 리워드 & 금액권 플랫폼
 
-**꾹모아는 소상공인 매장에서 사용할 수 있는 모바일 금액권 및 스탬프 적립 기반 고객 리워드 플랫폼입니다.**
-- **디지털 금액권 구매 및 사용**
-    - 원하는 금액의 e-금액권을 구매하여 입점 매장에서 자유롭게 사용합니다.
-- **자동 스탬프 적립 시스템**
-    - 결제 내역과 연동되어 스탬프가 자동으로 적립됩니다.
-- **맞춤형 서비스 쿠폰**
-    - 스탬프 10개 누적 시 자동 발급되며, 매장별 사장님이 직접 혜택을 설정합니다.
-- **QR 코드 기반 적립 및 선물**
-    - 카드 결제 시에도 QR 인식으로 스탬프 적립이 가능하며, 금액권을 선물할 수 있습니다.
+> 소상공인 매장에서 사용할 수 있는 **모바일 금액권** + **자동 스탬프 적립** 기반 고객 리워드 서비스
 
-<br/>
-<br/>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8695423b-3de4-4207-8838-49c3c9f74eb4" alt="kkukmoa_poster" width="720"/>
+</p>
+
+---
 
 ## 💻 FrontEnd Developer
+
 | 김은하 | 이채영 | 정윤철 | 정주연 |
 |:------:|:------:|:------:|:------:|
 | <img src="https://avatars.githubusercontent.com/u/152863626?v=4" alt="김은하" width="150"> | <img src="https://avatars.githubusercontent.com/u/133013991?v=4" alt="이채영" width="150"> | <img src="https://avatars.githubusercontent.com/u/3233503?v=4" alt="정윤철" width="150"> | <img src="https://avatars.githubusercontent.com/u/118319081?v=4" alt="정주연" width="150"> |
 | 성신여대 | 서울여대 | 광운대 | 광운대 |
 | [rladmsgki](https://github.com/rladmsgki) | [chae1125](https://github.com/chae1125) | [onebone](https://github.com/onebone) | [juyeonnnn](https://github.com/juyeonnnn) |
 
+---
 
-<br/>
-<br/>
+## ✨ 핵심 기능
 
-## 🛠️ 프로젝트 구조
+- **디지털 금액권 구매·사용**: 원하는 금액의 e-금액권을 구매하고 제휴 매장에서 자유롭게 사용
+- **자동 스탬프 적립**: 결제 내역 연동으로 결제 시 자동으로 스탬프 적립
+- **맞춤형 서비스 쿠폰**: 스탬프 10개 누적 시 자동 발급 (혜택은 점주가 직접 설정)
+- **QR 기반 적립/선물**: 카드 결제도 QR 인식으로 적립, 금액권 선물 가능
+
+---
+
+## 🧭 목차
+
+- [프로젝트 구조](#-프로젝트-구조)
+- [기술 스택 & 선정 이유](#-기술-스택--선정-이유)
+- [시작하기](#-시작하기-getting-started)
+- [개발 워크플로우](#-개발-워크플로우)
+- [트러블슈팅](#-트러블슈팅)
+
+---
+
+## 🗂 프로젝트 구조
+
+<details>
+<summary><b>📂 src</b></summary>
+
 ```plaintext
-
+src
+├─ api/                      # 서버 통신 모듈
+│   ├─ client.ts
+│   ├─ images.ts
+│   ├─ kakaoLogin.ts
+│   ├─ like.ts
+│   ├─ localAuth.ts
+│   ├─ logout.ts
+│   ├─ owner.ts
+│   ├─ reissueTokens.ts
+│   ├─ review.ts
+│   ├─ shop.ts
+│   ├─ stamp.ts
+│   ├─ store.ts
+│   └─ voucherApi.ts
+│
+├─ assets/                   # 폰트 & 이미지 리소스
+│   ├─ fonts/ Pretendard-*.ttf
+│   ├─ images/ (아이콘, 배너, 로고, 샘플 이미지 등)
+│   └─ images/logo/ (앱 로고, 네이버 로고)
+│
+├─ design/
+│   ├─ colors.ts              # 전역 색상 정의
+│   └─ component/             # 공용 컴포넌트
+│       ├─ Header.tsx
+│       ├─ KkButton.tsx
+│       ├─ ...
+│
+├─ hooks/                     # 커스텀 훅
+│   ├─ useAuth.ts
+│   ├─ useLikeStore.ts
+│   ├─ ...
+│
+├─ screens/                   # 페이지 단위 UI
+│   ├─ auth/                  # 로그인/회원가입
+│   ├─ GiftCard/
+│   ├─ main/
+│   ├─ myCoupon/
+│   ├─ myGiftCard/
+│   ├─ mypage/
+│   ├─ owner/                 # 점주 페이지
+│   ├─ ownerJoinShop/
+│   ├─ qrcode/
+│   ├─ search/
+│   ├─ stamp/
+│   └─ Store/                 # 지도 및 매장 관련 화면 & 컴포넌트
+│       ├─ CategoryTabs/
+│       ├─ KakaoMap/
+│       ├─ MapFloatingButtons/
+│       ├─ PickLocationScreen/
+│       ├─ ReviewCard/
+│       ├─ Reviews/
+│       ├─ SearchBar/
+│       ├─ StoreBottomSheet/
+│       ├─ StoreCard/
+│       ├─ StoreDetailScreen/
+│       └─ StoreScreen/
+│
+├─ store/                     # Zustand 상태 관리
+│   ├─ useAuthStore.ts
+│   ├─ useOwnerJoinStore.ts
+│   └─ useShopStore.ts
+│
+├─ types/                     # 전역 타입 정의
+│   ├─ auth.ts
+│   ├─ kakao.ts
+│   ├─ review.ts
+│   ├─ stamp.ts
+│   ├─ store.ts
+│   └─ voucher.ts
+│
+└─ utils/                     # 유틸 함수
+    ├─ location.ts
+    └─ tokenStorage.ts
 ```
 
-<br/>
-<br/>
+</details>
 
-## 💎 기술 스택 + 선정 이유
-**Language** 
-* TypeScript: 정적 타입 지원으로 코드 안정성과 가독성을 높이기 위함
-  
-**Framework**
-* React Native : 하나의 코드베이스로 iOS/Android 크로스 플랫폼 개발 가능. 추후 iOS로의 확장 가능성 고려
-  
-**Tools**
-* Android Emulator / Expo CLI : 실제 디바이스 없이 빠른 테스트와 빌드 가능
-  
-**Routing / Library**
-* Expo Router: 화면 전환과 네비게이션을 간편하게 관리 가능
+<details>
+<summary><b>🧪 __tests__</b></summary>
 
-<br/>
+```plaintext
+__tests__
+└─ App.test.tsx                # 앱 초기 진입 테스트
+```
 
-## 📓 협업
-* Git
-* Notion
-* Discord
+</details>
 
-<br/>
+---
 
-## 📌 협업 규칙
-- **GitHub 브랜치 전략**:
-    - Git Flow (main, develop, feature, release, hotfix)
-    - 브랜치 네이밍 규칙:
-        - 예) feat/[기능명]-[이슈번호]
-- **Commit 메시지 규칙**:
-    - 형식: [타입]: [요약] , 예: feat: 로그인 기능 추가
-    - 주요 타입: feat, fix, docs, style, refactor, test, chore
-- **PR 및 코드 리뷰**:
-    - PR 제목 형식: [요약] ([이슈번호])
-    - 최소 2명 리뷰 필수
-    - 작업 내용 및 스크린샷 공유
-- **코드 스타일 및 린트 규칙**:
-    - ESLint, Prettier (Airbnb 스타일)
-- **GitHub Projects 태스크 관리**:
-    - 진행 상황 한눈에 파악, 효율적인 협업 지원
+## 💎 기술 스택 & 선정 이유
 
-<br/>
-<br/>
+| 영역 | 기술 | 선정 이유 |
+|---|---|---|
+| Language | **TypeScript** | 정적 타입 시스템으로 런타임 에러 감소, 협업 시 안정성↑ |
+| Framework | **React Native** | 웹 기술 기반으로 네이티브 앱과 유사한 경험 구현 가능 |
+| Dev Platform | **Expo** | 빠른 빌드 & 디버깅, OTA 업데이트 |
+| Routing | **Expo Router** | 파일 기반 라우팅, 네비게이션 단순화 |
+| State Mgmt | **Zustand** | 가볍고 직관적인 전역 상태 관리 |
+| Server State | **React Query** | 캐싱/리페치 최적화, 서버 상태 관리 |
+| UI | **@gorhom/bottom-sheet**, **Reanimated** | 네이티브급 제스처/애니메이션 |
+| HTTP | **Axios** | 인터셉터 기반 토큰/에러 처리 |
+| Styling | **StyleSheet** | 컴포넌트 단위 스타일 관리 |
+| 품질 | **ESLint + Prettier (Airbnb)** | 코드 스타일 일관성 유지 |
+| 협업 | **Husky** + **Git Hooks** | 커밋 전 린트/포맷 자동 실행 |
 
-## 🚨 개발 중 겪은 어려움과 해결 과정
-- Expo를 설치하면서 생긴 버전 불일치 문제
-    - 설치한 React Native와 Expo 사이에 버전이 호환되지 않는 문제가 있었음
-    - 인터넷을 뒤져가며 버전 하나하나씩 시도해가면서 문제를 해결해봄
-- `@gorhom/bottom-sheet` 적용 후 앱 실행 시 흰 화면만 뜨는 오류 발생
-    - 기본 설정(`babel.config.js`, `GestureHandlerRootView` 등) 모두 확인 → 문제 없었음
-    - `@gorhom/bottom-sheet` / `react-native-reanimated`버전 호환성 의심 → 여러 조합 테스트했지만 동일 증상
-    - `BottomSheet` 전체를 주석 처리했더니 앱 정상 실행됨
-    - `BottomSheet` 자체가 초기화 시점에서 죽는 상황이라고 판단하여 최소 코드로 BottomSheet만 테스트하며 [**이 링크**](https://hururuek-chapchap.tistory.com/259)를 참고하여 해결함
+---
 
-<br/>
+## ⚡ 시작하기 (Getting Started)
 
-## 🤖 AI 활용 방식
-- **Code Rabbit 기반 코드 리뷰 자동화 도입**
-    - 리뷰 시간을 획기적으로 단축
-    - 구체적이고 실질적인 피드백 제공
-    - 개발자 생산성 및 코드 품질 향상
+```bash
+# 1. 의존성 설치
+npm install
+
+# 2. Android 실행
+npx expo run:android
+```
+
+---
+
+## 🤝 개발 워크플로우
+
+- **브랜치 전략**: Git Flow (`main`, `develop`, `feature/*`, `release/*`, `hotfix/*`)
+- **커밋 컨벤션**: `type: summary` → feat, fix, docs, style, refactor, test, chore
+- **PR 규칙**: 제목 `[요약] (#이슈번호)`, 스크린샷 포함, 최소 2인 리뷰
+- **자동화**: Husky + Lint/Format, GitHub Actions → Discord 알림
+
+---
+
+## 🧩 트러블슈팅
+
+---
+
+### 1) Expo ↔ RN 버전 불일치
+**상황**  
+Expo SDK와 React Native 버전이 맞지 않아 빌드/실행 시 오류 발생
+
+**원인**  
+Expo SDK와 RN의 버전 매트릭스 불일치
+
+**해결**  
+Expo 공식 문서에서 버전 매트릭스 확인 후 동일하게 맞춤  
+`node_modules` 및 캐시 삭제 후 재설치
+
+---
+
+### 2) WebView 버전 충돌 (결제 SDK ↔ 지도)
+**상황**  
+`@tosspayments/widget-sdk-react-native`가 요구하는 `react-native-webview` 버전과  
+카카오 지도에서 요구하는 버전이 달라 빌드 충돌 발생
+
+**원인**  
+두 라이브러리가 서로 다른 WebView 메이저/마이너 버전을 강제함
+
+**해결**  
+결제 기능은 백엔드에서 제공하는 **별도 결제 페이지**를  
+인앱 브라우저 또는 외부 브라우저로 열어 처리하도록 변경  
+→ 지도는 기존 WebView 버전 유지, 결제는 앱 업데이트 없이 백엔드에서 대응 가능
+
+---
+
+### 3) `@gorhom/bottom-sheet` 흰 화면
+**상황**  
+`@gorhom/bottom-sheet` 적용 후 앱 실행 시 흰 화면 표시
+
+**원인**  
+Reanimated/Babel 설정 누락 또는 초기화 순서 문제
+
+**해결**  
+Babel 플러그인 순서 수정(`react-native-reanimated/plugin` 마지막에 위치)  
+`GestureHandlerRootView` 적용  
+최소 재현 코드로 테스트
