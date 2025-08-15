@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { KeyboardAvoidingView, ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,6 +18,7 @@ import styles from './OwnerJoinShopFormScreen.style';
 import { uploadImage } from '../../api/images';
 import { applyForStore } from '../../api/owner';
 import useOwnerJoinStore from '../../store/useOwnerJoinStore';
+import KkCompleteModal from '../../design/component/KkCompleteModal';
 
 export default function OwnerJoinShopFormScreen() {
   const router = useRouter();
@@ -48,6 +56,7 @@ export default function OwnerJoinShopFormScreen() {
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (params.latitude && params.longitude) {
@@ -61,11 +70,10 @@ export default function OwnerJoinShopFormScreen() {
 
   const formatAndCoerceTime = (text: string): string => {
     const digitsOnly = text.replace(/\D/g, '');
-    const upTo6Digits = digitsOnly.slice(0, 6);
+    const upTo4Digits = digitsOnly.slice(0, 4);
 
-    let hoursStr = upTo6Digits.slice(0, 2);
-    let minutesStr = upTo6Digits.slice(2, 4);
-    let secondsStr = upTo6Digits.slice(4, 6);
+    let hoursStr = upTo4Digits.slice(0, 2);
+    let minutesStr = upTo4Digits.slice(2, 4);
 
     if (hoursStr.length === 2) {
       const hours = parseInt(hoursStr, 10);
@@ -81,21 +89,8 @@ export default function OwnerJoinShopFormScreen() {
       }
     }
 
-    if (secondsStr.length === 2) {
-      const seconds = parseInt(secondsStr, 10);
-      if (seconds > 59) {
-        secondsStr = '59';
-      }
-    }
+    const coercedDigits = hoursStr + minutesStr;
 
-    const coercedDigits = hoursStr + minutesStr + secondsStr;
-
-    if (coercedDigits.length > 4) {
-      return `${coercedDigits.slice(0, 2)}:${coercedDigits.slice(
-        2,
-        4,
-      )}:${coercedDigits.slice(4, 6)}`;
-    }
     if (coercedDigits.length > 2) {
       return `${coercedDigits.slice(0, 2)}:${coercedDigits.slice(2, 4)}`;
     }
@@ -106,10 +101,10 @@ export default function OwnerJoinShopFormScreen() {
     mutationFn: applyForStore,
     onSuccess: () => {
       reset();
-      // TODO: Handle success (e.g., navigate to next screen)
+      setIsModalVisible(true);
     },
     onError: (error) => {
-      // TODO: Handle error
+      Alert.alert('입점 신청 실패', error.message || '알 수 없는 이유로 실패했습니다.');
       console.error('Failed to apply for store', error);
     },
   });
@@ -334,15 +329,15 @@ export default function OwnerJoinShopFormScreen() {
                 category
               ) {
                 applyMutation.mutate({
-                  name: storeName,
-                  address,
-                  detailAddress: addressDetail,
+                  storeName,
+                  storeAddress: address,
+                  storeAddressDetail: addressDetail,
                   latitude,
                   longitude,
                   openingHours,
                   closingHours,
-                  number: contact,
-                  storeImage: uploadedImageUrl,
+                  storePhoneNumber: contact,
+                  storeImageUrl: uploadedImageUrl,
                   category,
                 });
               }
@@ -352,6 +347,15 @@ export default function OwnerJoinShopFormScreen() {
           />
         </View>
       </KeyboardAvoidingView>
+
+      <KkCompleteModal
+        visible={isModalVisible}
+        onClose={() => {
+          setIsModalVisible(false);
+          router.replace('/(tabs)/profile');
+        }}
+        message="매장 등록이 완료되었습니다."
+      />
     </SafeAreaView>
   );
 }

@@ -29,7 +29,7 @@ export default function OwnerLayout() {
 
       <Stack.Protected guard={!isOwner && !isPendingOwner}>
         <Stack.Screen name="auth" />
-        <Stack.Screen name="join" />
+        <Stack.Screen name="signup" />
       </Stack.Protected>
     </Stack>
   );

@@ -1,15 +1,15 @@
 import apiClient from './client';
 
 interface ApplyForStoreParams {
-  name: string;
-  address: string;
-  detailAddress: string;
+  storeName: string;
+  storeAddress: string;
+  storeAddressDetail: string;
   latitude: number;
   longitude: number;
   openingHours: string;
   closingHours: string;
-  number: string;
-  storeImage: string;
+  storePhoneNumber: string;
+  storeImageUrl: string;
   category: string;
 }
 
