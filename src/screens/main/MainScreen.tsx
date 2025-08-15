@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
-import { likeStore, unlikeStore } from '../../api/shop';
-import useShopStore from '../../store/useShopStore';
+import useLikeStore from '../../hooks/useLikeStore';
 import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
@@ -56,8 +55,7 @@ function MainScreen() {
     },
   });
 
-  const queryClient = useQueryClient();
-  const { addFavoriteShop, removeFavoriteShop, isFavoriteShop } = useShopStore();
+  const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
 
   const { data: appCoords } = useQuery({
     queryKey: ['coords'],
@@ -67,28 +65,6 @@ function MainScreen() {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 0,
-  });
-
-  const { mutate: like } = useMutation({
-    mutationFn: (storeId: string) => likeStore(storeId),
-    onMutate: async (storeId: string) => {
-      await queryClient.cancelQueries({ queryKey: ['isLiked', storeId] });
-      addFavoriteShop(storeId);
-    },
-    onError: (_, storeId) => {
-      removeFavoriteShop(storeId);
-    },
-  });
-
-  const { mutate: unlike } = useMutation({
-    mutationFn: (storeId: string) => unlikeStore(storeId),
-    onMutate: async (storeId: string) => {
-      await queryClient.cancelQueries({ queryKey: ['isLiked', storeId] });
-      removeFavoriteShop(storeId);
-    },
-    onError: (_, storeId) => {
-      addFavoriteShop(storeId);
-    },
   });
 
   useEffect(() => {
@@ -153,14 +129,6 @@ function MainScreen() {
       });
     }
   }, [data, addFavoriteShop, isFavoriteShop]);
-
-  const toggleLike = (storeId: string) => {
-    if (isFavoriteShop(storeId)) {
-      unlike(storeId);
-    } else {
-      like(storeId);
-    }
-  };
 
   const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
@@ -234,7 +202,7 @@ function MainScreen() {
             <StoreCard
               item={item}
               isLiked={isFavoriteShop(item.storeId)}
-              onToggleLike={() => toggleLike(item.storeId)}
+              onToggleLike={toggleLike}
               onPress={(id) =>
                 router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
               }
