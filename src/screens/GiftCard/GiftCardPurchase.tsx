@@ -6,7 +6,6 @@ import * as Keychain from 'react-native-keychain';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import PaymentModal from '../../design/component/PaymentModal';
-import KkCompleteModal from '../../design/component/KkCompleteModal';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 
@@ -27,7 +26,6 @@ export default function GiftCardPurchase() {
   const [isPayMethodSelected, setIsPayMethodSelected] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [paymentToken, setPaymentToken] = useState<string | null>(null);
 
   const priceNum = Number(Array.isArray(price) ? price[0] : price?.replace(/[^0-9]/g, '') || '0');
@@ -73,7 +71,6 @@ export default function GiftCardPurchase() {
   const handlePaymentSuccess = () => {
     setShowPaymentModal(false);
     setPaymentUrl(null);
-    setShowCompleteModal(true);
   };
 
   return (
@@ -154,13 +151,6 @@ export default function GiftCardPurchase() {
             onPaymentSuccess={handlePaymentSuccess}
           />
         )}
-
-        <KkCompleteModal
-          visible={showCompleteModal}
-          onClose={() => setShowCompleteModal(false)}
-          navigationPath="/myGiftCard/MyGiftCardScreen"
-          message="결제가 완료되었습니다."
-        />
       </View>
     </SafeAreaView>
   );

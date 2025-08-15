@@ -46,7 +46,7 @@ export default function PaymentModal({
   const handleNavigationStateChange = (navState: any) => {
     const { url } = navState;
 
-    if (url.startsWith('kkukmoa://myGiftCard/MyGiftCardScreen')) {
+    if (url.startsWith('kkukmoa://giftCard/GiftCardPaymentSuccess')) {
       onPaymentSuccess();
       onClose();
     } else if (url.includes('fail=true')) {
