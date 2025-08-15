@@ -146,8 +146,8 @@ export default function QRScannerScreen() {
       <Text style={styles.title}>스탬프 QR 적립</Text>
 
       <View style={styles.centerTexts}>
-        {/* TODO: 실제 매장 이름으로 바꾸기 */}
-        <Text style={styles.shopName}>미진카페</Text>
+        {/* TODO: 실제 매장 이름으로 바꾸기? */}
+        <Text style={styles.shopName}>QR코드 스탬프</Text>
         <Text style={styles.instruction}>매장QR을 스캔해주세요.</Text>
       </View>
 
