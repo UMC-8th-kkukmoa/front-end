@@ -12,7 +12,7 @@ import useOwnerJoinStore from '../../store/useOwnerJoinStore';
 
 export default function StoreLocationSelectScreen() {
   const router = useRouter();
-  const debounceRef = React.useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const { setLatitude, setLongitude, setAddress } = useOwnerJoinStore();
 
   const [center, setCenter] = React.useState<{ lat: number; lng: number } | null>(null);
