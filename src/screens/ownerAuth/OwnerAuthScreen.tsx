@@ -29,7 +29,7 @@ export default function OwnerAuthScreen() {
         if (roles.includes('ROLE_OWNER')) {
           router.replace('/owner/Dashboard');
         } else if (roles.includes('ROLE_PENDING_OWNER')) {
-          router.replace('/owner/join');
+          router.replace('/owner/signup');
         }
       }
     },
@@ -107,7 +107,7 @@ export default function OwnerAuthScreen() {
             type="secondary"
             size="large"
             onPress={() => {
-              router.push('/owner/join');
+              router.push('/owner/signup');
             }}
             shadow
           />

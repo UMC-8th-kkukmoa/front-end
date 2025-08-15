@@ -32,7 +32,7 @@ function Checkbox({ checked, onPress }: { checked: boolean; onPress: () => void 
   );
 }
 
-export default function OwnerJoinShopScreen() {
+export default function OwnerSignUpScreen() {
   const router = useRouter();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
