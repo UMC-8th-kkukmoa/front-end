@@ -91,7 +91,7 @@ export default function MyPageScreen() {
 
   return (
     <View>
-      <Header title="마이페이지" onBackPress={() => {}} />
+      <Header title="마이페이지" onBackPress={router.back} />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Section title="이용 내역">
@@ -107,7 +107,7 @@ export default function MyPageScreen() {
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/Dashboard')} />
+          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/auth')} />
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
       </ScrollView>

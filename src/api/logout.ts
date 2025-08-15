@@ -1,6 +1,8 @@
 import * as Keychain from 'react-native-keychain';
 import apiClient from './client';
 import { getAccessToken, getRefreshToken } from '../utils/tokenStorage';
+import useAuthStore from '../store/useAuthStore';
+import useOwnerJoinStore from '../store/useOwnerJoinStore';
 
 const logout = async () => {
   try {
@@ -31,6 +33,9 @@ const logout = async () => {
     // 토큰 삭제
     await Keychain.resetGenericPassword({ service: 'com.kkukmoa.accessToken' });
     await Keychain.resetGenericPassword({ service: 'com.kkukmoa.refreshToken' });
+
+    useAuthStore.getState().clearAuth();
+    useOwnerJoinStore.getState().reset();
   }
 };
 

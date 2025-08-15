@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Alert } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
@@ -7,14 +7,15 @@ import { KkButton } from '../../design/component/KkButton';
 import Header from '../../design/component/Header';
 import styles from './SignUpScreen.style';
 import {
+  useCheckEmailMutation,
   useCheckNicknameMutation,
   useEmailRequestMutation,
-  useCheckEmailMutation,
   useSignUpMutation,
 } from '../../hooks/signUpMutations';
 import { SignUpRequest } from '../../types/auth';
 
 export default function SignUpScreen() {
+  const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [date, setDate] = useState('');
   const [email, setEmail] = useState('');
@@ -28,7 +29,6 @@ export default function SignUpScreen() {
   const [isVerificationError, setIsVerificationError] = useState(false);
   const [isVerificationChecked, setIsVerificationChecked] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
-  const router = useRouter();
 
   const checkNicknameMutation = useCheckNicknameMutation();
   const emailRequestMutation = useEmailRequestMutation();
