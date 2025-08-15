@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -46,7 +47,11 @@ function MainScreen() {
       Alert.alert('스탬프 적립 성공', '스탬프가 성공적으로 적립되었습니다.');
     },
     onError: (error) => {
-      Alert.alert('스탬프 적립 실패', error.message || '다시 시도해주세요.');
+      if (isAxiosError(error)) {
+        Alert.alert('스탬프 적립 실패', error.response?.data?.message || '다시 시도해주세요.');
+      } else {
+        Alert.alert('스탬프 적립 실패', error.message || '다시 시도해주세요.');
+      }
     },
   });
 
