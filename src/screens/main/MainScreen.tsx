@@ -9,7 +9,6 @@ import useLikeStore from '../../hooks/useLikeStore';
 import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
-import BellIcon from '../../assets/images/bell.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
@@ -158,9 +157,6 @@ function MainScreen() {
             <TouchableOpacity onPress={() => router.push('/store/likeList')}>
               <HeartIcon width={24} height={24} />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <BellIcon width={24} height={24} />
-            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -170,7 +166,7 @@ function MainScreen() {
         <View style={styles.searchRow}>
           {/* 버튼 */}
           <View style={styles.buttonGroup}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/qrcode')}>
               <QRIcon width={26} height={26} />
             </TouchableOpacity>
             <TouchableOpacity
