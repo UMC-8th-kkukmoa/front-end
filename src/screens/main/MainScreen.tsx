@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
 import styles from './MainScreen.style';
@@ -14,6 +14,7 @@ import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
 import MainBanner from './MainBanner';
+import { requestStamp } from '../../api/stamp';
 
 function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
   return (
@@ -37,6 +38,17 @@ function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
+  const { qrCodeData } = useLocalSearchParams();
+
+  const stampMutation = useMutation({
+    mutationFn: (qrCode: string) => requestStamp(qrCode),
+    onSuccess: () => {
+      Alert.alert('스탬프 적립 성공', '스탬프가 성공적으로 적립되었습니다.');
+    },
+    onError: (error) => {
+      Alert.alert('스탬프 적립 실패', error.message || '다시 시도해주세요.');
+    },
+  });
 
   const { data: appCoords } = useQuery({
     queryKey: ['coords'],
@@ -109,6 +121,13 @@ function MainScreen() {
   const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   };
+
+  useEffect(() => {
+    if (qrCodeData && typeof qrCodeData === 'string') {
+      stampMutation.mutate(qrCodeData);
+      router.setParams({ qrCodeData: undefined });
+    }
+  }, [qrCodeData, router]);
 
   return (
     <View style={styles.container}>

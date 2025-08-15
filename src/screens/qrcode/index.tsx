@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import LeftArrowIcon from '../../assets/images/left-arrow.svg';
 import colors from '../../design/colors';
 
@@ -70,6 +70,7 @@ export default function QRScannerScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const device = useCameraDevice('back');
   const navigation = useNavigation();
+  const router = useRouter();
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const minDim = Math.min(screenWidth, screenHeight);
   const cutoutSize = Math.min(minDim * 0.6, 280);
@@ -88,8 +89,14 @@ export default function QRScannerScreen() {
     onCodeScanned: (codes) => {
       if (codes.length > 0) {
         const { value } = codes[0];
-        // eslint-disable-next-line no-console
-        console.log(`QR: ${value}`);
+        if (value) {
+          // eslint-disable-next-line no-console
+          console.log(`QR: ${value}`);
+          navigation.goBack();
+          router.setParams({
+            qrCodeData: value,
+          });
+        }
       }
     },
   });
