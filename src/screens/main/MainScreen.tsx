@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { getStoreList } from '../../api/store';
 import { getAddressFromCoords, getCurrentCoords } from '../../utils/location';
+import useLikeStore from '../../hooks/useLikeStore';
 import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
@@ -37,7 +38,6 @@ function EmptyStoreList() {
 
 function MainScreen() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
   const { qrCodeData } = useLocalSearchParams();
 
@@ -54,6 +54,8 @@ function MainScreen() {
       }
     },
   });
+
+  const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
 
   const { data: appCoords } = useQuery({
     queryKey: ['coords'],
@@ -116,12 +118,17 @@ function MainScreen() {
     );
   }, [data]);
 
-  const toggleLike = useCallback((id: string) => {
-    setLikedMap((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  }, []);
+  useEffect(() => {
+    if (data?.pages) {
+      const allStores = data.pages.flatMap((page) => page.stores);
+      allStores.forEach((store) => {
+        const storeIdStr = store.storeId.toString();
+        if (store.liked && !isFavoriteShop(storeIdStr)) {
+          addFavoriteShop(storeIdStr);
+        }
+      });
+    }
+  }, [data, addFavoriteShop, isFavoriteShop]);
 
   const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
@@ -194,8 +201,8 @@ function MainScreen() {
           renderItem={({ item }) => (
             <StoreCard
               item={item}
-              isLiked={likedMap[item.storeId] === true}
-              onToggleLike={() => toggleLike(item.storeId)}
+              isLiked={isFavoriteShop(item.storeId)}
+              onToggleLike={toggleLike}
               onPress={(id) =>
                 router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
               }

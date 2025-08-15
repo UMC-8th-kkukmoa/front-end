@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getStoreList, getStoreListByCategory } from '../../../api/store';
+import useLikeStore from '../../../hooks/useLikeStore';
 import styles from './StoreBottomSheet.style';
 import MapPin from '../../../assets/images/mappin.svg';
 import MapButton from '../../../assets/images/mapbutton.svg';
@@ -63,9 +64,10 @@ function StoreBottomSheet({
   const sheetRef = useRef<BottomSheet>(null);
   const router = useRouter();
 
+  const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
+
   const snapPoints = useMemo(() => ['9%', '37%', '75%'], []);
 
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
   const [showMapButton, setShowMapButton] = useState(false);
@@ -120,6 +122,7 @@ function StoreBottomSheet({
             distanceKm,
             lat: Number(store.latitude),
             lng: Number(store.longitude),
+            liked: store.liked,
           };
         })
         .sort((a, b) => a.distanceKm - b.distanceKm);
@@ -127,6 +130,17 @@ function StoreBottomSheet({
     staleTime: 30_000,
     retry: 1,
   });
+
+  useEffect(() => {
+    if (storeList) {
+      storeList.forEach((store) => {
+        const storeIdStr = store.storeId.toString();
+        if (store.liked && !isFavoriteShop(storeIdStr)) {
+          addFavoriteShop(storeIdStr);
+        }
+      });
+    }
+  }, [storeList, addFavoriteShop, isFavoriteShop]);
 
   useEffect(() => {
     if (!onStoresLoaded || !storeList) return;
@@ -185,14 +199,6 @@ function StoreBottomSheet({
     sheetRef.current?.snapToIndex(0);
   };
 
-  // 하트 관리
-  const toggleLike = (storeId: string) => {
-    setLikedMap((prev) => ({
-      ...prev,
-      [storeId]: !prev[storeId],
-    }));
-  };
-
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -200,7 +206,7 @@ function StoreBottomSheet({
   const renderItem = ({ item }: { item: StoreCardItem }) => (
     <StoreCard
       item={item}
-      isLiked={likedMap[item.storeId] === true}
+      isLiked={isFavoriteShop(item.storeId)}
       onToggleLike={toggleLike}
       onPress={(id) => router.push({ pathname: '/store/[id]', params: { id, from: 'stores' } })}
     />
@@ -227,7 +233,7 @@ function StoreBottomSheet({
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             <StoreCard
               item={selectedStore}
-              isLiked={likedMap[selectedStore.storeId] === true}
+              isLiked={isFavoriteShop(selectedStore.storeId)}
               onToggleLike={toggleLike}
               onPress={(id) =>
                 router.push({ pathname: '/store/[id]', params: { id, from: 'stores' } })
