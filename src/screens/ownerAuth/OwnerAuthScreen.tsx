@@ -26,9 +26,9 @@ export default function OwnerAuthScreen() {
         // TODO: ROLE_PENDING_OWNER 이라면 입점 신청이나 현황을 보여줘야 함
         setRoles(roles);
 
-        if (roles.contains('ROLE_OWNER')) {
+        if (roles.includes('ROLE_OWNER')) {
           router.replace('/owner/Dashboard');
-        } else if (roles.contains('ROLE_PENDING_OWNER')) {
+        } else if (roles.includes('ROLE_PENDING_OWNER')) {
           router.replace('/owner/join');
         }
       }
