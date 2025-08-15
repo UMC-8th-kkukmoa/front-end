@@ -3,6 +3,7 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { getReviewCount } from '../../../api/review';
 import styles from './StoreCard.style';
+import { getLikeCount } from '../../../api/like';
 import Arrow from '../../../assets/images/arrow.svg';
 import Like from '../../../assets/images/like.svg';
 import Unlike from '../../../assets/images/unlike.svg';
@@ -30,7 +31,6 @@ type Props = {
     categoryName: string;
     distance: string;
     time: string;
-    bookmarkCount: number;
   };
   isLiked: boolean;
   onToggleLike: (storeId: string) => void;
@@ -48,8 +48,21 @@ function StoreCard({ item, isLiked, onToggleLike, onPress }: Props) {
     gcTime: 5 * 60_000,
   });
 
+  const { data: likeCount } = useQuery({
+    queryKey: ['likeCount', item.storeId],
+    queryFn: () => getLikeCount(item.storeId),
+    enabled: !!item.storeId,
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+    placeholderData: 0, // 초기값 0으로 먼저 렌더
+  });
+
   return (
-    <TouchableOpacity style={styles.card} onPress={() => onPress?.(item.storeId)}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={styles.card}
+      onPress={() => onPress?.(item.storeId)}
+    >
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
 
       {IconComponent && (
@@ -71,7 +84,7 @@ function StoreCard({ item, isLiked, onToggleLike, onPress }: Props) {
               <Text style={styles.tagText}>리뷰 {isLoading ? '0' : (reviewCount ?? 0)}</Text>
             </View>
             <View style={styles.tag}>
-              <Text style={styles.tagText}>찜 {item.bookmarkCount ?? 0}</Text>
+              <Text style={styles.tagText}>찜 {likeCount ?? 0}</Text>
             </View>
             <Arrow style={{ marginLeft: 6 }} />
           </View>

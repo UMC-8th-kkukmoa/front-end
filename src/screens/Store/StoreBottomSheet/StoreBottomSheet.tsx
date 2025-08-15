@@ -118,14 +118,13 @@ function StoreBottomSheet({
             categoryName: store.categoryName,
             distance: `${distanceKm.toFixed(2)} km`,
             time: `${store.openingHours} ~ ${store.closingHours}`,
-            bookmarkCount: 0,
             distanceKm,
             lat: Number(store.latitude),
             lng: Number(store.longitude),
             liked: store.liked,
           };
         })
-        .sort((a, b) => a.distanceKm - b.distanceKm);
+        .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0));
     },
     staleTime: 30_000,
     retry: 1,

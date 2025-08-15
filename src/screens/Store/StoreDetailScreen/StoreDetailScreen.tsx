@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getStoreDetail } from '../../../api/store';
 import { getReviewCount, getReviewPreviews } from '../../../api/review';
-import { getIsLiked } from '../../../api/shop';
+import { getIsLiked } from '../../../api/like';
 import useLikeStore from '../../../hooks/useLikeStore';
 import type { StoreDetail } from '../../../types/store';
 import styles from './StoreDetailScreen.style';
