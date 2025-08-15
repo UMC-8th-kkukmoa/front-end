@@ -12,5 +12,5 @@ export const unlikeStore = async (storeId: string) => {
 
 export const getIsLiked = async (storeId: string) => {
   const response = await client.get(`/v1/stores/like/${storeId}/me`);
-  return response.data;
+  return response.data.result;
 };
