@@ -208,6 +208,7 @@ export default function QrScannerScreen() {
           message="쿠폰을 사용하시겠습니까?"
           qrUuid={currentQrUuid}
           onClose={() => setCouponModalVisible(false)}
+          navigationPath="/owner/Dashboard"
         />
       )}
     </SafeAreaView>

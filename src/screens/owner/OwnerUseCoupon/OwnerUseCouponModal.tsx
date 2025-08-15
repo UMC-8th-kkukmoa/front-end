@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 24,
     borderRadius: 16,
-    backgroundColor: '#fff',
+    backgroundColor: colors.light.white,
     alignItems: 'center',
     overflow: 'hidden',
   },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.light.white,
     borderWidth: 1,
     borderColor: colors.light.main,
     marginRight: 8,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
   },
   confirmText: {
-    color: '#fff',
+    color: colors.light.white,
     fontSize: 15,
     fontFamily: 'Pretendard-SemiBold',
   },
