@@ -2,10 +2,9 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getStoreList, getStoreListByCategory } from '../../../api/store';
-import { likeStore, unlikeStore } from '../../../api/shop';
-import useShopStore from '../../../store/useShopStore';
+import useLikeStore from '../../../hooks/useLikeStore';
 import styles from './StoreBottomSheet.style';
 import MapPin from '../../../assets/images/mappin.svg';
 import MapButton from '../../../assets/images/mapbutton.svg';
@@ -64,37 +63,14 @@ function StoreBottomSheet({
 }: Props) {
   const sheetRef = useRef<BottomSheet>(null);
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const { addFavoriteShop, removeFavoriteShop, isFavoriteShop } = useShopStore();
+  const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
 
   const snapPoints = useMemo(() => ['9%', '37%', '75%'], []);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
   const [showMapButton, setShowMapButton] = useState(false);
-
-  const { mutate: like } = useMutation({
-    mutationFn: (storeId: string) => likeStore(storeId),
-    onMutate: async (storeId: string) => {
-      await queryClient.cancelQueries({ queryKey: ['isLiked', storeId] });
-      addFavoriteShop(storeId);
-    },
-    onError: (_, storeId) => {
-      removeFavoriteShop(storeId);
-    },
-  });
-
-  const { mutate: unlike } = useMutation({
-    mutationFn: (storeId: string) => unlikeStore(storeId),
-    onMutate: async (storeId: string) => {
-      await queryClient.cancelQueries({ queryKey: ['isLiked', storeId] });
-      removeFavoriteShop(storeId);
-    },
-    onError: (_, storeId) => {
-      addFavoriteShop(storeId);
-    },
-  });
 
   // 데이터 패칭
   const {
@@ -221,14 +197,6 @@ function StoreBottomSheet({
   const handleMapButtonPress = () => {
     setShowMapButton(false);
     sheetRef.current?.snapToIndex(0);
-  };
-
-  const toggleLike = (storeId: string) => {
-    if (isFavoriteShop(storeId)) {
-      unlike(storeId);
-    } else {
-      like(storeId);
-    }
   };
 
   const onEndReached = useCallback(() => {
