@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
 
 export default function QRScannerScreen() {
   const [hasPermission, setHasPermission] = useState(false);
+  const [isScanned, setIsScanned] = useState(false);
   const device = useCameraDevice('back');
   const navigation = useNavigation();
   const router = useRouter();
@@ -87,9 +88,14 @@ export default function QRScannerScreen() {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: (codes) => {
+      if (isScanned) {
+        return;
+      }
+
       if (codes.length > 0) {
         const { value } = codes[0];
         if (value) {
+          setIsScanned(true);
           // eslint-disable-next-line no-console
           console.log(`QR: ${value}`);
           navigation.goBack();
