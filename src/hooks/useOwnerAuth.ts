@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import useAuthStore from '../store/useAuthStore';
 
 const useOwnerAuth = () => {
-  const { roles, loginType, loadAuth } = useAuthStore();
-  const [isOwner, setIsOwner] = useState<boolean | null>(null);
-  const [isPendingOwner, setIsPendingOwner] = useState<boolean | null>(null);
+  const { roles = [], loginType, loadAuth } = useAuthStore();
 
   useEffect(() => {
-    const checkRole = async () => {
-      await loadAuth();
-      setIsOwner(roles.includes('ROLE_OWNER'));
-      setIsPendingOwner(roles.includes('ROLE_PENDING_OWNER'));
-    };
-
-    checkRole();
+    loadAuth().catch(console.error);
   }, [roles, loadAuth]);
+
+  const isOwner = roles.includes('ROLE_OWNER');
+  const isPendingOwner = roles.includes('ROLE_PENDING_OWNER');
 
   return { isOwner, isPendingOwner, loginType };
 };
