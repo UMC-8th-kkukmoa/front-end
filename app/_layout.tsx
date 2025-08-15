@@ -36,7 +36,6 @@ function AppLayout() {
       <Stack.Protected guard={!isAuthenticated}>
         <Stack.Screen name="auth/LoginChoiceScreen" />
         <Stack.Screen name="oauth" />
-        <Stack.Screen name="owner/auth" />
       </Stack.Protected>
     </Stack>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useAuthStore from '../store/useAuthStore';
 
 const useOwnerAuth = () => {
-  const { roles, loadAuth } = useAuthStore();
+  const { roles, loginType, loadAuth } = useAuthStore();
   const [isOwner, setIsOwner] = useState<boolean | null>(null);
   const [isPendingOwner, setIsPendingOwner] = useState<boolean | null>(null);
 
@@ -16,7 +16,7 @@ const useOwnerAuth = () => {
     checkRole();
   }, [roles, loadAuth]);
 
-  return { isOwner, isPendingOwner };
+  return { isOwner, isPendingOwner, loginType };
 };
 
 export default useOwnerAuth;

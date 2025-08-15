@@ -23,7 +23,6 @@ export default function OwnerAuthScreen() {
       const { accessToken, refreshToken, roles } = data.result;
       await saveTokens(accessToken, refreshToken);
       if (roles) {
-        // TODO: ROLE_PENDING_OWNER 이라면 입점 신청이나 현황을 보여줘야 함
         setRoles(roles);
 
         if (roles.includes('ROLE_OWNER')) {
@@ -34,7 +33,7 @@ export default function OwnerAuthScreen() {
       }
     },
     onError: (error) => {
-      // TODO
+      Alert.alert('사장님 로그인 실패', error.message || '알 수 없는 오류로 실패');
       console.error('Failed to login', error);
     },
   });
@@ -42,9 +41,11 @@ export default function OwnerAuthScreen() {
   const checkStatusMutation = useMutation({
     mutationFn: checkPublicRegistrationStatus,
     onSuccess: (data) => {
-      // TODO
       console.log('Registration status:', JSON.stringify(data));
-      Alert.alert('신청 상태', data.result.pending ? '신청 중' : '등록된 신청 없음');
+      Alert.alert(
+        '신청 상태',
+        data.result.pending ? '등록된 신청이 있습니다' : '등록된 신청이 없습니다',
+      );
     },
     onError: (error) => {
       console.error('Failed to check registration status', error);

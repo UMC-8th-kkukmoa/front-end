@@ -85,4 +85,10 @@ export default StyleSheet.create({
     color: colors.light.main,
     fontSize: 14,
   },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
 });

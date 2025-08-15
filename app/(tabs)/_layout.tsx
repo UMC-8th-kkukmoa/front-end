@@ -57,10 +57,10 @@ export default function Layout() {
   const insets = useSafeAreaInsets();
   const isStoreTab = pathname === '/stores' || pathname === '/';
 
-  const loadRoles = useAuthStore((state) => state.loadRoles);
+  const loadAuth = useAuthStore((state) => state.loadAuth);
 
   useEffect(() => {
-    loadRoles();
+    loadAuth();
   }, []);
 
   return (

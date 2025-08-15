@@ -48,9 +48,16 @@ export async function checkPublicRegistrationStatus({
   email: string;
   password: string;
 }) {
-  const response = await apiClient.post('/v1/public/registrations/check-pending', {
-    email,
-    password,
+  const response = await apiClient.get('/v1/public/registrations/check-pending', {
+    params: {
+      email,
+      password,
+    },
   });
   return response.data;
 }
+
+export const checkPendingRegistration = async () => {
+  const response = await apiClient.get('/v1/owners/registrations/check-pending');
+  return response.data;
+};

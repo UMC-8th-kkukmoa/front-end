@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -16,9 +17,10 @@ import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
 import styles from './OwnerJoinShopFormScreen.style';
 import { uploadImage } from '../../api/images';
-import { applyForStore } from '../../api/owner';
+import { applyForStore, checkPendingRegistration } from '../../api/owner';
 import useOwnerJoinStore from '../../store/useOwnerJoinStore';
 import KkCompleteModal from '../../design/component/KkCompleteModal';
+import useAuthStore from '../../store/useAuthStore';
 
 export default function OwnerJoinShopFormScreen() {
   const router = useRouter();
@@ -57,6 +59,29 @@ export default function OwnerJoinShopFormScreen() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { loginType } = useAuthStore();
+  const [isCheckingRegistration, setIsCheckingRegistration] = useState(false);
+  const [isRegistrationPending, setIsRegistrationPending] = useState(false);
+
+  useEffect(() => {
+    const checkRegistration = async () => {
+      if (loginType === 'kakao') {
+        setIsCheckingRegistration(true);
+        try {
+          const isPending = await checkPendingRegistration();
+          if (isPending) {
+            setIsRegistrationPending(true);
+          }
+        } catch (error) {
+          console.error('입점 신청 상태 확인 실패:', error);
+        } finally {
+          setIsCheckingRegistration(false);
+        }
+      }
+    };
+
+    checkRegistration();
+  }, [loginType, router]);
 
   useEffect(() => {
     if (params.latitude && params.longitude) {
@@ -177,6 +202,30 @@ export default function OwnerJoinShopFormScreen() {
     return '선택한 파일 없음';
   }, [uploadError, isUploading, uploadedImageUrl, selectedImageUri]);
 
+  if (isCheckingRegistration) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <ActivityIndicator size="large" />
+        <Text>입점 신청 상태를 확인 중입니다...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (isRegistrationPending) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <Text>이미 입점 신청을 했습니다.</Text>
+        <KkButton
+          label="돌아가기"
+          onPress={() => router.back()}
+          style={{ marginTop: 20 }}
+          type="primary"
+          size="large"
+        />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.screen}>
       <Header title="입점 신청하기" onBackPress={router.back} shadow={false} />
@@ -244,7 +293,7 @@ export default function OwnerJoinShopFormScreen() {
               <View style={styles.consecutiveFormContainer}>
                 <KkTextbox
                   label="영업시간"
-                  placeholder="여는 시간 (예: 09:00:00)"
+                  placeholder="여는 시간 (예: 09:00)"
                   value={openingHours}
                   onChangeText={(text) => setOpeningHours(formatAndCoerceTime(text))}
                   size="large"
@@ -256,7 +305,7 @@ export default function OwnerJoinShopFormScreen() {
                 />
                 <KkTextbox
                   label=""
-                  placeholder="닫는 시간 (예: 22:00:00)"
+                  placeholder="닫는 시간 (예: 22:00)"
                   value={closingHours}
                   onChangeText={(text) => setClosingHours(formatAndCoerceTime(text))}
                   size="large"
