@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 export default function OwnerStampQR() {
   const router = useRouter();
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['stampQRCode'],
     queryFn: fetchQRCode,
     refetchInterval: 60000, // 1분마다 새로 요청
@@ -62,7 +62,9 @@ export default function OwnerStampQR() {
         <Header title={data?.store_name || '스탬프 QR'} onBackPress={() => router.back()} />
         <View style={styles.qrWrapper}>
           {isLoading && <ActivityIndicator size="large" color={colors.light.main} />}
-          {isError && <Text style={styles.errorText}>{(error as Error).message}</Text>}
+          {!!error && error instanceof Error && (
+            <Text style={styles.errorText}>{error.message}</Text>
+          )}
           {data?.qrcode && (
             <Image
               source={{ uri: `data:image/png;base64,${data.qrcode}` }}
