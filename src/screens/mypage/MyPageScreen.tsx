@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
@@ -8,6 +8,9 @@ import ChevronRightIcon from '../../assets/images/chevron-right.svg';
 import logout from '../../api/logout';
 
 const styles = StyleSheet.create({
+  root: {
+    backgroundColor: colors.light.white,
+  },
   container: {
     marginVertical: 14,
     marginHorizontal: 15,
@@ -88,24 +91,26 @@ export default function MyPageScreen() {
 
   return (
     <View>
-      <Header title="마이페이지" onBackPress={() => {}} />
+      <Header title="마이페이지" onBackPress={router.back} />
 
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Section title="이용 내역">
           <SectionLabel label="내 스탬프" onClick={() => router.push('/stamp/StampList')} />
           <SectionLabel label="내 쿠폰" onClick={() => router.push('/myCoupon/MyCouponList')} />
-          <SectionLabel label="내 금액권" onClick={() => {}} />
+          <SectionLabel
+            label="내 금액권"
+            onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
+          />
+          <SectionLabel label="결제 내역" onClick={() => {}} />
+          <SectionLabel label="받은 선물함" onClick={() => {}} />
         </Section>
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
-          <SectionLabel
-            label="사장님 로그인 (회원가입)"
-            onClick={() => router.push('/owner/Dashboard')}
-          />
+          <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/auth')} />
           <SectionLabel label="로그아웃" onClick={handleLogout} />
         </Section>
-      </View>
+      </ScrollView>
     </View>
   );
 }

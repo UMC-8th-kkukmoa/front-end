@@ -38,7 +38,9 @@ export type StoreListItem = {
   openingHours: string;
   closingHours: string;
   categoryName: string;
-  reviewCount: number;
+  latitude: number;
+  longitude: number;
+  liked: boolean;
 };
 
 export type StoreListPage = {
@@ -48,4 +50,17 @@ export type StoreListPage = {
   totalElements: number;
   isFirst: boolean;
   isLast: boolean;
+};
+
+export type StoreCardItem = {
+  storeId: string;
+  name: string;
+  imageUrl: string;
+  categoryName: string;
+  distance: string;
+  time: string;
+  bookmarkCount: number;
+  distanceKm: number;
+  lat: number;
+  lng: number;
 };

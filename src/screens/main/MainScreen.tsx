@@ -8,22 +8,28 @@ import styles from './MainScreen.style';
 import StoreCard from '../Store/StoreCard/StoreCard';
 import HeartIcon from '../../assets/images/Vector.svg';
 import BellIcon from '../../assets/images/bell.svg';
-import BannerImage from '../../assets/images/banner.svg';
 import MapPinIcon from '../../assets/images/map-pin2.svg';
 import QRIcon from '../../assets/images/maximize.svg';
 import StampIcon from '../../assets/images/star.svg';
 import SearchBarIcon from '../../assets/images/search-icon.svg';
 import { StoreListPage } from '../../types/store';
+import MainBanner from './MainBanner';
 
 function StoreListHeader({ isLoading, isError }: { isLoading: boolean; isError: boolean }) {
   return (
     <>
-      <View style={styles.banner}>
-        <BannerImage width="100%" height={130} />
-      </View>
-      {isLoading && <ActivityIndicator style={styles.loading} />}
-      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>Error</Text>}
+      <MainBanner />
+      {isLoading && <ActivityIndicator style={styles.loading} color="#FF8246" />}
+      {isError && <Text style={{ textAlign: 'center', paddingBottom: '50%' }}>오류</Text>}
     </>
+  );
+}
+
+function EmptyStoreList() {
+  return (
+    <View style={styles.emptyWrapper}>
+      <Text style={styles.emptyText}>아직 준비된 가게가 없습니다.</Text>
+    </View>
   );
 }
 
@@ -32,10 +38,19 @@ function MainScreen() {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
-  const { data: location } = useQuery({
-    queryKey: ['currentCoords'],
+  const { data: appCoords } = useQuery({
+    queryKey: ['coords'],
     queryFn: getCurrentCoords,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 0,
   });
+
+  useEffect(() => {
+    if (appCoords) setCoords(appCoords);
+  }, [appCoords]);
 
   const { data: address, isPending: isAddrLoading } = useQuery({
     queryKey: ['address', coords?.lat, coords?.lng],
@@ -43,12 +58,6 @@ function MainScreen() {
     enabled: !!coords,
     staleTime: 60_000,
   });
-
-  useEffect(() => {
-    if (location) {
-      setCoords(location);
-    }
-  }, [location]);
 
   const emptyStoreListPage: StoreListPage = {
     stores: [],
@@ -84,7 +93,6 @@ function MainScreen() {
           categoryName: store.categoryName,
           distance: `${Number.isNaN(km) ? '0.00' : km.toFixed(2)} km`,
           time: `${store.openingHours} ~ ${store.closingHours}`,
-          reviewCount: store.reviewCount,
           bookmarkCount: 0,
         };
       }),
@@ -132,7 +140,10 @@ function MainScreen() {
             <TouchableOpacity style={styles.iconButton}>
               <QRIcon width={26} height={26} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => router.push('/stamp/StampList')}
+            >
               <StampIcon width={26} height={26} />
             </TouchableOpacity>
           </View>
@@ -158,11 +169,15 @@ function MainScreen() {
               item={item}
               isLiked={likedMap[item.storeId] === true}
               onToggleLike={() => toggleLike(item.storeId)}
+              onPress={(id) =>
+                router.push({ pathname: '/store/[id]', params: { id, from: 'main' } })
+              }
             />
           )}
           contentContainerStyle={styles.cardContainer}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
+          ListEmptyComponent={isLoading || isError ? null : EmptyStoreList}
         />
       </View>
     </View>

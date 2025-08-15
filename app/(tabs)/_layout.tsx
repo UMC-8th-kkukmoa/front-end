@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,6 +9,7 @@ import HomeIcon from '../../src/assets/images/home.svg';
 import StoresIcon from '../../src/assets/images/mapicon.svg';
 import ProfileIcon from '../../src/assets/images/user.svg';
 import colors from '../../src/design/colors';
+import useAuthStore from '../../src/store/useAuthStore';
 
 const styles = StyleSheet.create({
   tabLayout: {
@@ -55,6 +56,12 @@ export default function Layout() {
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
   const isStoreTab = pathname === '/stores' || pathname === '/';
+
+  const loadAuth = useAuthStore((state) => state.loadAuth);
+
+  useEffect(() => {
+    loadAuth();
+  }, []);
 
   return (
     <SafeAreaView

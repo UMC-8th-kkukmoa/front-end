@@ -15,7 +15,7 @@ import GuideIcon from '../../assets/images/guide-icon.svg';
 
 const menuItems = [
   { id: 1, title: 'QR 스캔', icon: QrIcon, route: '/owner/OwnerQRScan' },
-  { id: 2, title: '스탬프 QR코드', icon: StampIcon, route: '/stamp-qr' },
+  { id: 2, title: '스탬프 QR코드', icon: StampIcon, route: '/owner/OwnerStampQR' },
   { id: 3, title: '매장관리', icon: StoreIcon, route: '/store' },
   { id: 4, title: '가게매출', icon: DollarIcon, route: '/sales' },
   { id: 5, title: '알림설정', icon: BellIcon, route: '/alarm-settings' },
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
+    overflow: 'hidden',
   },
   content: {
     flex: 1,
@@ -64,26 +65,28 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* eslint-disable-next-line react/style-prop-object */}
-      <StatusBar style="dark" />
-      <Header title="대시보드" onBackPress={() => router.back()} shadow />
+      <View style={styles.container}>
+        {/* eslint-disable-next-line react/style-prop-object */}
+        <StatusBar style="dark" />
+        <Header title="대시보드" onBackPress={() => router.back()} shadow />
 
-      <View style={styles.content}>
-        <View style={styles.grid}>
-          {menuItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.card}
-                activeOpacity={0.8}
-                onPress={() => router.push(item.route)}
-              >
-                <IconComponent width={40} height={40} />
-                <Text style={styles.cardText}>{item.title}</Text>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.content}>
+          <View style={styles.grid}>
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.card}
+                  activeOpacity={0.8}
+                  onPress={() => router.push(item.route)}
+                >
+                  <IconComponent width={40} height={40} />
+                  <Text style={styles.cardText}>{item.title}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
       </View>
     </SafeAreaView>
