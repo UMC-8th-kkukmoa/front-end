@@ -17,7 +17,7 @@
           "category": ["BROWSABLE", "DEFAULT"]
         },
         {
-          "action": "VIEW", 
+          "action": "VIEW",
           "data": {
             "scheme": "kakao265b5816cef1409cf3f8a345bc136fbe"
           },
@@ -25,10 +25,6 @@
         }
       ]
     },
-    "plugins": [
-      "expo-build-properties",
-      "expo-router",
-      "expo-web-browser"
-    ]
+    "plugins": ["expo-build-properties", "expo-router", "expo-web-browser"]
   }
 }
