@@ -54,18 +54,13 @@ export default function GiftCardPurchase() {
 
       const token = credentials.password;
 
-      const { data } = await axios.get<{ paymentUrl?: string; url?: string }>(
-        `${API_BASE_URL}/v1/payments/toss/view`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { unitPrice: priceNum, quantity: qtyNum },
-        },
+      await axios.get(`${API_BASE_URL}/v1/payments/toss/view`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { unitPrice: priceNum, quantity: qtyNum },
+      });
+      setPaymentUrl(
+        `${API_BASE_URL}/v1/payments/toss/view?unitPrice=${priceNum}&quantity=${qtyNum}`,
       );
-      const nextUrl = data?.paymentUrl ?? data?.url;
-      if (!nextUrl) {
-        throw new Error('유효한 결제 URL이 응답에 없습니다.');
-      }
-      setPaymentUrl(nextUrl);
       setPaymentToken(token);
       setShowPaymentModal(true);
     } catch (err) {
@@ -80,6 +75,7 @@ export default function GiftCardPurchase() {
   const handlePaymentSuccess = () => {
     setShowPaymentModal(false);
     setPaymentUrl(null);
+    router.replace('/giftCard/GiftCardPaymentSuccess');
   };
 
   return (
