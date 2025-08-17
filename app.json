@@ -22,6 +22,14 @@
             "scheme": "kakao265b5816cef1409cf3f8a345bc136fbe"
           },
           "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "kkukmoa",
+            "host": "payments"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },

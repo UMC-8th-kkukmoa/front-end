@@ -33,12 +33,14 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
 
         ws.current.onopen = () => {
           if (!isMounted.current) return;
+          // eslint-disable-next-line no-console
           console.log('WebSocket connected');
         };
 
         ws.current.onmessage = (event: MessageEvent) => {
           try {
             const data: CouponWebSocketMessage = JSON.parse(event.data);
+            // eslint-disable-next-line no-console
             console.log('WebSocket data:', data);
 
             if (data.is_success && data.qr_type === 'COUPON' && data.qr_info) {
@@ -54,11 +56,13 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
 
         ws.current.onerror = (error) => {
           if (!isMounted.current) return;
+          // eslint-disable-next-line no-console
           console.error('WebSocket error:', error);
         };
 
         ws.current.onclose = () => {
           if (!isMounted.current) return;
+          // eslint-disable-next-line no-console
           console.log('WebSocket disconnected');
 
           reconnectTimeout.current = setTimeout(() => {
@@ -68,6 +72,7 @@ const useQRCodeWebSocket = (onScanResult: (qrInfo: string) => void) => {
           }, 3000);
         };
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error('WebSocket connection failed:', e);
 
         if (isMounted.current) {
