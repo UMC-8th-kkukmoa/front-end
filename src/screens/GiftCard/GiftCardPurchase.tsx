@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Keychain from 'react-native-keychain';
@@ -53,15 +54,19 @@ export default function GiftCardPurchase() {
 
       const token = credentials.password;
 
-      await axios.get(`${API_BASE_URL}/v1/payments/toss/view`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { unitPrice: priceNum, quantity: qtyNum },
-      });
-      // 성공 시 결제 URL 열기
-      setPaymentUrl(
-        `${API_BASE_URL}/v1/payments/toss/view?unitPrice=${priceNum}&quantity=${qtyNum}`,
+      const { data } = await axios.get<{ paymentUrl?: string; url?: string }>(
+        `${API_BASE_URL}/v1/payments/toss/view`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { unitPrice: priceNum, quantity: qtyNum },
+        },
       );
-      setPaymentToken(token); // 상태로 따로 저장
+      const nextUrl = data?.paymentUrl ?? data?.url;
+      if (!nextUrl) {
+        throw new Error('유효한 결제 URL이 응답에 없습니다.');
+      }
+      setPaymentUrl(nextUrl);
+      setPaymentToken(token);
       setShowPaymentModal(true);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
