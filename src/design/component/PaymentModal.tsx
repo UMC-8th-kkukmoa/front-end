@@ -7,6 +7,7 @@ import {
   Text,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import colors from '../colors';
@@ -43,16 +44,20 @@ export default function PaymentModal({
   paymentToken,
   onPaymentSuccess,
 }: PaymentModalProps) {
-  const handleNavigationStateChange = (navState: any) => {
-    const { url } = navState;
+  const handleShouldStartLoad = (request: any) => {
+    const { url } = request;
 
     if (url.startsWith('kkukmoa://giftCard/GiftCardPaymentSuccess')) {
       onPaymentSuccess();
       onClose();
-    } else if (url.includes('fail=true')) {
+      return false;
+    }
+    if (url.includes('fail=true')) {
       Alert.alert('결제 실패');
       onClose();
+      return false;
     }
+    return true;
   };
 
   return (
@@ -69,11 +74,11 @@ export default function PaymentModal({
             source={{
               uri: paymentUrl,
               headers: {
-                Authorization: `Bearer ${paymentToken}`, // token 넣기
+                Authorization: `Bearer ${paymentToken}`,
               },
             }}
             style={styles.webview}
-            onNavigationStateChange={handleNavigationStateChange}
+            onNavigationStateChange={handleShouldStartLoad}
             startInLoadingState
             renderLoading={() => (
               <ActivityIndicator
