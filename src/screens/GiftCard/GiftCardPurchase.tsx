@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Keychain from 'react-native-keychain';
-import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import PaymentModal from '../../design/component/PaymentModal';
 import Header from '../../design/component/Header';
@@ -82,7 +82,7 @@ export default function GiftCardPurchase() {
       {/* eslint-disable-next-line react/style-prop-object */}
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <Header title="결제하기" onBackPress={() => router.push('/')} />
+        <Header title="결제하기" onBackPress={() => router.back()} />
 
         <View style={styles.content}>
           <View style={styles.section}>

@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 40 : 20,
-    paddingBottom: 10,
+    paddingBottom: 20,
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
   closeButton: { position: 'absolute', top: Platform.OS === 'ios' ? 40 : 20, right: 20, zIndex: 1 },
-  closeButtonText: { fontSize: 18, color: colors.light.black, fontFamily: 'Prentendard-Bold' },
-  title: { textAlign: 'center', fontSize: 18, fontFamily: 'Prentendard-Bold' },
+  closeButtonText: { fontSize: 18, color: colors.light.black, fontFamily: 'Pretendard-Bold' },
+  title: { textAlign: 'center', fontSize: 18, fontFamily: 'Pretendard-Bold' },
   webview: { flex: 1 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
@@ -78,7 +78,7 @@ export default function PaymentModal({
               },
             }}
             style={styles.webview}
-            onNavigationStateChange={handleShouldStartLoad}
+            onShouldStartLoadWithRequest={handleShouldStartLoad}
             startInLoadingState
             renderLoading={() => (
               <ActivityIndicator
