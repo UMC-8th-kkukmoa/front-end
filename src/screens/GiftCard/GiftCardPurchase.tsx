@@ -64,7 +64,11 @@ export default function GiftCardPurchase() {
       setPaymentToken(token); // 상태로 따로 저장
       setShowPaymentModal(true);
     } catch (err) {
-      Alert.alert('오류', '결제 준비 중 네트워크 오류 발생');
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        Alert.alert('로그인이 필요합니다.');
+        return;
+      }
+      Alert.alert('오류', '결제 준비 중 오류가 발생했습니다.');
     }
   };
 
