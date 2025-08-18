@@ -44,7 +44,7 @@ export default function MyGiftCardScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Header title="내 금액권" onBackPress={() => router.back()} />
+        <Header title="내 금액권" onBackPress={() => router.push('/profile')} />
 
         {/* 탭 바 */}
         <View style={styles.tabContainer}>
