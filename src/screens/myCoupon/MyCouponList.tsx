@@ -8,7 +8,7 @@ import axios from 'axios';
 import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import CouponCard from './MyCouponCard';
-import KkCategoryTaps from '../../design/component/kkCategoryTaps';
+import KkCategoryTabs from '../../design/component/KkCategoryTabs';
 import useQRCodeWebSocket from '../../hooks/useQRCodeWebSocket';
 import client from '../../api/client';
 
@@ -155,7 +155,7 @@ export default function MyCouponListScreen() {
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View>
-            <KkCategoryTaps selected={selected} onSelect={setSelected} />
+            <KkCategoryTabs selected={selected} onSelect={setSelected} />
           </View>
 
           {coupons.length === 0 ? (

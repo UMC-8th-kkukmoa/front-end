@@ -9,7 +9,7 @@ import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
 import colors from '../../design/colors';
-import KkCategoryTaps from '../../design/component/kkCategoryTaps';
+import KkCategoryTabs from '../../design/component/KkCategoryTabs';
 import { Stamp, ShopStampData, StampApiResponse } from '../../types/stamp';
 
 const TOTAL_STAMPS = 10;
@@ -162,7 +162,7 @@ export default function StampListScreen() {
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View>
-            <KkCategoryTaps selected={selected} onSelect={setSelected} />
+            <KkCategoryTabs selected={selected} onSelect={setSelected} />
           </View>
           {renderContent()}
         </ScrollView>
