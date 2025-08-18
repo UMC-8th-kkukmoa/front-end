@@ -71,7 +71,6 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
             }
 
             function categoryIconSvg(cat){
-              // 필요한 카테고리만 간단히 예시 (원하면 상세 SVG로 교체)
               if(cat==='카페') return \`<svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M4.12481 17.3251C3.89106 17.3251 3.69526 17.2459 3.53741 17.0875C3.37956 16.9291 3.30036 16.7333 3.29981 16.5001C3.29926 16.2669 3.37846 16.0711 3.53741 15.9127C3.69636 15.7543 3.89216 15.6751 4.12481 15.6751H15.6748C15.9086 15.6751 16.1046 15.7543 16.263 15.9127C16.4214 16.0711 16.5004 16.2669 16.4998 16.5001C16.4993 16.7333 16.4201 16.9294 16.2622 17.0883C16.1044 17.2473 15.9086 17.3262 15.6748 17.3251H4.12481ZM6.59981 14.0251C5.69231 14.0251 4.91543 13.702 4.26918 13.0557C3.62293 12.4095 3.29981 11.6326 3.29981 10.7251V4.1251C3.29981 3.67135 3.46151 3.28305 3.78491 2.9602C4.10831 2.63735 4.49661 2.47565 4.94981 2.4751H16.4998C16.9536 2.4751 17.3421 2.6368 17.6655 2.9602C17.9889 3.2836 18.1504 3.6719 18.1498 4.1251V6.6001C18.1498 7.05385 17.9884 7.44242 17.6655 7.76582C17.3427 8.08922 16.9541 8.25065 16.4998 8.2501H14.8498V10.7251C14.8498 11.6326 14.5267 12.4095 13.8804 13.0557C13.2342 13.702 12.4573 14.0251 11.5498 14.0251H6.59981ZM14.8498 6.6001H16.4998V4.1251H14.8498V6.6001Z" fill="white"/></svg>\`
               if(cat==='음식점') return \`<svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +93,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
               }
 
               function defaultBgSvg() {
-                // 기존 동그란 배경을 한 줄 문자열로(그대로 붙여도 됨)
+                // 기존 동그란 배경을 한 줄 문자열로
                 return '<svg width="120" height="120" viewBox="0 0 58 57" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f0)"><circle cx="28" cy="25" r="16" fill="#FF8246"/><circle cx="28" cy="25" r="16" stroke="#DCDCDC" stroke-width="2.18"/></g><g filter="url(#f1)"><circle cx="28.0002" cy="24.9999" r="14.6789" fill="#FF8246"/><circle cx="28.0002" cy="24.9999" r="14.6789" stroke="white" stroke-width="2"/></g><defs><filter id="f0"><feFlood flood-opacity="0"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dx="1.11423" dy="3.34269"/><feGaussianBlur stdDeviation="5.57116"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0.423016 0 0 0 0 0.193675 0 0 0 0 0.193675 0 0 0 0.15 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="e1"/><feBlend mode="normal" in="SourceGraphic" in2="e1" result="shape"/></filter><filter id="f1"><feFlood flood-opacity="0"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dx="1.02223" dy="3.06669"/><feGaussianBlur stdDeviation="5.11115"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0.423016 0 0 0 0 0.193675 0 0 0 0 0.193675 0 0 0 0.15 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="e2"/><feBlend mode="normal" in="SourceGraphic" in2="e2" result="shape"/></filter></defs></svg>';
               }
                           
@@ -259,7 +258,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
     <WebView<unknown>
       ref={mapRef}
       originWhitelist={['*']}
-      source={{ html }}
+      source={{ html, baseUrl: process.env.EXPO_PUBLIC_BASE_URL }}
       style={{ flex: 1 }}
       startInLoadingState
       renderLoading={renderMapLoading}
