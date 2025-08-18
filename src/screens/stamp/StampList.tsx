@@ -102,20 +102,23 @@ export default function StampListScreen() {
             id: i + 1,
             isStamped: i < stampedCount,
           }));
-
-          return {
-            shopName,
-            stamps: arr,
-          };
+          return { shopName, stamps: arr };
         },
       );
 
-      setStampBoards(newStampBoards);
-
-      const hasCompletedShop = newStampBoards.some((shop) =>
+      const completedShops = newStampBoards.filter((shop) =>
         shop.stamps.every((stamp) => stamp.isStamped),
       );
-      setModalVisible(hasCompletedShop);
+
+      const visibleBoards = newStampBoards.filter(
+        (shop) => !shop.stamps.every((stamp) => stamp.isStamped),
+      );
+
+      setStampBoards(visibleBoards);
+
+      if (completedShops.length > 0) {
+        setModalVisible(true);
+      }
     } catch (error: any) {
       showError(error?.message || '알 수 없는 오류가 발생했습니다.');
     } finally {
