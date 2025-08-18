@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     width: 324,
     margin: 20,
     alignItems: 'center',
-    backgroundColor: colors.light.main,
+    backgroundColor: colors.light.white,
     borderRadius: 18,
     padding: 20,
     elevation: 6,
@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   shopName: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Pretendard-Bold',
-    color: colors.light.white,
+    color: colors.light.main,
   },
   stampCount: {
-    fontSize: 16,
+    fontSize: 13,
     fontFamily: 'Pretendard-SemiBold',
-    color: colors.light.white,
+    color: colors.light.gray2,
   },
   board: {
     gap: 9,
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   },
   empty: {
     backgroundColor: colors.light.sub,
-    borderColor: colors.light.white,
+    borderColor: colors.light.gray1,
     borderStyle: 'dashed',
   },
   stampText: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Pretendard-Bold',
     color: colors.light.white,
   },
