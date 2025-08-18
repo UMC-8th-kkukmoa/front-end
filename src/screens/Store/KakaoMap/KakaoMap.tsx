@@ -258,7 +258,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
     <WebView<unknown>
       ref={mapRef}
       originWhitelist={['*']}
-      source={{ html, baseUrl: 'https://kkukmoa.shop' }}
+      source={{ html, baseUrl: process.env.EXPO_PUBLIC_BASE_URL }}
       style={{ flex: 1 }}
       startInLoadingState
       renderLoading={renderMapLoading}
