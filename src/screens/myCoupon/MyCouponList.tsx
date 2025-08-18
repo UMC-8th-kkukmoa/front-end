@@ -23,9 +23,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.light.gray1_35,
     zIndex: 10,
   },
-  categoryArea: {
-    marginBottom: 10,
-  },
   scrollContent: {
     paddingHorizontal: 8,
     paddingBottom: 80,
@@ -157,7 +154,7 @@ export default function MyCouponListScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.categoryArea}>
+          <View>
             <KkCategoryTaps selected={selected} onSelect={setSelected} />
           </View>
 
