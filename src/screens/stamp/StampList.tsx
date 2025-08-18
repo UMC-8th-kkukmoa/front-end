@@ -8,9 +8,8 @@ import axios from 'axios';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
-import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
-import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
+import KkCategoryTaps from '../../design/component/kkCategoryTaps';
 import { Stamp, ShopStampData, StampApiResponse } from '../../types/stamp';
 
 const TOTAL_STAMPS = 10;
@@ -26,10 +25,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.light.gray1_35,
     zIndex: 10,
   },
-  dropdownArea: {
-    height: 45,
-    paddingTop: 28,
-    paddingLeft: 22,
+  categoryArea: {
     marginBottom: 10,
   },
   scrollContent: {
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
 export default function StampListScreen() {
   const router = useRouter();
 
-  const [value, setValue] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [stampBoards, setStampBoards] = useState<ShopStampData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -128,8 +124,8 @@ export default function StampListScreen() {
   }, []);
 
   useEffect(() => {
-    fetchStamps(value);
-  }, [value, fetchStamps]);
+    fetchStamps(selected);
+  }, [selected, fetchStamps]);
 
   const renderContent = () => {
     if (loading) {
@@ -155,12 +151,6 @@ export default function StampListScreen() {
     ));
   };
 
-  const items = categoryData.map((cat) => ({
-    label: cat.name,
-    value: cat.value,
-    icon: cat.icon,
-  }));
-
   return (
     <>
       <SafeAreaView style={styles.container} edges={['top']}>
@@ -171,8 +161,8 @@ export default function StampListScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.dropdownArea}>
-            <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
+          <View style={styles.categoryArea}>
+            <KkCategoryTaps selected={selected} onSelect={setSelected} />
           </View>
           {renderContent()}
         </ScrollView>
