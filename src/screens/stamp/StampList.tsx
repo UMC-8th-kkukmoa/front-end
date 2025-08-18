@@ -25,9 +25,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.light.gray1_35,
     zIndex: 10,
   },
-  categoryArea: {
-    marginBottom: 10,
-  },
   scrollContent: {
     paddingHorizontal: 8,
     paddingBottom: 40,
@@ -164,7 +161,7 @@ export default function StampListScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.categoryArea}>
+          <View>
             <KkCategoryTaps selected={selected} onSelect={setSelected} />
           </View>
           {renderContent()}
