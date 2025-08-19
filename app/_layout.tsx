@@ -3,12 +3,12 @@ import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ActivityIndicator, View } from 'react-native';
-import useAuth from '../src/hooks/useAuth';
+import useAuthStore from '../src/store/useAuthStore';
 
 const queryClient = new QueryClient();
 
 function AppLayout() {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   if (isAuthenticated === null) {
     return (
