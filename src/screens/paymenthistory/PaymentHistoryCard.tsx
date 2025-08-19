@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.light.gray1,
   },
   dateText: {
     fontSize: 10,
