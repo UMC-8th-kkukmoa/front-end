@@ -56,9 +56,9 @@ export default function PaymentHistoryScreen() {
     },
   ];
 
-  const renderItem = ({ item: historyItem }: { item: PaymentHistoryItem }) => (
+  const renderItem = ({ item: payitem }: { item: PaymentHistoryItem }) => (
     <PaymentHistoryCard
-      item={historyItem}
+      item={payitem}
       onPressReview={(i) => console.log(`${i.storeName} 리뷰 쓰기 클릭`)}
     />
   );
