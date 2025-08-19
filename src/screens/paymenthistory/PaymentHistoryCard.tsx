@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Rectangle from '../../assets/images/Rectangle.png';
+import Arrow from '../../assets/images/right-arrow.svg';
 import colors from '../../design/colors';
 import { PaymentHistoryItem } from '../../types/payment';
 
@@ -45,6 +46,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   storeImage: {
     width: 40,
     height: 40,
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   storeName: {
     fontSize: 15,
     fontWeight: '600',
-    flex: 1,
+    marginRight: 4,
   },
   amountRow: {
     flexDirection: 'row',
@@ -76,6 +81,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light.main,
     borderRadius: 24,
     alignItems: 'center',
+    shadowColor: colors.light.shadow,
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
   },
   reviewButtonText: {
     color: colors.light.white,
@@ -103,7 +113,10 @@ export default function PaymentHistoryCard({ item, onPressReview }: PaymentHisto
           source={item.imageUrl ? { uri: item.imageUrl } : Rectangle}
           style={styles.storeImage}
         />
-        <Text style={styles.storeName}>{item.storeName}</Text>
+        <TouchableOpacity style={styles.nameRow} onPress={() => {}}>
+          <Text style={styles.storeName}>{item.storeName}</Text>
+          <Arrow width={12} height={12} style={{ marginTop: 5 }} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.innerseparator} />
