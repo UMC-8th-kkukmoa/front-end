@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import colors from '../../design/colors';
@@ -53,24 +53,26 @@ export default function PaymentHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="결제 내역" onBackPress={() => router.back()} />
-      {isLoading ? (
-        <ActivityIndicator size="large" style={styles.loading} />
-      ) : (
-        <FlatList
-          data={historyData}
-          renderItem={renderItem}
-          keyExtractor={(item) => String(item.usageId)}
-          contentContainerStyle={styles.listContent}
-          onEndReached={() => {
-            if (hasNextPage) fetchNextPage();
-          }}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            isFetchingNextPage ? <ActivityIndicator style={styles.loading} /> : null
-          }
-        />
-      )}
+      <View style={styles.container}>
+        <Header title="결제 내역" onBackPress={() => router.back()} />
+        {isLoading ? (
+          <ActivityIndicator size="large" style={styles.loading} />
+        ) : (
+          <FlatList
+            data={historyData}
+            renderItem={renderItem}
+            keyExtractor={(item) => String(item.usageId)}
+            contentContainerStyle={styles.listContent}
+            onEndReached={() => {
+              if (hasNextPage) fetchNextPage();
+            }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              isFetchingNextPage ? <ActivityIndicator style={styles.loading} /> : null
+            }
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
