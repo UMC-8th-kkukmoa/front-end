@@ -1,11 +1,13 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import colors from '../../design/colors';
 import Header from '../../design/component/Header';
 import PaymentHistoryCard from './PaymentHistoryCard';
-import { PaymentHistoryItem } from '../../types/payment';
+import { PaymentHistoryItem, PaymentHistoryResponse } from '../../types/payment';
+import { fetchPaymentHistory } from '../../api/voucherApi';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,48 +19,34 @@ const styles = StyleSheet.create({
     paddingTop: 27,
     paddingHorizontal: 30.5,
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+  },
 });
 
 export default function PaymentHistoryScreen() {
   const router = useRouter();
 
-  // 🔹 더미 데이터
-  const paymentHistory: PaymentHistoryItem[] = [
-    {
-      id: '1',
-      date: '2025-08-08',
-      storeName: '미진 카페',
-      amount: 14200,
-    },
-    {
-      id: '2',
-      date: '2025-08-08',
-      storeName: '꾹모아 카페 공덕점',
-      amount: 14200,
-    },
-    {
-      id: '3',
-      date: '2025-08-08',
-      storeName: '카페 공덕점',
-      amount: 14200,
-    },
-    {
-      id: '4',
-      date: '2025-08-08',
-      storeName: '카페 공덕점',
-      amount: 14200,
-    },
-    {
-      id: '5',
-      date: '2025-08-08',
-      storeName: '카페 공덕점',
-      amount: 14200,
-    },
-  ];
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery<
+    PaymentHistoryResponse,
+    Error,
+    InfiniteData<PaymentHistoryResponse>,
+    [_: string],
+    string | undefined
+  >({
+    queryKey: ['paymentHistory'],
+    queryFn: ({ pageParam }) => fetchPaymentHistory({ cursor: pageParam }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.result.hasNext ? lastPage.result.nextCursor : undefined,
+  });
 
-  const renderItem = ({ item: payitem }: { item: PaymentHistoryItem }) => (
+  const historyData = data?.pages.flatMap((page) => page.result.items) ?? [];
+
+  const renderItem = ({ item }: { item: PaymentHistoryItem }) => (
     <PaymentHistoryCard
-      item={payitem}
+      item={item}
       onPressReview={(i) => console.log(`${i.storeName} 리뷰 쓰기 클릭`)}
     />
   );
@@ -66,12 +54,23 @@ export default function PaymentHistoryScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="결제 내역" onBackPress={() => router.back()} />
-      <FlatList
-        data={paymentHistory}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" style={styles.loading} />
+      ) : (
+        <FlatList
+          data={historyData}
+          renderItem={renderItem}
+          keyExtractor={(item) => String(item.usageId)}
+          contentContainerStyle={styles.listContent}
+          onEndReached={() => {
+            if (hasNextPage) fetchNextPage();
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isFetchingNextPage ? <ActivityIndicator style={styles.loading} /> : null
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }

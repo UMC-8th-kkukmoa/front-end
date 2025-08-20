@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import Rectangle from '../../assets/images/Rectangle.png';
 import Arrow from '../../assets/images/right-arrow.svg';
 import colors from '../../design/colors';
@@ -98,24 +99,27 @@ const styles = StyleSheet.create({
 });
 
 export default function PaymentHistoryCard({ item, onPressReview }: PaymentHistoryCardProps) {
+  const router = useRouter();
   return (
     <View style={styles.card}>
-      <Text style={styles.dateText}>
-        {new Date(item.date).toLocaleDateString('ko-KR', {
-          month: 'long',
-          day: 'numeric',
-          weekday: 'short',
-        })}
-      </Text>
+      <Text style={styles.dateText}>{item.usedAtFormatted}</Text>
 
       <View style={styles.separator} />
 
       <View style={styles.row}>
         <Image
-          source={item.imageUrl ? { uri: item.imageUrl } : Rectangle}
+          source={item.storeImage ? { uri: item.storeImage } : Rectangle}
           style={styles.storeImage}
         />
-        <TouchableOpacity style={styles.nameRow} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.nameRow}
+          onPress={() =>
+            router.push({
+              pathname: '/store/[id]',
+              params: { id: item.storeId, from: 'stores' },
+            })
+          }
+        >
           <Text style={styles.storeName}>{item.storeName}</Text>
           <Arrow width={12} height={12} style={{ marginTop: 5 }} />
         </TouchableOpacity>
@@ -125,7 +129,7 @@ export default function PaymentHistoryCard({ item, onPressReview }: PaymentHisto
 
       <View style={styles.amountRow}>
         <Text style={styles.amountLabel}>결제금액</Text>
-        <Text style={styles.amountValue}>{item.amount.toLocaleString()}원</Text>
+        <Text style={styles.amountValue}>{item.usedAmount.toLocaleString()}원</Text>
       </View>
       <TouchableOpacity style={styles.reviewButton} onPress={() => onPressReview?.(item)}>
         <Text style={styles.reviewButtonText}>리뷰 쓰기</Text>
