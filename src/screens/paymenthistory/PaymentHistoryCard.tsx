@@ -8,10 +8,9 @@ import styles from './PaymentHistoryCard.style';
 
 interface PaymentHistoryCardProps {
   item: PaymentHistoryItem;
-  onPressReview?: (item: PaymentHistoryItem) => void;
 }
 
-export default function PaymentHistoryCard({ item, onPressReview }: PaymentHistoryCardProps) {
+export default function PaymentHistoryCard({ item }: PaymentHistoryCardProps) {
   const router = useRouter();
 
   return (
@@ -45,7 +44,15 @@ export default function PaymentHistoryCard({ item, onPressReview }: PaymentHisto
         <Text style={styles.amountLabel}>결제금액</Text>
         <Text style={styles.amountValue}>{item.usedAmount.toLocaleString()}원</Text>
       </View>
-      <TouchableOpacity style={styles.reviewButton} onPress={() => onPressReview?.(item)}>
+      <TouchableOpacity
+        style={styles.reviewButton}
+        onPress={() =>
+          router.push({
+            pathname: '/reviewWrite/reviewWrite',
+            params: { storeId: String(item.storeId) },
+          })
+        }
+      >
         <Text style={styles.reviewButtonText}>리뷰 쓰기</Text>
       </TouchableOpacity>
     </View>

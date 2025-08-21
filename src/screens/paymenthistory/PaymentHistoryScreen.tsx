@@ -44,12 +44,7 @@ export default function PaymentHistoryScreen() {
 
   const historyData = data?.pages.flatMap((page) => page.result.items) ?? [];
 
-  const renderItem = ({ item }: { item: PaymentHistoryItem }) => (
-    <PaymentHistoryCard
-      item={item}
-      onPressReview={(i) => console.log(`${i.storeName} 리뷰 쓰기 클릭`)}
-    />
-  );
+  const renderItem = ({ item }: { item: PaymentHistoryItem }) => <PaymentHistoryCard item={item} />;
 
   return (
     <SafeAreaView style={styles.container}>
