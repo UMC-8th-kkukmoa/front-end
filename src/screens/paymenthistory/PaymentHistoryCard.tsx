@@ -30,7 +30,7 @@ export default function PaymentHistoryCard({ item, onPressReview }: PaymentHisto
           onPress={() =>
             router.push({
               pathname: '/store/[id]',
-              params: { id: item.storeId, from: 'stores' },
+              params: { id: item.storeId },
             })
           }
         >

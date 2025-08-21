@@ -39,5 +39,6 @@ export const fetchPaymentHistory = async ({
   const res = await apiClient.get('/v1/vouchers/usage', {
     params: { cursor, from, to, limit },
   });
+  console.log(res.data.result.items);
   return res.data;
 };
