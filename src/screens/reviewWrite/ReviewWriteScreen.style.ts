@@ -30,6 +30,7 @@ export default StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
+    bottom: -20,
     height: 20,
   },
   // 스토어 이름

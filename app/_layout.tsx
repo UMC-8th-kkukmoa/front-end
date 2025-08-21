@@ -32,7 +32,7 @@ function AppLayout() {
         <Stack.Screen name="store/[id]/reviews" />
         <Stack.Screen name="store/pickLocation" />
         <Stack.Screen name="store/likeList" />
-        <Stack.Screen name="reviewWrite/eviewWrite" />
+        <Stack.Screen name="reviewWrite/reviewWrite" />
       </Stack.Protected>
 
       <Stack.Protected guard={!isAuthenticated}>

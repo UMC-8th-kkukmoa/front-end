@@ -25,6 +25,7 @@ export default function PhotoSourceSheet({
       onBackdropPress={onClose}
       onBackButtonPress={onClose}
       swipeDirection="down"
+      onSwipeComplete={onClose}
       style={{ justifyContent: 'flex-end', margin: 0 }}
       statusBarTranslucent
       useNativeDriver

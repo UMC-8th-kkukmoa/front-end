@@ -1,8 +1,17 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Image, FlatList, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  FlatList,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -25,12 +34,10 @@ export default function ReviewWriteScreen() {
   const router = useRouter();
 
   const { storeId, storeName } = useLocalSearchParams<{ storeId?: string; storeName?: string }>();
-  const numericStoreId = storeId ? Number(storeId) : undefined;
+  const parsedStoreId = storeId != null ? Number(storeId) : NaN;
+  const numericStoreId = Number.isFinite(parsedStoreId) ? parsedStoreId : undefined;
 
   const qc = useQueryClient();
-
-  const insets = useSafeAreaInsets();
-  const [headerH, setHeaderH] = React.useState(0);
 
   const [content, setContent] = useState('');
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -82,7 +89,9 @@ export default function ReviewWriteScreen() {
         legacy: true,
       });
 
-      const tried = res.assets?.length ?? 0; // 방금 사용자가 고른 수
+      if (res.canceled || !res.assets?.length) return;
+
+      const tried = res.assets.length; // 방금 사용자가 고른 수
       const current = photos.length; // 이미 담겨 있는 수
       const totalAfter = current + tried; // 총개수
       const overflow = Math.max(0, totalAfter - MAX_PHOTOS); // 초과 개수
@@ -96,7 +105,7 @@ export default function ReviewWriteScreen() {
         Alert.alert(`사진은 최대 ${MAX_PHOTOS}장까지`, `${overflow}장은 제외되어 추가됩니다.`);
       }
 
-      const picked = res.assets!.slice(0, allow).map((a, i) => ({
+      const picked = res.assets.slice(0, allow).map((a, i) => ({
         id: `${Date.now()}-${i}`,
         uri: a.uri!,
       }));
@@ -168,79 +177,83 @@ export default function ReviewWriteScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* 상단 헤더 */}
-      <View style={[styles.header]} onLayout={(e) => setHeaderH(e.nativeEvent.layout.height)}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          style={styles.backBtn}
-        >
-          <BackArrow />
-        </TouchableOpacity>
-        <Text style={styles.title}>리뷰 작성</Text>
-        <View style={{ width: 24 }} />
-      </View>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.4 }}
-        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
-        style={[styles.topShadow, { top: headerH + insets.top }]}
-      />
-      {/* 스토어 이름 */}
-      <View style={styles.storeNameBox}>
-        <Text style={styles.storeName}>{storeName ?? '매장명 확인 중..'}</Text>
-      </View>
-
-      {/* 사진 영역 */}
-      <View style={styles.choiceArea}>
-        <TouchableOpacity
-          style={styles.rowBetween}
-          onPress={() => {
-            setSheetVisible(true);
-          }}
-        >
-          <Camera />
-          <Text style={styles.sectionTitle}>
-            사진 첨부하기 ({photos.length}/{MAX_PHOTOS})
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {photos.length > 0 ? (
-        <View style={styles.photoArea}>
-          <FlatList
-            data={photos}
-            horizontal
-            keyExtractor={(p) => p.id}
-            renderItem={renderPhoto}
-            ItemSeparatorComponent={PhotoSeparator}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 4, paddingTop: 8 }}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[styles.header]}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={styles.backBtn}
+          >
+            <BackArrow />
+          </TouchableOpacity>
+          <Text style={styles.title}>리뷰 작성</Text>
+          <View style={{ width: 24 }} />
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 0.4 }}
+            colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+            style={[styles.topShadow]}
           />
         </View>
-      ) : null}
+        {/* 스토어 이름 */}
+        <View style={styles.storeNameBox}>
+          <Text style={styles.storeName}>{storeName ?? '매장명 확인 중..'}</Text>
+        </View>
 
-      {/* 텍스트 입력 */}
-      <View style={styles.inputArea}>
-        <TextInput
-          style={[styles.input, { borderColor: hasText ? colors.light.black : colors.light.gray1 }]}
-          value={content}
-          placeholder="솔직한 후기와 응원의 한마디는 사장님의 큰 힘이 됩니다 :)"
-          placeholderTextColor={colors.light.gray2}
-          onChangeText={setContent}
-          multiline
-          maxLength={1000}
-        />
-      </View>
+        {/* 사진 영역 */}
+        <View style={styles.choiceArea}>
+          <TouchableOpacity
+            style={styles.rowBetween}
+            onPress={() => {
+              setSheetVisible(true);
+            }}
+          >
+            <Camera />
+            <Text style={styles.sectionTitle}>
+              사진 첨부하기 ({photos.length}/{MAX_PHOTOS})
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {photos.length > 0 ? (
+          <View style={styles.photoArea}>
+            <FlatList
+              data={photos}
+              horizontal
+              keyExtractor={(p) => p.id}
+              renderItem={renderPhoto}
+              ItemSeparatorComponent={PhotoSeparator}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 4, paddingTop: 8 }}
+            />
+          </View>
+        ) : null}
 
-      {/* 완료 버튼 */}
-      <View style={styles.submitBtn}>
-        <KkButton
-          label="완료"
-          type={canSubmit ? 'primary' : 'disabled'}
-          size="large"
-          onPress={submitReview}
-        />
-      </View>
+        {/* 텍스트 입력 */}
+        <View style={styles.inputArea}>
+          <TextInput
+            style={[
+              styles.input,
+              { borderColor: hasText ? colors.light.black : colors.light.gray1 },
+            ]}
+            value={content}
+            placeholder="솔직한 후기와 응원의 한마디는 사장님의 큰 힘이 됩니다 :)"
+            placeholderTextColor={colors.light.gray2}
+            onChangeText={setContent}
+            multiline
+            maxLength={1000}
+          />
+        </View>
+
+        {/* 완료 버튼 */}
+        <View style={styles.submitBtn}>
+          <KkButton
+            label="완료"
+            type={canSubmit ? 'primary' : 'disabled'}
+            size="large"
+            onPress={submitReview}
+          />
+        </View>
+      </ScrollView>
 
       {/* 사진 소스 시트 */}
       <PhotoSourceSheet
