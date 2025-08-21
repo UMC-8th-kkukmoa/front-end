@@ -96,7 +96,6 @@ export default function LoginScreen() {
     }
   };
 
-  // 인증 상태 감지해서 자동 리다이렉트
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {

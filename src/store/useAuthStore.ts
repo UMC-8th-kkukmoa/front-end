@@ -36,7 +36,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     set({ loginType });
     const { tokens } = get();
     const isAuthenticated = !!(tokens?.accessToken && loginType);
-    set({ isAuthenticated }); // 이 줄이 빠져있었어요
+    set({ isAuthenticated });
 
     if (loginType) {
       AsyncStorage.setItem('loginType', loginType).catch(console.error);
