@@ -10,6 +10,7 @@ import CategoryTabs from '../CategoryTabs/CategoryTabs';
 import MapFloatingButtons from '../MapFloatingButtons/MapFloatingButtons';
 import KakaoMap from '../KakaoMap/KakaoMap';
 import { getCurrentCoords, getAddressFromCoords } from '../../../utils/location';
+import { getStoreList } from '../../../api/store';
 
 function Store() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -35,7 +36,21 @@ function Store() {
     staleTime: 60_000,
   });
 
-  // 목록 → 마커로 내려보내기
+  // 전체 가게 목록 → 마커로 내려보내기
+  const handleShowAllMarkers = useCallback(async () => {
+    if (!coords) return;
+    const res = await getStoreList(coords.lat, coords.lng, 0, 30); // 최대 30
+    const markers = res.stores.map((s) => ({
+      storeId: String(s.storeId),
+      name: s.name,
+      categoryName: s.categoryName,
+      lat: Number(s.latitude),
+      lng: Number(s.longitude),
+    }));
+
+    mapRef.current?.postMessage(JSON.stringify({ type: 'SET_MARKERS', payload: markers }));
+  }, [coords]);
+
   const handleStoresLoaded = useCallback(
     (
       stores: Array<{
@@ -115,6 +130,10 @@ function Store() {
           onSelect={(cat) => {
             setSelectedCategory(cat);
             setSelectedId(null);
+
+            if (cat === null) {
+              handleShowAllMarkers();
+            }
           }}
         />
       </View>

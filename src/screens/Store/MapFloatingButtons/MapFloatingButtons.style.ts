@@ -4,8 +4,6 @@ import colors from '../../../design/colors';
 export default StyleSheet.create({
   floatingButtonGroup: {
     position: 'absolute',
-    left: 14,
-    bottom: 130,
     zIndex: 0,
     gap: 12,
     padding: 10,
