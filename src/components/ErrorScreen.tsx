@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 96,
     height: 96,
-    marginBottom: 16,
+    marginBottom: 32,
   },
   title: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 16,
     color: '#111827',
   },
 });
