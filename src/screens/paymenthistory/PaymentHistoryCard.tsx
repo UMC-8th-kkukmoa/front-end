@@ -49,7 +49,7 @@ export default function PaymentHistoryCard({ item }: PaymentHistoryCardProps) {
         onPress={() =>
           router.push({
             pathname: '/reviewWrite/reviewWrite',
-            params: { storeId: String(item.storeId) },
+            params: { storeId: String(item.storeId), storeName: String(item.storeName) },
           })
         }
       >
