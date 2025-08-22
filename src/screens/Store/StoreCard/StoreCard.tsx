@@ -20,7 +20,7 @@ const categoryIconMap: Record<string, React.FC<any>> = {
   음식점: FoodIcon,
   '운동/건강': ExerciseIcon,
   교육: EducationIcon,
-  미용실: SalonIcon,
+  미용: SalonIcon,
 };
 
 type Props = {

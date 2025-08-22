@@ -30,27 +30,30 @@ const PhotoThumb = React.memo(({ url }: { url: string }) => {
   return <Image source={{ uri: url }} style={styles.photo} />;
 });
 
-const ReviewsHeader = React.memo(({ count, imageUrl }: { count: number; imageUrl?: string }) => (
-  <>
-    {imageUrl ? (
-      <Image source={{ uri: imageUrl }} style={[styles.banner]} resizeMode="cover" />
-    ) : (
-      <View style={[styles.banner]} />
-    )}
+const ReviewsHeader = React.memo(
+  ({ count, imageUrl, storeName }: { count: number; imageUrl?: string; storeName?: string }) => (
+    <>
+      {imageUrl ? (
+        <Image source={{ uri: imageUrl }} style={[styles.banner]} resizeMode="cover" />
+      ) : (
+        <View style={[styles.banner]} />
+      )}
 
-    <LinearGradient
-      pointerEvents="none"
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 0.4 }}
-      colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
-      style={[styles.bottomShadow]}
-    />
+      <LinearGradient
+        pointerEvents="none"
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.4 }}
+        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+        style={[styles.bottomShadow]}
+      />
 
-    <View style={styles.headerBlock}>
-      <Text style={styles.countReview}>리뷰 {count}개</Text>
-    </View>
-  </>
-));
+      <View style={styles.headerBlock}>
+        <Text style={styles.storeName}>{storeName ?? '가게 이름 불러오는 중..'}</Text>
+        <Text style={styles.countReview}>리뷰 {count}개</Text>
+      </View>
+    </>
+  ),
+);
 
 const ReviewsFooterLoading = React.memo(() => (
   <View style={styles.footerLoading}>
@@ -231,7 +234,11 @@ export default function ReviewsScreen() {
           onEndReachedThreshold={0.2}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
           ListHeaderComponent={
-            <ReviewsHeader count={reviewCount ?? list.count} imageUrl={headerDto?.storeImageUrl} />
+            <ReviewsHeader
+              count={reviewCount ?? list.count}
+              imageUrl={headerDto?.storeImageUrl}
+              storeName={headerDto?.storeName}
+            />
           }
           ListFooterComponent={hasNextPage ? <ReviewsFooterLoading /> : <ReviewsFooterSpace />}
           showsVerticalScrollIndicator={false}

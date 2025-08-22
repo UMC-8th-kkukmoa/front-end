@@ -6,10 +6,9 @@ import { StatusBar } from 'expo-status-bar';
 import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
 import Header from '../../design/component/Header';
-import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
 import CouponCard from './MyCouponCard';
-import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
+import KkCategoryTabs from '../../design/component/KkCategoryTabs';
 import useQRCodeWebSocket from '../../hooks/useQRCodeWebSocket';
 import client from '../../api/client';
 
@@ -18,12 +17,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light.white,
     overflow: 'hidden',
-  },
-  dropdownArea: {
-    height: 45,
-    paddingTop: 28,
-    paddingLeft: 22,
-    marginBottom: 10,
   },
   scrollContent: {
     paddingHorizontal: 8,
@@ -40,7 +33,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -72,18 +64,13 @@ type Coupon = {
 
 export default function MyCouponListScreen() {
   const router = useRouter();
+
   const [bottomVisible, setBottomVisible] = useState(false);
-  const [value, setValue] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const items = categoryData.map((cat) => ({
-    label: cat.name,
-    value: cat.value,
-    icon: cat.icon,
-  }));
-
-  const fetchCoupons = async (storeType: string, signal?: AbortSignal) => {
+  const fetchCoupons = async (storeType: string | null, signal?: AbortSignal) => {
     try {
       const credentials = await Keychain.getGenericPassword({
         service: 'com.kkukmoa.accessToken',
@@ -111,7 +98,6 @@ export default function MyCouponListScreen() {
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         if (error.name === 'CanceledError') {
-          // 요청 취소 시 무시
           console.log('이전 요청 취소됨');
         } else {
           console.error('쿠폰 목록 조회 오류:', error.response?.data || error.message);
@@ -124,12 +110,12 @@ export default function MyCouponListScreen() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchCoupons(value || '', controller.signal);
+    fetchCoupons(selected, controller.signal);
 
     return () => {
       controller.abort();
     };
-  }, [value]);
+  }, [selected]);
 
   const handleCouponUsed = useCallback((qrInfo: string) => {
     setCoupons((prev) => {
@@ -162,8 +148,8 @@ export default function MyCouponListScreen() {
           <Header title="내 쿠폰" onBackPress={() => router.back()} />
 
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.dropdownArea}>
-              <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
+            <View>
+              <KkCategoryTabs selected={selected} onSelect={setSelected} />
             </View>
 
             {coupons.length === 0 ? (

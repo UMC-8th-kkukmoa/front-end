@@ -7,9 +7,8 @@ import axios from 'axios';
 import Header from '../../design/component/Header';
 import StampBoard from './StampBoard';
 import StampCompleteModal from './StampCompleteModal';
-import KkDropdown from '../../design/component/KkDropdown';
 import colors from '../../design/colors';
-import { categoryData } from '../Store/CategoryTabs/CategoryTabs';
+import KkCategoryTabs from '../../design/component/KkCategoryTabs';
 import { Stamp, ShopStampData, StampApiResponse } from '../../types/stamp';
 
 const TOTAL_STAMPS = 10;
@@ -19,18 +18,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light.white,
     overflow: 'hidden',
-  },
-  headerContainer: {
-    backgroundColor: colors.light.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.light.gray1_35,
-    zIndex: 10,
-  },
-  dropdownArea: {
-    height: 45,
-    paddingTop: 28,
-    paddingLeft: 22,
-    marginBottom: 10,
   },
   scrollContent: {
     paddingHorizontal: 8,
@@ -45,7 +32,7 @@ const styles = StyleSheet.create({
 export default function StampListScreen() {
   const router = useRouter();
 
-  const [value, setValue] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [stampBoards, setStampBoards] = useState<ShopStampData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -102,20 +89,23 @@ export default function StampListScreen() {
             id: i + 1,
             isStamped: i < stampedCount,
           }));
-
-          return {
-            shopName,
-            stamps: arr,
-          };
+          return { shopName, stamps: arr };
         },
       );
 
-      setStampBoards(newStampBoards);
-
-      const hasCompletedShop = newStampBoards.some((shop) =>
+      const completedShops = newStampBoards.filter((shop) =>
         shop.stamps.every((stamp) => stamp.isStamped),
       );
-      setModalVisible(hasCompletedShop);
+
+      const visibleBoards = newStampBoards.filter(
+        (shop) => !shop.stamps.every((stamp) => stamp.isStamped),
+      );
+
+      setStampBoards(visibleBoards);
+
+      if (completedShops.length > 0) {
+        setModalVisible(true);
+      }
     } catch (error: any) {
       showError(error?.message || '알 수 없는 오류가 발생했습니다.');
     } finally {
@@ -124,8 +114,8 @@ export default function StampListScreen() {
   }, []);
 
   useEffect(() => {
-    fetchStamps(value);
-  }, [value, fetchStamps]);
+    fetchStamps(selected);
+  }, [selected, fetchStamps]);
 
   const renderContent = () => {
     if (loading) {
@@ -151,12 +141,6 @@ export default function StampListScreen() {
     ));
   };
 
-  const items = categoryData.map((cat) => ({
-    label: cat.name,
-    value: cat.value,
-    icon: cat.icon,
-  }));
-
   return (
     <>
       <SafeAreaView style={styles.container} edges={['top']}>
@@ -164,8 +148,8 @@ export default function StampListScreen() {
           <Header title="스탬프" onBackPress={() => router.back()} />
 
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.dropdownArea}>
-              <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
+            <View>
+              <KkCategoryTabs selected={selected} onSelect={setSelected} />
             </View>
             {renderContent()}
           </ScrollView>

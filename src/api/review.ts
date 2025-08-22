@@ -1,12 +1,39 @@
 import apiClient from './client';
 import type { BaseResponse } from '../types/store';
 import type {
+  ReviewCreateResult,
   ReviewPreviewItem,
   ReviewCursorEnvelopeDto,
   ReviewCursorPageDto,
   ReviewCount,
 } from '../types/review';
 
+// 리뷰 작성
+export async function createReview(
+  storeId: string | number,
+  content: string,
+  images: (string | Blob)[] = [],
+): Promise<ReviewCreateResult> {
+  const formData = new FormData();
+  formData.append('content', content);
+
+  images.forEach((img, idx) => {
+    formData.append('images', {
+      uri: typeof img === 'string' ? img : undefined,
+      name: `review_${idx}.jpg`,
+      type: 'image/jpeg',
+    } as any);
+  });
+
+  const { data } = await apiClient.post<BaseResponse<ReviewCreateResult>>(
+    `/v1/stores/${storeId}/reviews`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+
+  if (!data.isSuccess) throw new Error(data.message || '리뷰 작성에 실패했습니다.');
+  return data.result;
+}
 // 최신 리뷰 프리뷰
 export async function getReviewPreviews(
   storeId: string | number,

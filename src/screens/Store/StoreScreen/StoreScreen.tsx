@@ -35,7 +35,6 @@ function Store() {
     staleTime: 60_000,
   });
 
-  // 목록 → 마커로 내려보내기
   const handleStoresLoaded = useCallback(
     (
       stores: Array<{

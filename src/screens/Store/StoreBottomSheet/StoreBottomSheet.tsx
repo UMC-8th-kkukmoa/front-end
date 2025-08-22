@@ -1,5 +1,12 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  useWindowDimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -66,7 +73,15 @@ function StoreBottomSheet({
 
   const { toggleLike, isFavoriteShop, addFavoriteShop } = useLikeStore();
 
-  const snapPoints = useMemo(() => ['9%', '37%', '75%'], []);
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+
+  const snapPoints = useMemo(() => {
+    if (isLandscape) {
+      return ['20%', '65%', '65%']; // 가로 모드
+    }
+    return ['9%', '37%', '75%']; // 세로 모드
+  }, [isLandscape]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sheetIndex, setSheetIndex] = useState(1);
@@ -100,9 +115,9 @@ function StoreBottomSheet({
         };
       }
       if (selectedCategory) {
-        return getStoreListByCategory(selectedCategory, location.lat, location.lng, pageParam, 10);
+        return getStoreListByCategory(selectedCategory, location.lat, location.lng, pageParam, 20);
       }
-      return getStoreList(location.lat, location.lng, pageParam, 10);
+      return getStoreList(location.lat, location.lng, pageParam, 20);
     },
     getNextPageParam: (lastPage, pages) => (lastPage.isLast ? undefined : pages.length),
     select: (data) => {

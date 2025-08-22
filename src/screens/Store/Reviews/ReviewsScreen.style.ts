@@ -42,13 +42,21 @@ const styles = StyleSheet.create({
     height: 20,
   },
   headerBlock: {
+    alignItems: 'center',
+    flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: 13,
   },
+  storeName: {
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 20,
+    color: colors.light.main,
+    marginRight: 10,
+  },
   countReview: {
     fontFamily: 'Pretendard-Medium',
-    fontSize: 17,
-    color: colors.light.black,
+    fontSize: 16,
+    color: colors.light.gray2,
   },
 
   // 리뷰 아이템
