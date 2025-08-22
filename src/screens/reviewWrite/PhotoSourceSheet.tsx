@@ -28,11 +28,8 @@ export default function PhotoSourceSheet({
       onSwipeComplete={onClose}
       style={{ justifyContent: 'flex-end', margin: 0 }}
       statusBarTranslucent
-      useNativeDriver
-      hideModalContentWhileAnimating
       backdropTransitionOutTiming={0}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
+      hideModalContentWhileAnimating
       propagateSwipe
     >
       <View style={styles.sheet}>

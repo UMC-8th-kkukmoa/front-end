@@ -13,7 +13,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import styles from './ReviewWriteScreen.style';
 import { KkButton } from '../../design/component/KkButton';
@@ -21,8 +20,8 @@ import KkCompleteModal from '../../design/component/KkCompleteModal';
 import PhotoSourceSheet from './PhotoSourceSheet';
 import Camera from '../../assets/images/camera.svg';
 import RemoveIcon from '../../assets/images/removeIcon.svg';
-import BackArrow from '../../assets/images/arrow_back.svg';
 import colors from '../../design/colors';
+import Header from '../../design/component/Header';
 
 import { createReview } from '../../api/review';
 
@@ -178,23 +177,8 @@ export default function ReviewWriteScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.header]}>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={styles.backBtn}
-          >
-            <BackArrow />
-          </TouchableOpacity>
-          <Text style={styles.title}>리뷰 작성</Text>
-          <View style={{ width: 24 }} />
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 0.4 }}
-            colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
-            style={[styles.topShadow]}
-          />
-        </View>
+        <Header title="리뷰 작성" onBackPress={() => router.back()} shadow />
+
         {/* 스토어 이름 */}
         <View style={styles.storeNameBox}>
           <Text style={styles.storeName}>{storeName ?? '매장명 확인 중..'}</Text>
