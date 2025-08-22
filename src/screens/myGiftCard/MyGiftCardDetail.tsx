@@ -79,7 +79,7 @@ export default function MyGiftcardDetail() {
 
               <View style={styles.description}>
                 <Text style={styles.brand}>꾹모아</Text>
-                <Text style={styles.title}>{voucher.name}</Text>
+                <Text style={styles.title}>모바일 금액권 {voucher.name}권</Text>
               </View>
 
               <View style={styles.barcode}>

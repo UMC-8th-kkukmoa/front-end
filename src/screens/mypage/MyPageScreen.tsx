@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Header from '../../design/component/Header';
@@ -101,12 +101,24 @@ export default function MyPageScreen() {
             label="내 금액권"
             onClick={() => router.push('/myGiftCard/MyGiftCardScreen')}
           />
+          <SectionLabel
+            label="결제 내역"
+            onClick={() => router.push('/paymenthistory/PaymentHistoryScreen')}
+          />
         </Section>
 
         <Section title="계정 관리">
           <SectionLabel label="비밀번호 재설정" onClick={() => {}} />
           <SectionLabel label="사장님 계정 전환" onClick={() => router.push('/owner/auth')} />
-          <SectionLabel label="로그아웃" onClick={handleLogout} />
+          <SectionLabel
+            label="로그아웃"
+            onClick={() =>
+              Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
+                { text: '취소', style: 'cancel' },
+                { text: '확인', onPress: handleLogout },
+              ])
+            }
+          />
         </Section>
       </ScrollView>
     </View>

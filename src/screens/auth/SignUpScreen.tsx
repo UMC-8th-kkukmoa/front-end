@@ -250,7 +250,7 @@ export default function SignUpScreen() {
             value={password}
             onChangeText={setPassword}
             placeholder="비밀번호를 입력해주세요."
-            type="text"
+            type="password"
             variant={password ? 'secondary' : 'primary'}
             enabled={!!password}
             error={false}
@@ -268,7 +268,7 @@ export default function SignUpScreen() {
               value={passwordConfirm}
               onChangeText={setPasswordConfirm}
               placeholder="비밀번호를 입력해주세요."
-              type="text"
+              type="password"
               variant={passwordConfirm ? 'secondary' : 'primary'}
               enabled={!!passwordConfirm}
               error={isPasswordError}

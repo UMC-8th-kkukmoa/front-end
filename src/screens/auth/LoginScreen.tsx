@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
@@ -54,6 +62,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -73,16 +82,27 @@ export default function LoginScreen() {
   const isValid = email && password;
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       await localLogin(email, password);
       useAuthStore.getState().setLoginType('local');
+      await useAuthStore.getState().updateTokens();
       await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
-      router.replace('/');
     } catch (err: any) {
       console.error('로그인 실패:', err);
       Alert.alert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다. 다시 시도해주세요.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/');
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <View style={styles.container}>
@@ -116,13 +136,17 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.button}>
-        <KkButton
-          label="로그인"
-          type={isValid ? 'primary' : 'disabled'}
-          size="large"
-          onPress={isValid ? handleLogin : () => {}}
-          shadow
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.light.main} />
+        ) : (
+          <KkButton
+            label="로그인"
+            type={isValid ? 'primary' : 'disabled'}
+            size="large"
+            onPress={isValid ? handleLogin : () => {}}
+            shadow
+          />
+        )}
       </View>
 
       <View style={styles.signupContainer}>
