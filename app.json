@@ -16,6 +16,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "edgeToEdgeEnabled": true,
       "intentFilters": [
         {
           "action": "VIEW",
