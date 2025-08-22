@@ -1,5 +1,6 @@
 import apiClient from './client';
 import type { MyGiftcard, DetailedGiftCard } from '../types/voucher';
+import { PaymentHistoryResponse } from '../types/payment';
 
 // 내 금액권 전체 목록 조회
 export const getMyGiftCards = async (): Promise<MyGiftcard[]> => {
@@ -21,4 +22,22 @@ export const getGiftCardDetail = async (uuid: string): Promise<DetailedGiftCard>
     console.error('금액권 상세 조회 실패:', error);
     throw error;
   }
+};
+
+// 결제 내역 조회
+export const fetchPaymentHistory = async ({
+  cursor,
+  from,
+  to,
+  limit = 10,
+}: {
+  cursor?: string;
+  from?: string;
+  to?: string;
+  limit?: number;
+}): Promise<PaymentHistoryResponse> => {
+  const res = await apiClient.get('/v1/vouchers/usage', {
+    params: { cursor, from, to, limit },
+  });
+  return res.data;
 };
