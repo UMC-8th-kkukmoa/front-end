@@ -53,7 +53,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
             var pending = [];
             var overlays = [];
             var overlayMap = {};
-            var selectedId = null; 
+            var selectedId = null;
 
             function clearSelection(){
               if (selectedId && overlayMap[selectedId]) {
@@ -64,7 +64,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
               selectedId = null;
             }
 
-            function postToRN(msg){ 
+            function postToRN(msg){
               if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
                 window.ReactNativeWebView.postMessage(JSON.stringify(msg));
               }
@@ -96,7 +96,7 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
                 // 기존 동그란 배경을 한 줄 문자열로
                 return '<svg width="120" height="120" viewBox="0 0 58 57" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f0)"><circle cx="28" cy="25" r="16" fill="#FF8246"/><circle cx="28" cy="25" r="16" stroke="#DCDCDC" stroke-width="2.18"/></g><g filter="url(#f1)"><circle cx="28.0002" cy="24.9999" r="14.6789" fill="#FF8246"/><circle cx="28.0002" cy="24.9999" r="14.6789" stroke="white" stroke-width="2"/></g><defs><filter id="f0"><feFlood flood-opacity="0"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dx="1.11423" dy="3.34269"/><feGaussianBlur stdDeviation="5.57116"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0.423016 0 0 0 0 0.193675 0 0 0 0 0.193675 0 0 0 0.15 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="e1"/><feBlend mode="normal" in="SourceGraphic" in2="e1" result="shape"/></filter><filter id="f1"><feFlood flood-opacity="0"/><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dx="1.02223" dy="3.06669"/><feGaussianBlur stdDeviation="5.11115"/><feComposite in2="hardAlpha" operator="out"/><feColorMatrix type="matrix" values="0 0 0 0 0.423016 0 0 0 0 0.193675 0 0 0 0 0.193675 0 0 0 0.15 0"/><feBlend mode="normal" in2="BackgroundImageFix" result="e2"/><feBlend mode="normal" in="SourceGraphic" in2="e2" result="shape"/></filter></defs></svg>';
               }
-                          
+
               // 배경 핀 SVG + 가운데 아이콘 SVG 겹치기
               function buildMarkerHtml(category, isSelected){
               var bg = isSelected ? selectedBgSvg() : defaultBgSvg();
@@ -220,7 +220,6 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
               });
               ready = true;
 
-              // 지도 빈 공간 클릭 → 선택 해제 + RN에 알림
               kakao.maps.event.addListener(map, 'click', function(){
                 clearSelection();
                 postToRN({ type: 'MAP_BACKGROUND_CLICK' });
@@ -235,7 +234,12 @@ export default function KakaoMap({ center, zoom = 3, mapRef, onMessage }: KakaoM
               // 준비 완료 알림
               postToRN({ type: 'MAP_READY' });
 
-              // 대기 중 이동 처리
+              // WebView 완전 로딩 후 중심점 재설정
+              setTimeout(function() {
+                map.relayout();
+                map.setCenter(new kakao.maps.LatLng(${finalCenter.lat}, ${finalCenter.lng}));
+              }, 1000);
+
               while (pending.length) {
                 var t = pending.shift();
                 map.setCenter(new kakao.maps.LatLng(t.lat, t.lng));
