@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   card: {
-    width: 162,
+    width: 163,
     height: 139,
     marginTop: 10,
     alignItems: 'center',
   },
   cardImage: {
-    width: 165,
+    width: '100%',
     height: 99,
     aspectRatio: 16 / 9,
     resizeMode: 'contain',
