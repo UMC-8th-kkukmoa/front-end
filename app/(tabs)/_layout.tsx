@@ -1,6 +1,6 @@
 import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
-import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StatusBar, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, usePathname } from 'expo-router';
@@ -56,6 +56,9 @@ export default function Layout() {
   const insets = useSafeAreaInsets();
   const isStoreTab = pathname === '/stores' || pathname === '/';
 
+  const { width, height } = Dimensions.get('window');
+  const isLandscape = width > height;
+
   return (
     <SafeAreaView
       edges={['left', 'right', 'bottom']}
@@ -63,8 +66,9 @@ export default function Layout() {
         flex: 1,
         paddingTop: isStoreTab ? 0 : insets.top,
         paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
+        // 가로 모드에서는 좌우 패딩 제거
+        paddingLeft: isLandscape ? 0 : insets.left,
+        paddingRight: isLandscape ? 0 : insets.right,
         backgroundColor: colors.light.white,
       }}
     >
