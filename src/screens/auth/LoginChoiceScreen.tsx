@@ -68,6 +68,7 @@ export default function LoginChoiceScreen() {
       useAuthStore.getState().setLoginType('kakao');
       // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
       // noinspection ES6MissingAwait
+      await useAuthStore.getState().updateTokens();
       queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
     }
   };
