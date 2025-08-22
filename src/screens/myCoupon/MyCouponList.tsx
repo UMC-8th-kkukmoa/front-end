@@ -17,12 +17,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
-  },
-  headerContainer: {
-    backgroundColor: colors.light.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.light.gray1_35,
-    zIndex: 10,
+    overflow: 'hidden',
   },
   dropdownArea: {
     height: 45,
@@ -163,30 +158,30 @@ export default function MyCouponListScreen() {
       <SafeAreaView style={styles.container} edges={['top']}>
         {/* eslint-disable-next-line react/style-prop-object */}
         <StatusBar style="dark" />
-        <View style={styles.headerContainer}>
-          <Header title="내 쿠폰" onBackPress={() => router.back()} shadow={false} />
-        </View>
+        <View style={styles.container}>
+          <Header title="내 쿠폰" onBackPress={() => router.back()} />
 
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.dropdownArea}>
-            <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
-          </View>
-
-          {coupons.length === 0 ? (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={styles.emptyText}>사용 가능한 쿠폰이 없습니다.</Text>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <View style={styles.dropdownArea}>
+              <KkDropdown items={items} value={value} onSelect={(val) => setValue(val)} />
             </View>
-          ) : (
-            coupons.map((coupon) => (
-              <CouponCard
-                key={coupon.coupon_id}
-                title={coupon.coupon_name}
-                shopName={coupon.store_name}
-                coupon_qrcode={coupon.coupon_qrcode}
-              />
-            ))
-          )}
-        </ScrollView>
+
+            {coupons.length === 0 ? (
+              <View style={{ alignItems: 'center' }}>
+                <Text style={styles.emptyText}>사용 가능한 쿠폰이 없습니다.</Text>
+              </View>
+            ) : (
+              coupons.map((coupon) => (
+                <CouponCard
+                  key={coupon.coupon_id}
+                  title={coupon.coupon_name}
+                  shopName={coupon.store_name}
+                  coupon_qrcode={coupon.coupon_qrcode}
+                />
+              ))
+            )}
+          </ScrollView>
+        </View>
       </SafeAreaView>
       {bottomVisible && (
         <View style={styles.bottomSheet}>
