@@ -115,9 +115,9 @@ function StoreBottomSheet({
         };
       }
       if (selectedCategory) {
-        return getStoreListByCategory(selectedCategory, location.lat, location.lng, pageParam, 10);
+        return getStoreListByCategory(selectedCategory, location.lat, location.lng, pageParam, 20);
       }
-      return getStoreList(location.lat, location.lng, pageParam, 10);
+      return getStoreList(location.lat, location.lng, pageParam, 20);
     },
     getNextPageParam: (lastPage, pages) => (lastPage.isLast ? undefined : pages.length),
     select: (data) => {
