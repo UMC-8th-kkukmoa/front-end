@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { InfiniteData } from '@tanstack/react-query';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import CategoryTabs from '../../../design/component/kkCategoryTaps';
+import CategoryTabs from '../../../design/component/KkCategoryTabs';
 import StoreCard from '../StoreCard/StoreCard';
 import styles from './LikeListScreen.style';
 import BackArrow from '../../../assets/images/arrow_back.svg';

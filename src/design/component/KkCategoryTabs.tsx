@@ -67,7 +67,7 @@ type Props = {
   paddingVertical?: number;
 };
 
-function kkCategoryTaps({
+function kkCategoryTabs({
   selected,
   onSelect,
   paddingHorizontal = 22,
@@ -116,4 +116,4 @@ function kkCategoryTaps({
   );
 }
 
-export default kkCategoryTaps;
+export default kkCategoryTabs;

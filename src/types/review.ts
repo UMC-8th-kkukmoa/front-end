@@ -1,3 +1,14 @@
+// 리뷰 생성 응답
+export interface ReviewCreateResult {
+  reviewId: number;
+  storeId: number;
+  writerId: number;
+  content: string;
+  imageUrls: string[];
+  createdAt: string;
+}
+
+// 프리뷰
 export interface ReviewPreviewItem {
   reviewId: number;
   writerNickname: string | null;

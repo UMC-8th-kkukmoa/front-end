@@ -11,7 +11,7 @@
     "prepare": "npx husky install"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^5.1.8",
+    "@gorhom/bottom-sheet": "~5.1.8",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.1",
     "@tanstack/react-query": "^5.83.0",
