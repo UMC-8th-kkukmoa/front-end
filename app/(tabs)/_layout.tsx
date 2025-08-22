@@ -24,13 +24,17 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 8,
   },
-  topFadeOverlay: {
+  contentContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  bottomFadeOverlay: {
     position: 'absolute',
     left: 0,
     right: 0,
     height: 50,
     zIndex: 1,
-    bottom: 80,
+    bottom: 0,
   },
 });
 
@@ -72,14 +76,17 @@ export default function Layout() {
       }}
     >
       <StatusBar barStyle="dark-content" />
-      <LinearGradient
-        start={{ x: 0, y: 1 }}
-        end={{ x: 0, y: 0 }}
-        colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
-        style={[styles.topFadeOverlay]}
-      />
       <Tabs>
-        <TabSlot />
+        <View style={styles.contentContainer}>
+          <TabSlot />
+          <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            colors={['rgba(108, 49, 49, 0.08)', 'rgba(0,0,0,0)']}
+            style={styles.bottomFadeOverlay}
+            pointerEvents="none"
+          />
+        </View>
         <TabList style={styles.tabLayout}>
           {tabs.map((tab) => {
             // 이 페이지는 하단 탭 바가 보이지 않아야 하므로 router.push를 사용해 별도로 이동 처리함
