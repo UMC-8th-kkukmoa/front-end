@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, Alert, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
 import Header from '../../design/component/Header';
@@ -18,12 +17,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light.white,
-  },
-  headerContainer: {
-    backgroundColor: colors.light.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.light.gray1_35,
-    zIndex: 10,
+    overflow: 'hidden',
   },
   scrollContent: {
     paddingHorizontal: 8,
@@ -42,10 +36,6 @@ export default function StampListScreen() {
   const [stampBoards, setStampBoards] = useState<ShopStampData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleBack = () => {
-    router.replace('/(tabs)/profile');
-  };
 
   const showError = (message: string) => {
     Alert.alert('오류', message);
@@ -154,18 +144,16 @@ export default function StampListScreen() {
   return (
     <>
       <SafeAreaView style={styles.container} edges={['top']}>
-        {/* eslint-disable-next-line react/style-prop-object */}
-        <StatusBar style="dark" />
-        <View style={styles.headerContainer}>
-          <Header title="스탬프" onBackPress={handleBack} shadow={false} />
-        </View>
+        <View style={styles.container}>
+          <Header title="스탬프" onBackPress={() => router.back()} />
 
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View>
-            <KkCategoryTabs selected={selected} onSelect={setSelected} />
-          </View>
-          {renderContent()}
-        </ScrollView>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <View>
+              <KkCategoryTabs selected={selected} onSelect={setSelected} />
+            </View>
+            {renderContent()}
+          </ScrollView>
+        </View>
       </SafeAreaView>
 
       <StampCompleteModal visible={isModalVisible} onClose={() => setModalVisible(false)} />
