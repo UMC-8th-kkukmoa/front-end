@@ -24,15 +24,16 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   gridContainer: {
+    marginTop: 30,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: 17,
-    paddingTop: 22,
+    justifyContent: 'center',
+    gap: 20,
   },
   card: {
-    flexBasis: '48%',
-    marginBottom: 24,
+    width: 162,
+    height: 139,
+    marginTop: 10,
     alignItems: 'center',
   },
   cardImage: {
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     marginTop: 8,
-    alignItems: 'center',
   },
   cardTitle: {
     fontFamily: 'Pretendard-Bold',
