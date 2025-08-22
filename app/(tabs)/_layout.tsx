@@ -2,7 +2,7 @@ import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StatusBar, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, usePathname } from 'expo-router';
 import CouponsIcon from '../../src/assets/images/credit-card.svg';
 import HomeIcon from '../../src/assets/images/home.svg';
@@ -60,8 +60,7 @@ export default function Layout() {
   const isLandscape = width > height;
 
   return (
-    <SafeAreaView
-      edges={['left', 'right', 'bottom']}
+    <View
       style={{
         flex: 1,
         paddingTop: isStoreTab ? 0 : insets.top,
@@ -118,6 +117,6 @@ export default function Layout() {
           })}
         </TabList>
       </Tabs>
-    </SafeAreaView>
+    </View>
   );
 }
