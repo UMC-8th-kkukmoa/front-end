@@ -6,6 +6,10 @@
     "scheme": "kkukmoa",
     "icon": "./assets/images/icon.png",
     "newArchEnabled": true,
+    "androidNavigationBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content"
+    },
     "android": {
       "package": "com.kkukmoa",
       "adaptiveIcon": {
