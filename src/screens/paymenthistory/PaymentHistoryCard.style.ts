@@ -1,0 +1,89 @@
+import { StyleSheet } from 'react-native';
+import colors from '../../design/colors';
+
+export default StyleSheet.create({
+  card: {
+    backgroundColor: colors.light.white,
+    borderRadius: 16,
+    paddingTop: 12.5,
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    marginBottom: 24,
+    shadowColor: colors.light.shadow,
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.light.gray1,
+  },
+  dateText: {
+    fontSize: 10,
+    color: colors.light.gray2,
+    fontFamily: 'Pretendard-Medium',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.light.gray1_35,
+    marginHorizontal: -20,
+    marginTop: 12.5,
+    marginBottom: 9,
+  },
+  innerseparator: {
+    height: 1,
+    marginTop: 10,
+    marginBottom: 14,
+    backgroundColor: colors.light.gray1_35,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  storeImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    marginRight: 13,
+    backgroundColor: colors.light.gray1,
+  },
+  storeName: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginRight: 4,
+  },
+  amountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  amountLabel: {
+    fontSize: 12,
+    color: colors.light.black,
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  amountValue: {
+    fontSize: 12,
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  reviewButton: {
+    marginTop: 8.5,
+    backgroundColor: colors.light.main,
+    borderRadius: 24,
+    alignItems: 'center',
+    shadowColor: colors.light.shadow,
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  reviewButtonText: {
+    color: colors.light.white,
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 12,
+    paddingVertical: 13.5,
+  },
+});
