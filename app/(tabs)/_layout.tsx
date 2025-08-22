@@ -1,6 +1,6 @@
 import React from 'react';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
-import { StatusBar, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
+import { StatusBar, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, usePathname } from 'expo-router';
@@ -56,7 +56,7 @@ export default function Layout() {
   const insets = useSafeAreaInsets();
   const isStoreTab = pathname === '/stores' || pathname === '/';
 
-  const { width, height } = Dimensions.get('window');
+  const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
   return (
