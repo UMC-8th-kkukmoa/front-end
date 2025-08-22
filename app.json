@@ -38,6 +38,18 @@
         }
       ]
     },
-    "plugins": ["expo-build-properties", "expo-router", "expo-web-browser"]
+    "plugins": [
+      "expo-build-properties",
+      "expo-router",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FF8246",
+          "image": "./assets/images/splash.png",
+          "imageWidth": 200
+        }
+      ]
+    ]
   }
 }
