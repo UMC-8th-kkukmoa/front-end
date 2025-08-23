@@ -39,7 +39,16 @@
       ]
     },
     "plugins": [
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "gradleProperties": {
+              "VisionCamera_enableCodeScanner": "true"
+            }
+          }
+        }
+      ],
       "expo-router",
       "expo-web-browser",
       [
@@ -48,6 +57,12 @@
           "backgroundColor": "#FF8246",
           "image": "./assets/images/splash.png",
           "imageWidth": 200
+        }
+      ],
+      [
+        "react-native-vision-camera",
+        {
+          "enableCodeScanner": true
         }
       ]
     ]

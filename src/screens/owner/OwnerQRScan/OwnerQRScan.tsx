@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   topRight: { top: 0, right: 0, borderRightWidth: 10, borderTopWidth: 10 },
   bottomLeft: { bottom: 0, left: 0, borderLeftWidth: 10, borderBottomWidth: 10 },
   bottomRight: { bottom: 0, right: 0, borderRightWidth: 10, borderBottomWidth: 10 },
-  scannedText: { color: '#00ff00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
+  processingText: { color: '#ffaa00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
+  processingText: { color: '#ffaa00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
 });
 
 export default function QrScannerScreen() {
@@ -86,7 +87,7 @@ export default function QrScannerScreen() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const status = await Camera.requestCameraPermission();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -97,7 +98,6 @@ export default function QrScannerScreen() {
     setIsScanned(true);
     setIsProcessing(true);
 
-    // eslint-disable-next-line no-console
     console.log('QR 스캔됨:', qrValue);
 
     try {
