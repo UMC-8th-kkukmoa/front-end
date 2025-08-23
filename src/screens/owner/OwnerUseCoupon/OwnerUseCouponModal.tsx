@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light.white,
     alignItems: 'center',
     overflow: 'hidden',
+    zIndex: 3,
   },
   message: {
     fontSize: 16,
@@ -123,7 +124,7 @@ export default function OwnerUseCouponModal({
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <CheckIcon width={150} height={144} />

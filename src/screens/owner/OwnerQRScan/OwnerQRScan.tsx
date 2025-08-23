@@ -134,7 +134,13 @@ export default function QrScannerScreen() {
         });
       } else if (type === 'COUPON') {
         setCurrentQrUuid(qrUuid);
-        setCouponModalVisible(true);
+
+        console.log('QR UUID:', JSON.stringify(qrUuid));
+        console.log('API Response:', JSON.stringify(res.data, null, 2));
+
+        setTimeout(() => {
+          setCouponModalVisible(true);
+        }, 0);
       } else {
         Alert.alert('쿠폰', '쿠폰 사용 처리');
       }
@@ -145,6 +151,11 @@ export default function QrScannerScreen() {
         setScanned(false);
       }, 2000);
     }
+  };
+
+  const handleCloseModal = () => {
+    setCouponModalVisible(false);
+    setScanned(false);
   };
 
   if (hasPermission === null) {
@@ -207,7 +218,7 @@ export default function QrScannerScreen() {
           visible={couponModalVisible}
           message="쿠폰을 사용하시겠습니까?"
           qrUuid={currentQrUuid}
-          onClose={() => setCouponModalVisible(false)}
+          onClose={handleCloseModal}
           navigationPath="/owner/Dashboard"
         />
       )}
