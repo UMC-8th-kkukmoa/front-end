@@ -8,7 +8,6 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import KkTextbox from '../../design/component/KkTextbox';
 import { KkButton } from '../../design/component/KkButton';
@@ -64,7 +63,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const validateEmail = (inputEmail: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,7 +85,6 @@ export default function LoginScreen() {
       await localLogin(email, password);
       useAuthStore.getState().setLoginType('local');
       await useAuthStore.getState().updateTokens();
-      await queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
     } catch (err: any) {
       console.error('로그인 실패:', err);
       Alert.alert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다. 다시 시도해주세요.');
