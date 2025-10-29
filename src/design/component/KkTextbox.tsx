@@ -134,8 +134,10 @@ export default function KkTextbox({
     DateTimePickerAndroid.open({
       value: date,
       mode: 'date',
-      display: 'default',
+      display: 'spinner',
+      maximumDate: new Date(),
       onChange: (event, selectedDate) => {
+        if (event.type === 'dismissed') return;
         if (selectedDate) {
           setDate(selectedDate);
           onChangeText?.(formatDate(selectedDate));
