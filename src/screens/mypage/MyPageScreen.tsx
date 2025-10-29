@@ -6,6 +6,7 @@ import Header from '../../design/component/Header';
 import colors from '../../design/colors';
 import ChevronRightIcon from '../../assets/images/chevron-right.svg';
 import logout from '../../api/logout';
+import useAuthStore from '../../store/useAuthStore';
 
 const styles = StyleSheet.create({
   root: {
@@ -78,12 +79,12 @@ export default function MyPageScreen() {
     setIsLoggingOut(true);
     try {
       await logout();
-      await queryClient.invalidateQueries({ queryKey: ['auth'] });
-      router.replace('/auth/LoginChoiceScreen');
     } catch (error) {
       console.error('로그아웃 중 에러:', error);
     } finally {
-      await queryClient.invalidateQueries({ queryKey: ['auth'] });
+      useAuthStore.getState().clearAuth();
+      queryClient.clear();
+
       router.replace('/auth/LoginChoiceScreen');
       setIsLoggingOut(false);
     }

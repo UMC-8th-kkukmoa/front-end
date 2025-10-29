@@ -86,7 +86,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
 
       const accessToken = await getAccessToken();
       const refreshToken = await getRefreshToken();
-      console.log('Loaded tokens:', { accessToken, refreshToken });
 
       const isAuthenticated = !!(accessToken && refreshToken && savedLoginType);
 

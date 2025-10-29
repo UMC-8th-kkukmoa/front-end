@@ -4,9 +4,19 @@
     "slug": "kkukmoa",
     "version": "0.0.1",
     "scheme": "kkukmoa",
+    "icon": "./assets/images/icon.png",
     "newArchEnabled": true,
+    "androidNavigationBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content"
+    },
     "android": {
       "package": "com.kkukmoa",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "edgeToEdgeEnabled": true,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -33,6 +43,18 @@
         }
       ]
     },
-    "plugins": ["expo-build-properties", "expo-router", "expo-web-browser"]
+    "plugins": [
+      "expo-build-properties",
+      "expo-router",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FF8246",
+          "image": "./assets/images/splash.png",
+          "imageWidth": 200
+        }
+      ]
+    ]
   }
 }

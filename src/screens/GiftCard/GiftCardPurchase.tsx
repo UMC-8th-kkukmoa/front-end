@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -85,7 +85,11 @@ export default function GiftCardPurchase() {
       <View style={styles.container}>
         <Header title="결제하기" onBackPress={() => router.back()} />
 
-        <View style={styles.content}>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={{ paddingBottom: 120 }}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>구매상품</Text>
             <View style={styles.productBox}>
@@ -114,7 +118,7 @@ export default function GiftCardPurchase() {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
 
         <View style={styles.footer}>
           <View style={styles.agreementRow}>

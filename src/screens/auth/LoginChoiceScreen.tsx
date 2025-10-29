@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { KkButton } from '../../design/component/KkButton';
 import colors from '../../design/colors';
@@ -58,7 +57,6 @@ const logoImage = require('../../assets/images/logo/LogoText2.png');
 const naverImage = require('../../assets/images/logo/naverlogo.png');
 
 export default function LoginChoiceScreen() {
-  const queryClient = useQueryClient();
   const router = useRouter();
 
   const handleKakaoLoginPress = async () => {
@@ -66,10 +64,7 @@ export default function LoginChoiceScreen() {
     console.log('💡 로그인 직후 result:', result);
     if (result !== null) {
       useAuthStore.getState().setLoginType('kakao');
-      // ['auth', 'accessToken']을 invalidate 하면 useAuth()의 값이 바뀌면서 protected route로 메인 화면으로 이동하게 됨
-      // noinspection ES6MissingAwait
       await useAuthStore.getState().updateTokens();
-      queryClient.invalidateQueries({ queryKey: ['auth', 'accessToken'] });
     }
   };
 
