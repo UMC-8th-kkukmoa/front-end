@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
   bottomLeft: { bottom: 0, left: 0, borderLeftWidth: 10, borderBottomWidth: 10 },
   bottomRight: { bottom: 0, right: 0, borderRightWidth: 10, borderBottomWidth: 10 },
   processingText: { color: '#ffaa00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
-  processingText: { color: '#ffaa00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
 });
 
 export default function QrScannerScreen() {
