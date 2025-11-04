@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
-import { Camera, CameraView } from 'expo-camera';
+import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -71,28 +71,33 @@ const styles = StyleSheet.create({
   topRight: { top: 0, right: 0, borderRightWidth: 10, borderTopWidth: 10 },
   bottomLeft: { bottom: 0, left: 0, borderLeftWidth: 10, borderBottomWidth: 10 },
   bottomRight: { bottom: 0, right: 0, borderRightWidth: 10, borderBottomWidth: 10 },
-  scannedText: { color: '#00ff00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
+  processingText: { color: '#ffaa00', fontSize: 16, fontFamily: 'Pretendard-Bold' },
 });
 
 export default function QrScannerScreen() {
   const router = useRouter();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState(false);
+  const [isScanned, setIsScanned] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [couponModalVisible, setCouponModalVisible] = useState(false);
   const [currentQrUuid, setCurrentQrUuid] = useState<string | null>(null);
 
+  const device = useCameraDevice('back');
+
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const status = await Camera.requestCameraPermission();
       setHasPermission(status === 'granted');
     })();
   }, []);
 
-  const handleBarCodeScanned = async (result: any) => {
-    if (scanned) return;
-    setScanned(true);
+  const handleQRCodeScanned = async (qrValue: string) => {
+    if (isScanned || isProcessing) return;
 
-    const qrUuid = result.data;
+    setIsScanned(true);
+    setIsProcessing(true);
+
+    console.log('QR 스캔됨:', qrValue);
 
     try {
       const credentials = await Keychain.getGenericPassword({
@@ -101,20 +106,19 @@ export default function QrScannerScreen() {
 
       if (!credentials) {
         Alert.alert('알림', '로그인이 필요합니다.');
-        setScanned(false);
         return;
       }
 
       const token = credentials.password;
-
       const API_BASE_URL = process.env.EXPO_PUBLIC_BASE_URL || 'https://kkukmoa.shop';
 
       const res = await axios.get(`${API_BASE_URL}/v1/owners/qrcode/category`, {
-        params: { 'qr-uuid': qrUuid },
+        params: { 'qr-uuid': qrValue },
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
+        timeout: 10000, // 10초 타임아웃
       });
 
       if (!res.data.isSuccess) {
@@ -129,33 +133,47 @@ export default function QrScannerScreen() {
           pathname: '/owner/VoucherPayment',
           params: {
             balance: balance.toString(),
-            qrUuid,
+            qrUuid: qrValue,
           },
         });
       } else if (type === 'COUPON') {
-        setCurrentQrUuid(qrUuid);
-
-        console.log('QR UUID:', JSON.stringify(qrUuid));
-        console.log('API Response:', JSON.stringify(res.data, null, 2));
-
-        setTimeout(() => {
-          setCouponModalVisible(true);
-        }, 0);
+        setCurrentQrUuid(qrValue);
+        setCouponModalVisible(true);
+        // eslint-disable-next-line no-console
+        console.log('쿠폰 모달 표시됨');
       } else {
-        Alert.alert('쿠폰', '쿠폰 사용 처리');
+        Alert.alert('알림', '알 수 없는 QR 코드 타입입니다.');
       }
     } catch (err: any) {
-      Alert.alert('네트워크 오류', 'QR 코드 처리 중 오류가 발생했습니다.');
+      // eslint-disable-next-line no-console
+      console.error('QR 처리 오류:', err);
+      if (err.code === 'ECONNABORTED') {
+        Alert.alert('네트워크 오류', '요청 시간이 초과되었습니다. 다시 시도해주세요.');
+      } else {
+        Alert.alert('네트워크 오류', 'QR 코드 처리 중 오류가 발생했습니다.');
+      }
     } finally {
+      setIsProcessing(false);
+      // 2초 후 다시 스캔 가능하도록
       setTimeout(() => {
-        setScanned(false);
+        setIsScanned(false);
       }, 2000);
     }
   };
 
+  const codeScanner = useCodeScanner({
+    codeTypes: ['qr'],
+    onCodeScanned: (codes) => {
+      if (codes.length > 0 && codes[0].value) {
+        handleQRCodeScanned(codes[0].value);
+      }
+    },
+  });
+
   const handleCloseModal = () => {
     setCouponModalVisible(false);
-    setScanned(false);
+    setCurrentQrUuid(null);
+    setIsScanned(false);
   };
 
   if (hasPermission === null) {
@@ -165,10 +183,20 @@ export default function QrScannerScreen() {
       </View>
     );
   }
+
   if (hasPermission === false) {
     return (
       <View style={styles.center}>
         <Text>카메라 권한이 없습니다.</Text>
+        <Text>설정에서 카메라 권한을 허용해주세요.</Text>
+      </View>
+    );
+  }
+
+  if (!device) {
+    return (
+      <View style={styles.center}>
+        <Text>카메라를 사용할 수 없습니다.</Text>
       </View>
     );
   }
@@ -180,16 +208,14 @@ export default function QrScannerScreen() {
       <View style={styles.container}>
         <QRHeader title="QR 스캔" onBackPress={() => router.back()} />
 
-        <CameraView
+        <Camera
           style={StyleSheet.absoluteFill}
-          facing="back"
-          onBarcodeScanned={handleBarCodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ['qr'],
-          }}
+          device={device}
+          isActive
+          codeScanner={codeScanner}
         />
 
-        <View style={styles.overlayContainer}>
+        <View style={styles.overlayContainer} pointerEvents="none">
           <View style={styles.topOverlay}>
             <Text style={styles.scanText}>QR을 스캔해주세요.</Text>
           </View>
@@ -208,20 +234,19 @@ export default function QrScannerScreen() {
           </View>
 
           <View style={styles.bottomOverlay}>
-            {scanned && <Text style={styles.scannedText}>스캔 완료!</Text>}
+            {isProcessing && <Text style={styles.processingText}>처리 중...</Text>}
+            {isScanned && !isProcessing && <Text style={styles.scannedText}>스캔 완료!</Text>}
           </View>
         </View>
       </View>
 
-      {currentQrUuid && (
-        <OwnerUseCouponModal
-          visible={couponModalVisible}
-          message="쿠폰을 사용하시겠습니까?"
-          qrUuid={currentQrUuid}
-          onClose={handleCloseModal}
-          navigationPath="/owner/Dashboard"
-        />
-      )}
+      <OwnerUseCouponModal
+        visible={couponModalVisible && !!currentQrUuid}
+        message="쿠폰을 사용하시겠습니까?"
+        qrUuid={currentQrUuid || ''}
+        onClose={handleCloseModal}
+        navigationPath="/owner/Dashboard"
+      />
     </SafeAreaView>
   );
 }

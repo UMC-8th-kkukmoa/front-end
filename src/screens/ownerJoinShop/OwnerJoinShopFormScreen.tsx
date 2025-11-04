@@ -69,9 +69,7 @@ export default function OwnerJoinShopFormScreen() {
         setIsCheckingRegistration(true);
         try {
           const isPending = await checkPendingRegistration();
-          if (isPending) {
-            setIsRegistrationPending(true);
-          }
+          setIsRegistrationPending(isPending?.result?.pending ?? false);
         } catch (error) {
           console.error('입점 신청 상태 확인 실패:', error);
         } finally {
