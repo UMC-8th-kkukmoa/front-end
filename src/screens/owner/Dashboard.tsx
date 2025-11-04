@@ -125,7 +125,7 @@ export default function DashboardScreen() {
         <View style={styles.container}>
           {/* eslint-disable-next-line react/style-prop-object */}
           <StatusBar style="dark" />
-          <Header title="대시보드" onBackPress={() => router.replace('/')} shadow />
+          <Header title="대시보드" onBackPress={() => router.back()} shadow />
 
           <View style={styles.content}>
             <View style={styles.grid}>
