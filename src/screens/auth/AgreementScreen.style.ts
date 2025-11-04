@@ -79,4 +79,10 @@ export default StyleSheet.create({
     width: '100%',
     marginTop: 50,
   },
+  textAndIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
 });

@@ -7,6 +7,8 @@ import styles from './AgreementScreen.style';
 import colors from '../../design/colors';
 import Header from '../../design/component/Header';
 import { KkButton } from '../../design/component/KkButton';
+import KkAgreementModal from '../../design/component/KkAgreementModal';
+import AgreementContents from './AgreementContents';
 
 export default function AgreementScreen() {
   const router = useRouter();
@@ -17,6 +19,14 @@ export default function AgreementScreen() {
     thirdParty: false,
     marketing: false,
   });
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAgreement, setSelectedAgreement] = useState<keyof typeof agreements | null>(null);
+
+  const openModal = (key: keyof typeof agreements) => {
+    setSelectedAgreement(key);
+    setModalVisible(true);
+  };
 
   const handleBack = () => {
     router.back();
@@ -42,6 +52,21 @@ export default function AgreementScreen() {
     });
   };
 
+  const getAgreementTitle = (key: keyof typeof agreements | null) => {
+    switch (key) {
+      case 'terms':
+        return '꾹모아 서비스 이용약관';
+      case 'privacy':
+        return '개인정보 수집 및 이용 동의';
+      case 'thirdParty':
+        return '제3자 정보 제공 동의';
+      case 'marketing':
+        return '마케팅 활용 동의';
+      default:
+        return '';
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="회원가입" onBackPress={handleBack} shadow={false} />
@@ -65,41 +90,48 @@ export default function AgreementScreen() {
           </TouchableOpacity>
 
           <View style={styles.separator} />
-
           {[
             { key: 'terms', type: 'required', label: '이용 약관 동의' },
             { key: 'privacy', type: 'required', label: '개인정보 수집 및 이용 약관 동의' },
             { key: 'thirdParty', type: 'optional', label: '제 3자 정보 제공 동의' },
             { key: 'marketing', type: 'optional', label: '마케팅 활용 동의' },
           ].map((item) => (
-            <TouchableOpacity
-              key={item.key}
-              style={styles.checkboxContainer}
-              onPress={() => toggleAgreement(item.key as keyof typeof agreements)}
-            >
-              <Icon
-                name={
-                  agreements[item.key as keyof typeof agreements]
-                    ? 'checkmark-circle'
-                    : 'checkmark-circle-outline'
-                }
-                size={35}
-                color={
-                  agreements[item.key as keyof typeof agreements]
-                    ? colors.light.main
-                    : colors.light.gray2
-                }
-                style={{ marginTop: 5 }}
-              />
-              <Text style={styles.checkboxText2}>
-                <Text style={item.type === 'required' ? styles.required : styles.optional}>
-                  ({item.type === 'required' ? '필수' : '선택'})
+            <View key={item.key} style={styles.checkboxContainer}>
+              <TouchableOpacity
+                onPress={() => toggleAgreement(item.key as keyof typeof agreements)}
+              >
+                <Icon
+                  name={
+                    agreements[item.key as keyof typeof agreements]
+                      ? 'checkmark-circle'
+                      : 'checkmark-circle-outline'
+                  }
+                  size={35}
+                  color={
+                    agreements[item.key as keyof typeof agreements]
+                      ? colors.light.main
+                      : colors.light.gray2
+                  }
+                  style={{ marginTop: 5 }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.textAndIconContainer}
+                onPress={() => openModal(item.key as keyof typeof agreements)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.checkboxText2}>
+                  <Text style={item.type === 'required' ? styles.required : styles.optional}>
+                    ({item.type === 'required' ? '필수' : '선택'})
+                  </Text>
+                  {item.label}
                 </Text>
-                {item.label}
-              </Text>
-              <Icon name="add" size={21} color={colors.light.gray1} />
-            </TouchableOpacity>
+                <Icon name="add" size={21} color={colors.light.gray1} />
+              </TouchableOpacity>
+            </View>
           ))}
+
           <KkButton
             style={styles.nextButton}
             label="다음"
@@ -110,6 +142,13 @@ export default function AgreementScreen() {
           />
         </View>
       </View>
+
+      <KkAgreementModal
+        visible={modalVisible}
+        title={getAgreementTitle(selectedAgreement)}
+        content={selectedAgreement ? AgreementContents[selectedAgreement] : ''}
+        onClose={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
