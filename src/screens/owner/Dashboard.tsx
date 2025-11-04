@@ -22,6 +22,13 @@ const menuItems = [
   { id: 6, title: '가이드', icon: GuideIcon, route: null },
 ];
 
+type MenuItem = {
+  id: number;
+  title: string;
+  icon: React.FC<{ width: number; height: number }>;
+  route: string | null;
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -58,13 +65,53 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     color: colors.light.black,
   },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    maxWidth: '80%',
+    width: 'auto',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-Medium',
+    marginBottom: 20,
+  },
+  modalMessage: {
+    fontSize: 13,
+    fontFamily: 'Pretendard-Medium',
+    textAlign: 'center',
+    color: colors.light.gray2,
+    marginBottom: 25,
+  },
+  modalButton: {
+    alignSelf: 'stretch',
+    backgroundColor: colors.light.main,
+    borderRadius: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    elevation: 5,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
 });
 
 export default function DashboardScreen() {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
 
-  const handlePress = (item) => {
+  const handlePress = (item: MenuItem) => {
     if (!item.route) {
       setVisible(true);
       return;
@@ -100,6 +147,7 @@ export default function DashboardScreen() {
           </View>
         </View>
       </SafeAreaView>
+
       <Modal
         transparent
         visible={visible}
@@ -107,65 +155,12 @@ export default function DashboardScreen() {
         onRequestClose={() => setVisible(false)}
         statusBarTranslucent
       >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 16,
-              paddingVertical: 20,
-              paddingHorizontal: 25,
-              alignItems: 'center',
-              maxWidth: '80%', // 화면의 80%까지만 허용
-              width: 'auto', // 내용에 따라 자동 너비
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: 'Pretendard-Medium',
-                marginBottom: 20,
-              }}
-            >
-              준비 중인 서비스
-            </Text>
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: 'Pretendard-Medium',
-                textAlign: 'center',
-                color: colors.light.gray2,
-                marginBottom: 25,
-              }}
-            >
-              해당 기능은 곧 업데이트될 예정입니다.
-            </Text>
-            <TouchableOpacity
-              onPress={() => setVisible(false)}
-              style={{
-                alignSelf: 'stretch',
-                backgroundColor: colors.light.main,
-                borderRadius: 25,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                elevation: 5,
-              }}
-            >
-              <Text
-                style={{
-                  color: 'white',
-                  fontWeight: '600',
-                  textAlign: 'center',
-                }}
-              >
-                확인
-              </Text>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>준비 중인 서비스</Text>
+            <Text style={styles.modalMessage}>해당 기능은 곧 업데이트될 예정입니다.</Text>
+            <TouchableOpacity onPress={() => setVisible(false)} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>확인</Text>
             </TouchableOpacity>
           </View>
         </View>
